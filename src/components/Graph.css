@@ -1,0 +1,21 @@
+
+
+.node-list-container {
+    overflow-y: auto;
+    max-height: 400px;
+    margin-right: 50px;
+  }
+  
+  .node-list li {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .node-list li:hover {
+    background-color: rgba(169, 169, 169, 0.5); /* Semi-transparent gray on hover */
+  }
+  
+  .node-list li.highlighted {
+    background-color: rgba(169, 169, 169, 0.8); /* More pronounced gray for highlighted node */
+  }
+  
