@@ -36,7 +36,13 @@ const Graph = () => {
     if (graphData) {
       const { nodeNames, edges } = graphData;
 
-      const nodesDataSet = new DataSet(nodeNames.map((nodeName, index) => ({ id: nodeName, label: `${index + 1}`, title: nodeName })));
+      const nodesDataSet = new DataSet(nodeNames.map((nodeName, index) => ({ 
+        id: nodeName, 
+        label: `${index + 1}`, 
+        title: nodeName,
+        // x: 0,
+        // y:0
+      })));
       const edgesDataSet = new DataSet(edges.map((edge, index) => ({
         ...edge,
         id: `edge${index}`,
@@ -86,7 +92,7 @@ const Graph = () => {
         physics: {
           repulsion: {
             centralGravity: 1, // Уменьшаем центральное притяжение между вершинами
-            springLength: 2000, // Увеличиваем длину пружины
+            springLength: 300, // Увеличиваем длину пружины
             springConstant: 0.001, // Уменьшаем жесткость пружины
           },
         },
@@ -108,7 +114,9 @@ const Graph = () => {
             background: 'white', // Прозрачный фон
           },
        },
+       physics: false,
         interaction: {
+          physics: false,
           hover: true,
           tooltipDelay: 300,
           multiselect: true,

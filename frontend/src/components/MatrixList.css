@@ -1,0 +1,23 @@
+/* MatrixList.css */
+.matrix-list-container {
+    padding: 20px;
+  }
+  
+  .matrix-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .matrix-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .matrix-card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
