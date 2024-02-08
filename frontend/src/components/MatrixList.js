@@ -17,26 +17,27 @@ const MatrixList = () => {
       .catch(error => console.error('Error fetching matrices:', error));
   }, []);
   
+  
 
   return (
     <div className="matrix-list-container">
       <h1>Matrix List</h1>
       <div className="matrix-cards">
-      {Array.isArray(matrices) ? (
-  matrices.map(matrix => (
-    <Link key={matrix} to={`/matrix/${matrix}`}>
-      <div className="matrix-card">
-        <h2>{matrix}</h2>
-      </div>
-    </Link>
-  ))
-) : (
-  <p>No matrices available</p>
-)}
-
+        {matrices ? (
+          matrices.map(matrix => (
+            <Link key={matrix} to={`/matrix/${matrix}`}>
+              <div className="matrix-card">
+                <h2>{matrix}</h2>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
     </div>
   );
+  
 };
 
 export default MatrixList;
