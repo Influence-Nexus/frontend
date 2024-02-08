@@ -8,7 +8,7 @@ const MatrixList = () => {
 
   useEffect(() => {
     // Fetch matrices from the Flask server
-    fetch('http://127.0.0.1:5000/matrices')
+    fetch('http://147.45.68.90:5000/matrices')
       .then(response => response.json())
       .then(data => setMatrices(data.matrices))
       .catch(error => console.error('Error fetching matrices:', error));
