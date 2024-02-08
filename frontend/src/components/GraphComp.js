@@ -43,46 +43,60 @@ const GraphComponent = ({ matrixInfo }) => {
         edges: {
           smooth: {
             type: 'cubicBezier',
-            roundness: 0.25, // Adjust the roundness as needed
           },
-          arrows: 'to',
-          font: {
-            align: 'top',
-            strokeWidth: 0.001,
-            strokeColor: '#ffffff',
+          scaling: {
+            min: 1,
+            max: 1,
+            label: {
+              enabled: true,
+              min: 7,
+              max: 7,
+              maxVisible: 55,
+              drawThreshold: 5,
+            },
           },
+          interaction: {
+            hover: false, // Disable hover effect on edges
+          },
+          arrows: {
+            to: {
+              scaleFactor: 0.45, // Уменьшить размер стрелочки
+            },
+          },
+      
         },
         physics: {
           repulsion: {
-            centralGravity: 1,
-            springLength: 300,
-            springConstant: 0.001,
+            centralGravity: 1, // Уменьшаем центральное притяжение между вершинами
+            springLength: 300, // Увеличиваем длину пружины
+            springConstant: 0.001, // Уменьшаем жесткость пружины
           },
         },
         nodes: {
-          shape: 'circle',
+          shape: 'circle', // Сделать вершины круглыми
           size: 40,
           interaction: {
-            hover: true,
+            hover: true, // Enable hover effect on nodes
           },
           font: {
             size: 14,
-            align: 'center',
+            align: 'center', // Выравнивание текста по центру
           },
-          borderWidth: 2,
-          borderWidthSelected: 4,
+      
+          borderWidth: 2, // Ширина обводки
+          borderWidthSelected: 4, // Ширина обводки при выделении
           color: {
-            border: 'black',
-            background: 'white',
+            border: 'black', // Цвет обводки
+            background: 'white', // Прозрачный фон
           },
-        },
-        physics: false,
+       },
+       physics: false,
         interaction: {
           physics: false,
           hover: true,
           tooltipDelay: 300,
           multiselect: true,
-        },
+       },
       };
 
       const network = new Network(container, graphData, options);

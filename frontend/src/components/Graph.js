@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
 import './Graph.css'; // Import the CSS file for styling
+import { Link } from 'react-router-dom';
 
 const Graph = () => {
   const [graphData, setGraphData] = useState(null);
@@ -145,7 +146,7 @@ const Graph = () => {
     <div style={{ display: 'flex' }}>
       <div style={{ flex: '1', paddingRight: '20px' }}>
         <input type="file" accept=".txt" onChange={handleFileChange} />
-        <div id="graph-container" style={{ height: '400px' }}></div>
+        <div id="graph-container" style={{ height: '400px', border: "1px solid"}}></div>
       </div>
       {graphData && (
         <div className="node-list-container">
@@ -162,6 +163,9 @@ const Graph = () => {
           </ul>
         </div>
       )}
+      <Link key="0" to={`/`}>
+        <p>Домой</p>
+        </Link>
     </div>
   );
 };

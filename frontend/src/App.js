@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MatrixList from './components/MatrixList';
 import MatrixDetails from './components/MatrixDetails';
+import Graph from './components/Graph';
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MatrixList />} />
         <Route path="/matrix/:matrixName" element={<MatrixDetails />} />
+        <Route path="/model" element={<Graph />} />
       </Routes>
     </Router>
   );

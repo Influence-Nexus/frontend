@@ -1,6 +1,6 @@
 // MatrixDetails.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {Link, useParams } from 'react-router-dom';
 import GraphComponent from './GraphComp'; // Предполагается, что GraphComponent правильно настроен
 
 const MatrixDetails = () => {
@@ -24,6 +24,9 @@ const MatrixDetails = () => {
       {matrixInfo.edges && (
         <GraphComponent matrixInfo={matrixInfo} />
       )}
+      <Link key="0" to={`/`}>
+        <p>Домой</p>
+        </Link>
     </div>
   );
 };
