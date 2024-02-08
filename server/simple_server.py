@@ -88,4 +88,4 @@ def get_matrix_info(matrix_name):
     return jsonify({'matrix_name': matrix_name,'edges': edges})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host= "0.0.0.0", debug=True)
