@@ -10,21 +10,30 @@ const MatrixList = () => {
     // Fetch matrices from the Flask server
     fetch('http://147.45.68.90:5000/matrices')
       .then(response => response.json())
-      .then(data => setMatrices(data.matrices))
+      .then(data => {
+        console.log('API response:', data); // Log the response
+        setMatrices(data.matrices);
+      })
       .catch(error => console.error('Error fetching matrices:', error));
   }, []);
+  
 
   return (
     <div className="matrix-list-container">
       <h1>Matrix List</h1>
       <div className="matrix-cards">
-        {matrices.map(matrix => (
-          <Link key={matrix} to={`/matrix/${matrix}`}>
-            <div className="matrix-card">
-              <h2>{matrix}</h2>
-            </div>
-          </Link>
-        ))}
+      {Array.isArray(matrices) ? (
+  matrices.map(matrix => (
+    <Link key={matrix} to={`/matrix/${matrix}`}>
+      <div className="matrix-card">
+        <h2>{matrix}</h2>
+      </div>
+    </Link>
+  ))
+) : (
+  <p>No matrices available</p>
+)}
+
       </div>
     </div>
   );
