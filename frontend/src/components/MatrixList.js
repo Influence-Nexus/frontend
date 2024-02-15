@@ -8,7 +8,7 @@ const MatrixList = () => {
 
   useEffect(() => {
     // Fetch matrices from the Flask server
-    fetch('http://localhost:5000/matrices')
+    fetch('http://91.108.240.55:5000/matrices')
       .then(response => response.json())
       .then(data => {
         console.log('API response:', data); // Log the response

@@ -10,7 +10,7 @@ const MatrixDetails = () => {
 
   useEffect(() => {
     // Fetch detailed information about the selected matrix
-    fetch(`http://localhost:5000/matrix/${matrixName}`)
+    fetch(`http://91.108.240.55:5000/matrix/${matrixName}`)
       .then(response => response.json())
       .then(data => setMatrixInfo(data))
       .catch(error => console.error('Error fetching matrix details:', error));
