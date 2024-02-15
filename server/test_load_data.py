@@ -3,7 +3,7 @@ import mysql.connector
 import os
 
 # Replace these values with your own
-host = '147.45.68.90'
+host = '91.108.240.55'
 user = 'main_admin'
 password = 'Accessors231'
 database = 'influence_models'
@@ -27,7 +27,7 @@ create_nodes_table_query = """
 CREATE TABLE IF NOT EXISTS Nodes (
     node_id INT AUTO_INCREMENT PRIMARY KEY,
     matrix_id INT,
-    node_name VARCHAR(50) NOT NULL,
+    node_name TEXT NOT NULL,
     FOREIGN KEY (matrix_id) REFERENCES Matrices(matrix_id)
 );
 """
@@ -104,7 +104,8 @@ for matrix_file in matrix_files:
                 insert_edges_query = """
                 INSERT INTO Edges (matrix_id, source_node_id, target_node_id, value) VALUES (%s, %s, %s, %s);
                 """
-                cursor.execute(insert_edges_query, (last_matrix_id, source_node_id, target_node_id, float(value) if pd.notna(value) else 0))
+                if pd.notna(value):
+                    cursor.execute(insert_edges_query, (last_matrix_id, source_node_id, target_node_id, float(value)))
             else:
                 print(f"Nodes not found for matrix_id={last_matrix_id}, source_node_name='{source_node_name}', target_node_name='{target_node_name}'.")
 

@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
 import './Graph.css'; // Import the CSS file for styling
+import 'bootstrap/dist/css/bootstrap.min.css'; // Подключаем файл стилей Bootstrap
+import bootstrap from 'bootstrap/dist/js/bootstrap.bundle'; // Import Bootstrap JavaScript
+import SelectedNodesList from './SelectedNodesList'; // Путь к компоненту SelectedNodesList
+import Button from 'react-bootstrap/Button'; // Путь к компоненту Button
 
 const GraphComponent = ({ matrixInfo }) => {
   const [graphData, setGraphData] = useState(null);
   const [highlightedNode, setHighlightedNode] = useState(null);
-
+  const [selectedNodes, setSelectedNodes] = useState([]);
+  
   useEffect(() => {
     if (matrixInfo) {
       const edges = matrixInfo.edges;
@@ -14,15 +19,18 @@ const GraphComponent = ({ matrixInfo }) => {
       const nodesDataSet = new DataSet();
       const edgesDataSet = new DataSet();
 
+      console.log(edges);
+
       edges.forEach(({ from, to, value }) => {
         if (value !== 0) { // Exclude edges with value 0
+          console.log(from, to, value);
           if (!nodes.has(from.id)) {
-            nodes.set(from.id, { id: from.id, label: from.name, title: from.name });
+            nodes.set(from.id, { id: from.id, label: `${from.id}`, title: from.name });
             nodesDataSet.add(nodes.get(from.id));
           }
 
           if (!nodes.has(to.id)) {
-            nodes.set(to.id, { id: to.id, label: to.name, title: to.name });
+            nodes.set(to.id, { id: to.id, label: `${to.id}`, title: to.name });
             nodesDataSet.add(nodes.get(to.id));
           }
 
@@ -30,14 +38,37 @@ const GraphComponent = ({ matrixInfo }) => {
         }
       });
 
+      console.log(nodesDataSet);
+      console.log(edgesDataSet);
+
 
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
   }, [matrixInfo]);
 
+  const handleNodeClick = (event) => {
+    const clickedNodeIds = event.nodes;
+    if (clickedNodeIds.length === 1) {
+      const clickedNodeId = clickedNodeIds[0];
+      // Если вершина уже была выбрана, удаляем её из списка выбранных
+      if (selectedNodes.includes(clickedNodeId)) {
+        setSelectedNodes(selectedNodes.filter(nodeId => nodeId !== clickedNodeId));
+      } else {
+        // Иначе, добавляем вершину в список выбранных
+        setSelectedNodes([...selectedNodes, clickedNodeId]);
+      }
+    }
+  };
+  const handleClearSelection = () => {
+    setSelectedNodes([]);
+  };
+
+
   useEffect(() => {
     if (graphData) {
       const container = document.getElementById('graph-container');
+
+      const nodes = graphData.nodes; // Define nodes here
 
       const options = {
         edges: {
@@ -54,9 +85,6 @@ const GraphComponent = ({ matrixInfo }) => {
               maxVisible: 55,
               drawThreshold: 5,
             },
-          },
-          interaction: {
-            hover: false, // Disable hover effect on edges
           },
           arrows: {
             to: {
@@ -75,9 +103,6 @@ const GraphComponent = ({ matrixInfo }) => {
         nodes: {
           shape: 'circle', // Сделать вершины круглыми
           size: 40,
-          interaction: {
-            hover: true, // Enable hover effect on nodes
-          },
           font: {
             size: 14,
             align: 'center', // Выравнивание текста по центру
@@ -90,9 +115,7 @@ const GraphComponent = ({ matrixInfo }) => {
             background: 'white', // Прозрачный фон
           },
        },
-       physics: false,
         interaction: {
-          physics: false,
           hover: true,
           tooltipDelay: 300,
           multiselect: true,
@@ -100,6 +123,8 @@ const GraphComponent = ({ matrixInfo }) => {
       };
 
       const network = new Network(container, graphData, options);
+
+      network.on('click', handleNodeClick);
 
       // Highlight node in the graph on hover in the node list
       network.on('hoverNode', (event) => {
@@ -111,11 +136,13 @@ const GraphComponent = ({ matrixInfo }) => {
         setHighlightedNode(null);
       });
 
+
       return () => {
         network.destroy();
       };
     }
-  }, [graphData]);
+  }, [graphData, selectedNodes]);
+
 
   return (
     <div style={{ display: 'flex' }}>
@@ -132,11 +159,27 @@ const GraphComponent = ({ matrixInfo }) => {
                 className={highlightedNode === node.id ? 'highlighted' : ''}
                 onMouseEnter={() => setHighlightedNode(node.id)}
                 onMouseLeave={() => setHighlightedNode(null)}
-              >{`${node.label} - ${node.title}`}</li>
+              >{`${node.id} - ${node.title}`}</li>
             ))}
           </ul>
         </div>
+        
       )}
+      {selectedNodes.length > 0 && (
+        <div className="selected-nodes-list">
+          <h2>Selected Nodes</h2>
+          <ul>
+            {selectedNodes.map((nodeId, index) => (
+              <li key={index}>{`Node ID: ${nodeId}`}</li>
+            ))}
+          </ul>
+          <Button variant="outline-danger" onClick={handleClearSelection}>
+            Clear Selection
+          </Button>
+        </div>
+      )}
+
+      
     </div>
   );
 };

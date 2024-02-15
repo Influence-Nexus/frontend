@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import {Link, useParams } from 'react-router-dom';
 import GraphComponent from './GraphComp'; // Предполагается, что GraphComponent правильно настроен
+import 'bootstrap/dist/css/bootstrap.min.css'; // Подключаем файл стилей Bootstrap
 
 const MatrixDetails = () => {
   const { matrixName } = useParams();
@@ -9,24 +10,26 @@ const MatrixDetails = () => {
 
   useEffect(() => {
     // Fetch detailed information about the selected matrix
-    fetch(`http://147.45.68.90:5000/matrix/${matrixName}`)
+    fetch(`http://localhost:5000/matrix/${matrixName}`)
       .then(response => response.json())
       .then(data => setMatrixInfo(data))
       .catch(error => console.error('Error fetching matrix details:', error));
   }, [matrixName]);
 
   return (
-    <div>
-      <h1>{matrixInfo.matrix_name}</h1>
-      <p>Description: {matrixInfo.description}</p>
+<div className="container mt-4">
+      <h1 className="display-4">{matrixInfo.matrix_name}</h1>
+      <p className="lead">Description: {matrixInfo.description}</p>
+
+      <Link to={`/`} className="btn btn-primary mt-3">
+        Домой
+      </Link>
       
-      Display graph using GraphComponent
-      {matrixInfo.edges && (
-        <GraphComponent matrixInfo={matrixInfo} />
-      )}
-      <Link key="0" to={`/`}>
-        <p>Домой</p>
-        </Link>
+      <div>
+        {matrixInfo.edges && (
+          <GraphComponent matrixInfo={matrixInfo} />
+        )}
+      </div>
     </div>
   );
 };

@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Replace these values with your own
-host = '147.45.68.90'
+host = '91.108.240.55'
 user = 'main_admin'
 password = 'Accessors231'
 database = 'influence_models'
@@ -53,18 +53,20 @@ def get_matrices():
 def get_matrix_info(matrix_name):
     # Query to fetch node and edge information for a matrix
     query = """
-    SELECT
-        Nodes.node_id AS source_id,
-        Nodes.node_name AS source_name,
-        Edges.target_node_id AS target_id,
-        Nodes.node_name AS target_name,
-        Edges.value AS value
-    FROM
-        Matrices
-    JOIN Nodes ON Matrices.matrix_id = Nodes.matrix_id
-    JOIN Edges ON Matrices.matrix_id = Edges.matrix_id AND Nodes.node_id = Edges.source_node_id
-    WHERE
-        Matrices.matrix_name = %s
+SELECT
+    Nodes.node_id AS source_id,
+    Nodes.node_name AS source_name,
+    Edges.target_node_id AS target_id,
+    TargetNodes.node_name AS target_name,
+    Edges.value AS value
+FROM
+    Matrices
+JOIN Nodes ON Matrices.matrix_id = Nodes.matrix_id
+JOIN Edges ON Matrices.matrix_id = Edges.matrix_id AND Nodes.node_id = Edges.source_node_id
+JOIN Nodes AS TargetNodes ON Edges.target_node_id = TargetNodes.node_id
+WHERE
+    Matrices.matrix_name = %s
+
     """
 
     result = execute_query(query, (matrix_name,))
@@ -74,6 +76,7 @@ def get_matrix_info(matrix_name):
     edges = []
 
     for row in result:
+        print(row)
         source_node = (row['source_id'], row['source_name'])
         target_node = (row['target_id'], row['target_name'])
         nodes.add(source_node)
@@ -83,7 +86,6 @@ def get_matrix_info(matrix_name):
             'to': {'id': row['target_id'], 'name': row['target_name']},
             'value': row['value']
         })
-    print({'edges': edges})
     # Return data as JSON
     return jsonify({'matrix_name': matrix_name,'edges': edges})
 

@@ -8,7 +8,7 @@ const MatrixList = () => {
 
   useEffect(() => {
     // Fetch matrices from the Flask server
-    fetch('http://147.45.68.90:5000/matrices')
+    fetch('http://localhost:5000/matrices')
       .then(response => response.json())
       .then(data => {
         console.log('API response:', data); // Log the response
@@ -20,16 +20,20 @@ const MatrixList = () => {
   
 
   return (
-    <div className="matrix-list-container">
-      <h1>Matrix List</h1>
-      <div className="matrix-cards">
+    <div className="container mt-4">
+      <h1 className="display-4">Matrix List</h1>
+      <div className="row">
         {matrices ? (
           matrices.map(matrix => (
-            <Link key={matrix} to={`/matrix/${matrix}`}>
-              <div className="matrix-card">
-                <h2>{matrix}</h2>
-              </div>
-            </Link>
+            <div key={matrix} className="col-md-4 mb-4">
+              <Link to={`/matrix/${matrix}`} className="text-decoration-none text-dark">
+                <div className="card">
+                  <div className="card-body">
+                    <h2 className="card-title">{matrix}</h2>
+                  </div>
+                </div>
+              </Link>
+            </div>
           ))
         ) : (
           <p>Loading...</p>
@@ -37,6 +41,7 @@ const MatrixList = () => {
       </div>
     </div>
   );
+
   
 };
 
