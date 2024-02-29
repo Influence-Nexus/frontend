@@ -1,0 +1,15 @@
+	C1: Amount of Fuel in the Forest	C2: Air Quality/Pollution	C3: Recreational Forest Use	C4: lgnition (e.g. lighting storms)	C5: Ability to control/contain a fire	C6: Number of Fires	C7: Economic Impacts	C9: Commercial timber harvest	C10: Invasive plant species	C11: Diversity of the ecosystem	C12: Habitat of the small animals	C13: Risk of destructive fires	C14:Cost of clean water supply	C15: Weather Rain-percipitation/drought
+C1: Amount of Fuel in the Forest	0	0	-0.2	0.4	-0.4	0.9	0	0	0	0.2	0.3	0.8	0	0
+C2: Air Quality/Pollution	0	0	0	-0.1	-0.3	0.6	0	0	0	-0.2	-0.6	0.2	0	-0.1
+C3: Recreational Forest Use	0	0	0	0.4	0	0.6	0.3	0	0.2	-0.6	-0.4	0.9	0	-0.1
+C4: lgnition (e.g. lighting storms)	0	0	0	0	-0.2	0.7	0	0	0	-0.2	-0.3	0.6	0	-0.1
+C5: Ability to control/contain a fire	0	0	-0.2	0	0	0	0	0	0	0.3	0.3	0	0	0.1
+C6: Number of Fires	0	0	0	0	-0.2	0	0	-0.1	0	-0.5	-0.4	0	0	-0.1
+C7: Economic Impacts	0	0.2	0	0	0	0.1	0	0.1	-0.2	0.1	0	0.2	0	-0.1
+C9: Commercial timber harvest	-0.2	0.5	-0.4	0.2	0.4	0	0.2	0	-0.2	-0.6	-0.7	0.3	0	0.1
+C10: Invasive plant species	0.2	-0.5	0	0.1	0	0	-0.2	0	0	0	-0.4	0.6	0	0.1
+C11: Diversity of the ecosystem	0	0	0	0	0	0	0.3	0	0	0	0.1	0	0	0.1
+C12: Habitat of the small animals	0	0	0	0	0	0	0.1	0	0	0	0	0	0	-0.1
+C13: Risk of destructive fires	0	0	0	0	-0.3	0.2	0	0	0	-0.4	-0.4	0	0	-0.1
+C14:Cost of clean water supply	0	-0.1	0	0	-0.2	0	0	0	0	0	0	0	0	0
+C15: Weather Rain-percipitation/drought	0	0	0	0	0	0	0	0	0	0	0	0	0	0

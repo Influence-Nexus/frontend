@@ -1,0 +1,11 @@
+	1 Design revisions to tanks, vessels, pumps and instrumentation	2 Mismanagement by pipe fabricator	3 Other design changes by the owner	4 Craft labour productivity decline	5 Late completion of piping installation	6 Excessive pipe weld failures	7 Increased direct and indirect construction costs	8 Requirement to accelerate remaining construction work	9 Delay in actual mechanical completion date	10 Slowly diminishing client relationship
+1 Design revisions to tanks, vessels, pumps and instrumentation	0	0	0	0	0.6	0	0	0	0	0
+2 Mismanagement by pipe fabricator	0	0	0	0.6	0	0.6	0	0	0	0
+3 Other design changes by the owner	0	0	0	0	0.2	0	0	0	0	0
+4 Craft labour productivity decline	0	0	0	0	0	0	0.6	0	0	0
+5 Late completion of piping installation	0	0	0	0	0	0	0	0.6	0.6	0
+6 Excessive pipe weld failures	0	0	0	0	0	0	0	0.8	0.6	0
+7 Increased direct and indirect construction costs	0	0	0	0	0	0	0	0	0	0.9
+8 Requirement to accelerate remaining construction work	0	0	0	0	0	0	0	0	0	0.9
+9 Delay in actual mechanical completion date	0	0	0	0	0	0	0	0	0	0.9
+10 Slowly diminishing client relationship	0	0	0	0	0	0	0	0	0	0

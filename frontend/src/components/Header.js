@@ -14,6 +14,9 @@ const Header = () => {
             <li className="nav-item">
               <a className="nav-link text-white" href="/model">Test Model Loading</a>
             </li>
+            <li className="nav-item">
+              <a className="nav-link text-white" href="/rules">Rules</a>
+            </li>
           </ul>
         </nav>
       </div>

@@ -1,0 +1,9 @@
+	C1 Ambient air temperature	C2 Winter ice cover	C3 Wind	C4 Evaporation	C5 Precipitation intensity, frequency and duration	C6 Net basin runoff	C7 Changes to lake levels	C8 Recreational boating
+C1 Ambient air temperature	0	-0.41	0	0.64	0	0	0	0.35
+C2 Winter ice cover	0	0	0	-0.21	0	0	0	0
+C3 Wind	0	0	0	0.56	0	0	0	-0.25
+C4 Evaporation	0	0	0	0	0	0	0.15	0
+C5 Precipitation intensity, frequency and duration	0	0	0	0	0	0.82	0	-0.32
+C6 Net basin runoff	0	0	0	0	0	0	0.58	0
+C7 Changes to lake levels	0	0	0	0	0	0	0	0.05
+C8 Recreational boating	0	0	0	0	0	0	0	0

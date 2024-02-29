@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import mysql.connector
+import pandas as pd
+
 
 app = Flask(__name__)
 CORS(app)
@@ -30,34 +32,49 @@ def execute_query(query, params=None):
 @app.route('/matrices', methods=['GET'])
 def get_matrices():
     try:
-    #     conn = mysql.connector.connect(host=host, user=user, password=password, database=database)
-    #     cursor = conn.cursor(dictionary=True)
+        # Fetch list of matrices with additional information
+        result = execute_query("""
+            SELECT 
+                M.matrix_id,
+                M.matrix_name,
+                M.description,
+                COUNT(DISTINCT N.node_id) AS node_count,
+                COUNT(DISTINCT E.edge_id) AS edge_count
+            FROM Matrices M
+            LEFT JOIN Nodes N ON M.matrix_id = N.matrix_id
+            LEFT JOIN Edges E ON M.matrix_id = E.matrix_id
+            WHERE E.value <> 0  -- Include only edges with non-zero value
+            GROUP BY M.matrix_id, M.matrix_name, M.description
+        """)
 
-    #     # Fetch list of matrices
-        result = execute_query("SELECT matrix_name FROM Matrices")
-        matrices = [row['matrix_name'] for row in result]
+        matrices = [{'matrix_id': row['matrix_id'],
+                     'matrix_name': row['matrix_name'],
+                     'description': row['description'],
+                     'node_count': row['node_count'],
+                     'edge_count': row['edge_count']} for row in result]
 
         return jsonify({'matrices': matrices})
 
     except Exception as e:
         return jsonify({'error': str(e)})
 
-    # finally:
-    #     cursor.close()
-    #     conn.close()
 
 # Helper function to execute queries and fetch dat
 
 # Endpoint to get node and edge information for a specific matrix# Endpoint to get node and edge information for a specific matrix
-@app.route('/matrix/<matrix_name>')
-def get_matrix_info(matrix_name):
-    # Query to fetch node and edge information for a matrix
+@app.route('/matrix/<int:matrix_id>')
+def get_matrix_info(matrix_id):
+    # Query to fetch node and edge information along with matrix details for a matrix by matrix ID
     query = """
 SELECT
+    Matrices.matrix_name,
+    Matrices.description,
     Nodes.node_id AS source_id,
     Nodes.node_name AS source_name,
+    Nodes.target AS source_target,
     Edges.target_node_id AS target_id,
     TargetNodes.node_name AS target_name,
+    TargetNodes.target AS target_target,
     Edges.value AS value
 FROM
     Matrices
@@ -65,29 +82,47 @@ JOIN Nodes ON Matrices.matrix_id = Nodes.matrix_id
 JOIN Edges ON Matrices.matrix_id = Edges.matrix_id AND Nodes.node_id = Edges.source_node_id
 JOIN Nodes AS TargetNodes ON Edges.target_node_id = TargetNodes.node_id
 WHERE
-    Matrices.matrix_name = %s
-
+    Matrices.matrix_id = %s
     """
 
-    result = execute_query(query, (matrix_name,))
+    result = execute_query(query, (matrix_id,))
     
     # Organize data into nodes and edges
     nodes = set()
     edges = []
 
+    matrix_info = None
+
     for row in result:
-        print(row)
+        if matrix_info is None:
+            matrix_info = {
+                'matrix_id': matrix_id,
+                'matrix_name': row['matrix_name'],
+                'description': row['description']
+            }
+
         source_node = (row['source_id'], row['source_name'])
         target_node = (row['target_id'], row['target_name'])
         nodes.add(source_node)
         nodes.add(target_node)
         edges.append({
-            'from': {'id': row['source_id'], 'name': row['source_name']},
-            'to': {'id': row['target_id'], 'name': row['target_name']},
+            'from': {'id': row['source_id'], 'name': row['source_name'], 'target': row['source_target']},
+            'to': {'id': row['target_id'], 'name': row['target_name'], 'target': row['target_target']},
             'value': row['value']
         })
+    
+    # Read CSV file based on matrix name
+    csv_filename = f"static/cognition/{matrix_info['matrix_name']}.csv"
+    try:
+        df = pd.read_csv(csv_filename)
+    except FileNotFoundError:
+        return jsonify({'error': f"CSV file for matrix {matrix_info['matrix_name']} not foun"})
+
+    # Convert CSV data to JSON
+    csv_data = df.to_dict(orient='records')
+
     # Return data as JSON
-    return jsonify({'matrix_name': matrix_name,'edges': edges})
+    return jsonify({'matrix_info': matrix_info, 'edges': edges, 'csv_data': csv_data})
 
 if __name__ == '__main__':
     app.run(host= "0.0.0.0", debug=True)

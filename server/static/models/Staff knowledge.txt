@@ -1,0 +1,24 @@
+	C1 Personal motivation	C2 Cost saving	C3 Knowledge decay	C4 Knowledge management investment	C5 External knowledge investment	C6 Expert knowledge	C7 Technology  cost	C8 Personal reward	C9 Staff turnover	C10 Employee expertise states	C11 Staff training	C12 Training investment	C13 Staff & Management cost	C14 Services cost	C15 Systems & Procedures investment	C16 Management turnover	C17 Top management training	C18 Staff communication	C19 Team microculture	C20 Microculture	C21 CAD culture	C22 Communication medium investment	C23 Region microculture
+C1 Personal motivation	0	0.85	0.2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C2 Cost saving	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C3 Knowledge decay	0	0	0	0	0	-0.73	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C4 Knowledge management investment	0	0	0	0	0	0.85	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C5 External knowledge investment	0	-0.9	0	0	0	0.85	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C6 Expert knowledge	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0
+C7 Technology  cost	0	-0.85	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C8 Personal reward	0.9	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C9 Staff turnover	0	0	0	0	0	0	0	0	0	-0.73	0	0	0	0	0	0	0	0	0	0	0	0	0
+C10 Employee expertise states	0.73	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.2	0	0	0	0	0
+C11 Staff training	0	0	0	0	0	0	0	0	0	0.73	0	0	0	0	0	0	0	0	0	0	0	0	0
+C12 Training investment	0	-0.5	0	0	0	1	0	0	0	0	1	0	-0.55	0	0.35	0	1	0	0.58	0	0	0	0
+C13 Staff & Management cost	0	-0.73	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C14 Services cost	0	-0.9	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C15 Systems & Procedures investment	0	-1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.5	0	0.95	0	0
+C16 Management turnover	0	0	0	0	0	0	0	0	0	-0.58	0	0	0	0	0	0	0	0	0	0	0	0	0
+C17 Top management training	0	0	0	0	0	0	0	0	0	0.35	0	0	0	0	0	0	0	0	0	0	0	0	0
+C18 Staff communication	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.65	0	0	0	0
+C19 Team microculture	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0
+C20 Microculture	0	0	0	0	0	0	0	0.73	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+C21 CAD culture	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.5	0	0	0
+C22 Communication medium investment	0	-1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.2	0	0.1	0	0.1
+C23 Region microculture	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0.2	0	0	0

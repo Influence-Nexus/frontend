@@ -1,8 +1,24 @@
 .node-list-container {
-    overflow-y: auto;
-    max-height: 400px;
-    margin-right: 50px;
-  }
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 120px;
+  right: -300px; /* Start off-screen, adjust the value based on your design */
+  width: 300px;
+  min-height: 435px;
+  background-color: #fff;
+  border-radius: 25px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: right 1.3s ease-in-out;
+  z-index: 2;
+}
+
+.node-list-container.visible {
+  right: 0;
+  transition: right 2.3s ease-in-out; 
+}
   
   .node-list li {
     cursor: pointer;
@@ -17,3 +33,23 @@
     background-color: rgba(169, 169, 169, 0.8); /* More pronounced gray for highlighted node */
   }
   
+  .local-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Добавьте стили для выделения вершин и дуг */
+.node-highlight {
+  border-width: 4;
+}
+
+.edge-highlight {
+  width: 4;
+}
+.selected-nodes-list{
+  padding: 15px;
+  border-radius: 25px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

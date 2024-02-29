@@ -1,0 +1,16 @@
+	C1 Differentiation capability	C2 Expansion in new markets	C3 Organisation and processes flexibility	C4 Financial market maturity	C5 Market share	C6 Microculture state	C7 Responsiveness to market changes	C8 Threat of new entrants	C9 New products	C10 Technology investment	C11 Government policy	C12 Level of internal cost	C13 Financial market size	C14 Company profitability	C15 Employee expertise states
+C1 Differentiation capability	0	0	0	0	0.5	0	0	0	0	0	0	0	0	0	0
+C2 Expansion in new markets	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0
+C3 Organisation and processes flexibility	-0.8	0	0	0	0	0	0.8	0	0	0.8	0	0	0	0	0
+C4 Financial market maturity	-0.8	0.85	0	0	0	0	0	0	-0.65	0	0	0	0	0	0
+C5 Market share	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0
+C6 Microculture state	0	0	0.65	0	0	0	0	0	0	0.33	0	0	0	0	0
+C7 Responsiveness to market changes	0	1	0	0	0	0	0	0	0.5	0	0	0	0	0	0
+C8 Threat of new entrants	0	0	0	-0.73	-0.65	0	0	0	-0.58	0	0	0	0	0	0
+C9 New products	0	0.73	0	0	1	0	0	0	0	0	0	0.58	0	0	0
+C10 Technology investment	0	0	0	0	0	0	0.8	0	0.5	0	0	0	0	0	0
+C11 Government policy	0	0	0	0	0	0	0	0	0	0	0	-0.85	0	0	0
+C12 Level of internal cost	0	0	0	0	0	0	0	0	0	0	0	0	0	-1	0
+C13 Financial market size	0	0	0	0	0	0	0	0	0	0	0	0	0	0.35	0
+C14 Company profitability	0	0	0	0	0	0	0	0	0	-0.35	0	0	0	0	0.65
+C15 Employee expertise states	0	0	0	0	0	0	1	0	0	0.2	0	0.73	0	0	0
