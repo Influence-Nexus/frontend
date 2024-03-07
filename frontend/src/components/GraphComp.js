@@ -120,14 +120,14 @@ const GraphComponent = ({ matrixInfo }) => {
             type: 'cubicBezier',
           },
           scaling: {
-            min: 1,
-            max: 1,
+            min: 3.5,
+            max: 3.5,
             label: {
               enabled: true,
-              min: 11,
-              max: 11,
+              min: 19,
+              max: 19,
               maxVisible: 55,
-              drawThreshold: 5,
+              drawThreshold: 8,
             },
           },
           arrows: { middle: { scaleFactor: 0.45, }, to: true },
@@ -142,9 +142,9 @@ const GraphComponent = ({ matrixInfo }) => {
         // },
         nodes: {
           shape: 'circle',
-          size: 40,
+          size: 50,
           font: {
-            size: 14,
+            size: 18,
             align: 'center',
           },
           borderWidth: 2,
@@ -178,7 +178,7 @@ const GraphComponent = ({ matrixInfo }) => {
         allEdges.update(allEdges.get().map(edge => ({
           id: edge.id,
           color: {
-            color: edge.value > 0 ? 'rgba(60, 114, 194, 0.7)' : 'rgba(255, 99, 71, 0.7)', // Green for positive, Red for negative
+            color: edge.value > 0 ? 'rgba(255,239,062,1)' : 'rgba(255,148,56,1)', // Yellow for positive, Orange for negative
           },
         })));
       } else {
@@ -238,7 +238,7 @@ return (
 
           {/* Graph container */}
           {graphData && (
-              <div id="graph-container" style={{ height: '755px', width: '100%', position: 'absolute', top: 210, left: 0 }}></div>
+              <div id="graph-container" style={{ height: '755px', width: '70%', position: 'absolute', top: 375, left: 5, backgroundColor: "rgba(54, 69, 74, 1)", borderRadius: "3%" }}></div>
             )}
             {showNodeList && (
               <div className={`node-list-container ${showNodeList ? 'visible' : ''}`}>
