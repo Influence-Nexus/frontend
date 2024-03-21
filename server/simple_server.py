@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import mysql.connector
 import pandas as pd
+import base64
 
 
 app = Flask(__name__)
@@ -38,6 +39,7 @@ def get_matrices():
                 M.matrix_id,
                 M.matrix_name,
                 M.description,
+                M.image,
                 COUNT(DISTINCT N.node_id) AS node_count,
                 COUNT(DISTINCT E.edge_id) AS edge_count
             FROM Matrices M
@@ -47,9 +49,11 @@ def get_matrices():
             GROUP BY M.matrix_id, M.matrix_name, M.description
         """)
 
+
         matrices = [{'matrix_id': row['matrix_id'],
                      'matrix_name': row['matrix_name'],
                      'description': row['description'],
+                     'image': base64.b64encode(row['image']).decode('utf-8') if row['image'] else "NULL",
                      'node_count': row['node_count'],
                      'edge_count': row['edge_count']} for row in result]
 
@@ -57,6 +61,32 @@ def get_matrices():
 
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+
+@app.route('/calculate_score', methods=['POST'])
+def calculate_score():
+    # Получаем данные о вершинах из запроса
+    vertices = request.json.get('selectedNodes')
+    matrixName = request.json.get('matrixName')
+    print(vertices)
+
+    csv_filename = f"static/cognition/{matrixName}.csv"
+
+    df = pd.read_csv(csv_filename).sort_values(by="Controllability-ensuring index", ascending=False).to_numpy()
+    print(df)
+
+    score = 0
+
+    for key, value in vertices.items():
+        print(key, value)
+        if value == int(df[int(key)][0]):
+            score += float(df[int(key)][-1].replace(',', '.')) * 100
+        else:
+            score -= (100 - float(df[int(key)][-1].replace(',', '.')) * 100) * 0.2
+
+
+
+    return jsonify({'score': score})
 
 
 # Helper function to execute queries and fetch dat
@@ -64,6 +94,7 @@ def get_matrices():
 # Endpoint to get node and edge information for a specific matrix# Endpoint to get node and edge information for a specific matrix
 @app.route('/matrix/<int:matrix_id>')
 def get_matrix_info(matrix_id):
+
     # Query to fetch node and edge information along with matrix details for a matrix by matrix ID
     query = """
 SELECT
@@ -110,16 +141,14 @@ WHERE
             'to': {'id': row['target_id'], 'name': row['target_name'], 'target': row['target_target']},
             'value': row['value']
         })
-    
     # Read CSV file based on matrix name
     csv_filename = f"static/cognition/{matrix_info['matrix_name']}.csv"
-    try:
-        df = pd.read_csv(csv_filename)
-    except FileNotFoundError:
-        return jsonify({'error': f"CSV file for matrix {matrix_info['matrix_name']} not foun"})
+
+    df = pd.read_csv(csv_filename)
 
     # Convert CSV data to JSON
     csv_data = df.to_dict(orient='records')
+    print({'matrix_info': matrix_info, 'edges': edges, 'csv_data': csv_data})
 
     # Return data as JSON
     return jsonify({'matrix_info': matrix_info, 'edges': edges, 'csv_data': csv_data})
