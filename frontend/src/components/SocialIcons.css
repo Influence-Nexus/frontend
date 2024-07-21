@@ -1,0 +1,11 @@
+.social-icons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .social-icons a {
+    color: #ffd700;
+    font-size: 1.5rem;
+    text-decoration: none;
+  }
+  

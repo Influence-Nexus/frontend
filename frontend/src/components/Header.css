@@ -1,0 +1,20 @@
+.App-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav ul li {
+    font-size: 1.2rem;
+    color: #ffd700;
+  }
+  

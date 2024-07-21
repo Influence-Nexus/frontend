@@ -87,7 +87,7 @@ const MatrixDetails = () => {
 
           <Modal show={showSettingsModal} onHide={handleCloseSettingsModal}>
             <Modal.Header closeButton>
-              <Modal.Title>Настройки графа</Modal.Title>
+              <Modal.Title>Cognition</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form>

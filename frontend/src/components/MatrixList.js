@@ -88,7 +88,7 @@ const MatrixList = () => {
 
   return (
     <div className="container mt-4">
-      <h1 className="display-4">Models List</h1>
+      <h1 className="display-4">Model List</h1>
 
       <div className="row mb-3">
         <div className="col">

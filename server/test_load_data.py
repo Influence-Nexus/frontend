@@ -3,10 +3,10 @@ import mysql.connector
 import os
 
 # Replace these values with your own
-host = '91.108.240.55'
-user = 'main_admin'
+host = '185.36.147.31'
+user = 'oko'
 password = 'Accessors231'
-database = 'influence_models'
+database = 'CoDe'
 
 # Подключение к базе данных
 conn = mysql.connector.connect(host=host, user=user, password=password, database=database)
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Edges (
 cursor.execute(create_edges_table_query)
 
 # Директория, содержащая файлы с матрицами
-matrix_files_directory = 'models'
+matrix_files_directory = 'static/models'
 
 # Получение списка файлов в директории
 matrix_files = [f for f in os.listdir(matrix_files_directory) if f.endswith('.txt')]

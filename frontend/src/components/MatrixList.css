@@ -1,6 +1,7 @@
 /* MatrixList.css */
 .matrix-list-container {
     padding: 20px;
+    color: white;
   }
   
   .matrix-cards {
@@ -11,7 +12,6 @@
   
   .matrix-card {
     text-decoration: none;
-    color: black;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;

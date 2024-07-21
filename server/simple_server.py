@@ -9,10 +9,10 @@ app = Flask(__name__)
 CORS(app)
 
 # Replace these values with your own
-host = '91.108.240.55'
-user = 'main_admin'
+host = '185.36.147.31'
+user = 'oko'
 password = 'Accessors231'
-database = 'influence_models'
+database = 'CoDe'
 
 def execute_query(query, params=None):
     conn = mysql.connector.connect(host=host, user=user, password=password, database=database)
@@ -102,9 +102,16 @@ SELECT
     Matrices.description,
     Nodes.node_id AS source_id,
     Nodes.node_name AS source_name,
+    Nodes.node_ru_name AS source_ru_name,
+    Nodes.description AS source_description,
+    Nodes.image AS source_image,
+
     Nodes.target AS source_target,
     Edges.target_node_id AS target_id,
     TargetNodes.node_name AS target_name,
+    TargetNodes.node_ru_name AS target_ru_name,
+    TargetNodes.description AS target_description,
+    TargetNodes.image AS target_image,
     TargetNodes.target AS target_target,
     Edges.value AS value
 FROM
@@ -137,18 +144,17 @@ WHERE
         nodes.add(source_node)
         nodes.add(target_node)
         edges.append({
-            'from': {'id': row['source_id'], 'name': row['source_name'], 'target': row['source_target']},
-            'to': {'id': row['target_id'], 'name': row['target_name'], 'target': row['target_target']},
+            'from': {'id': row['source_id'], 'name': row['source_name'], 'target': row['source_target'], 'ru_name': row['source_ru_name'], 'description': row['source_description'], 'image': base64.b64encode(row['source_image']).decode('utf-8') if row['source_image'] else "NULL"},
+            'to': {'id': row['target_id'], 'name': row['target_name'], 'target': row['target_target'], 'ru_name': row['target_ru_name'], 'description': row['target_description'], 'image': base64.b64encode(row['target_image']).decode('utf-8') if row['target_image'] else "NULL"},
             'value': row['value']
         })
-    # Read CSV file based on matrix name
-    csv_filename = f"static/cognition/{matrix_info['matrix_name']}.csv"
 
-    df = pd.read_csv(csv_filename)
+    # csv_filename = f"static/cognition/{matrix_info['matrix_name']}.csv"
+
+    # df = pd.read_csv(csv_filename)
 
     # Convert CSV data to JSON
-    csv_data = df.to_dict(orient='records')
-    print({'matrix_info': matrix_info, 'edges': edges, 'csv_data': csv_data})
+    csv_data = {}
 
     # Return data as JSON
     return jsonify({'matrix_info': matrix_info, 'edges': edges, 'csv_data': csv_data})

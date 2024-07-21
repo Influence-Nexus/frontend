@@ -6,6 +6,9 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+
 import { FaMedal, FaStar, FaStopwatch  } from 'react-icons/fa';
 
 
@@ -22,6 +25,11 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [moveHistory, setMoveHistory] = useState([]);
   const [lastIndex, setLastIndex] = useState(0);
+  const [hoveredNode, setHoveredNode] = useState(null);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+
+
+
 
 
   const createSelectedNodesDictionary = (selectedNodes, startIndex) => {
@@ -48,6 +56,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
 
   const handleShowHistoryModal = () => setShowHistoryModal(true);
   const handleCloseHistoryModal = () => setShowHistoryModal(false);
+
 
 
   useEffect(() => {
@@ -92,23 +101,25 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
            const toId = indexMap.get(to.id);
    
            if (!nodes.has(fromId)) {
-             nodes.set(fromId, { id: fromId, label: `${fromId}`, title: from.name });
+             nodes.set(fromId, { id: fromId, label: `${fromId}`, title: from.name, ru_name: from.ru_name, description: from.description, image: from.image});
              nodesDataSet.add(nodes.get(fromId));
            }
    
            if (!nodes.has(toId)) {
-             nodes.set(toId, { id: toId, label: `${toId}`, title: to.name });
+             nodes.set(toId, { id: toId, label: `${toId}`, title: to.name, target: to.target, ru_name: to.ru_name, description: to.description,  image: to.image });
    
              // Проверяем, является ли вершина целевой (target) и устанавливаем соответствующий цвет
              if (to.target === 1) {
                nodes.get(toId).color = 'gold';
-               nodes.get(toId).size = 70;
+               nodes.get(toId).font = {
+                size: 25,
+              }
              }
    
              nodesDataSet.add(nodes.get(toId));
            }
    
-           edgesDataSet.add({ id: `${fromId}${toId}`, from: fromId, to: toId, value, label: value.toString(), smooth: { type: "curvedCW", roundness: 0.1 } });
+           edgesDataSet.add({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.ru_name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`,label: value.toString(), smooth: { type: "curvedCW", roundness:edgeRoundness } });
          }
        });
    
@@ -177,7 +188,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
       console.log(lockedNodes);
 
 
-      const options = {
+      const options = {     
         edges: {
           smooth: {
             type: 'cubicBezier',
@@ -195,7 +206,22 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
           },
           arrows: { to: true },
         },
-        physics: physicsEnabled,
+        physics: {
+          enabled: physicsEnabled,
+          barnesHut: {
+            gravitationalConstant: -50000,
+            centralGravity: 0.3,
+            springLength: 95,
+            springConstant: 0.04,
+            damping: 0.09,
+            avoidOverlap: 3.4
+          },
+          stabilization: {
+            enabled: true,
+            iterations: 1000,
+            updateInterval: 25
+          }
+       },
 
         //   repulsion: {
         //     centralGravity: 1,
@@ -208,13 +234,13 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
           size: 40,
           font: {
             size: 14,
+            color: "white",
             align: 'center',
           },
           borderWidth: 2,
           borderWidthSelected: 4,
           color: {
-            border: 'black',
-            background: nodeColor,
+            background: "#0b001a"
 
           },
         },
@@ -234,7 +260,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
         allNodes.update(allNodes.get().map(node => ({
           id: node.id,
           color: {
-            background: selectedNodes.includes(node.id) || lockedNodes[node.id] ? 'gray' : nodeColor,
+            background: selectedNodes.includes(node.id) || lockedNodes[node.id] ? 'gray' : node.target ? "gold" : "#0b001a",
           },
           fixed: lockedNodes[node.id] ? { x: true, y: true } : { x: false, y: false },
           interaction: lockedNodes[node.id] ? false : true, 
@@ -244,7 +270,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
         allEdges.update(allEdges.get().map(edge => ({
           id: edge.id,
           color: {
-            color: edge.value > 0 ? positiveEdgeColor : negativeEdgeColor, // Green for positive, Red for negative
+            color: edge.value > 0 ? "white" : "gold", // Green for positive, Red for negative
           },
         })));
          
@@ -255,12 +281,17 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
         newNetwork.on('hoverNode', (event) => {
           setHighlightedNode(event.node);
           setShowNodeList(true);
+          setHoveredNode(event.node);
+          setCursorPosition({ x: event.pointer.DOM.x, y: event.pointer.DOM.y });
+
 
           
         });
         newNetwork.on('blurNode', () => {
           setHighlightedNode(null);
           setShowNodeList(false);
+          setHoveredNode(null);
+
         });
 
         newNetwork.on('selectNode', (params) => {
@@ -390,7 +421,7 @@ return (
 
       <div class="tab-content" id="pills-tabContent">
           <div class="tab-pane fade show active" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab">
-          <div className="stopwatch-container" style={{ right: 75, position: 'absolute', zIndex: 1 }}>
+          <div className="stopwatch-container" style={{ right: 75, position: 'absolute', zIndex: 1, color: "white" }}>
           <h3>Процесс игры</h3>
           <div>
           <div>
@@ -414,31 +445,78 @@ return (
 
           {/* Graph container */}
           {graphData && (
-              <div id="graph-container" style={{ height: '755px', width: '100%', position: 'absolute', top: 210, left: 0 , zIndex: -1, backgroundColor: backgroundColor}}></div>
+              <div id="graph-container" style={{ height: '755px', width: '100%', position: 'absolute', top: 210, left: 0 , zIndex: -1, backgroundColor: "#0b001a", color: "white" }}></div>
             )}
             {showNodeList && (
               <div className={`node-list-container ${showNodeList ? 'visible' : ''}`}>
-                <h2>Node List</h2>
-                <ul className="node-list">
-                  {graphData.nodes.get().map((node) => (
-                    <li
-                      key={node.id}
-                      className={highlightedNode === node.id ? 'highlighted' : ''}
-                      onMouseEnter={() => setHighlightedNode(node.id)}
-                      onMouseLeave={() => setHighlightedNode(null)}
-                    >{`${node.id} - ${node.title}`}</li>
-                  ))}
-                </ul>
-              </div>
+              <Card>
+                <Card.Header>
+                  <Card.Title>Список вершин:</Card.Title>
+                </Card.Header>
+                <Card.Body>
+                  <ListGroup>
+                    {graphData.nodes.get().map((node) => (
+                      <ListGroup.Item
+                        key={node.id}
+                        action
+                        className={`list-group-item ${highlightedNode === node.id ? 'active' : ''}`}
+                        onMouseEnter={() => setHighlightedNode(node.id)}
+                        onMouseLeave={() => setHighlightedNode(null)}
+                        ref={highlightedNode === node.id ? (element) => element && element.scrollIntoView({ behavior: "smooth", block: "nearest" }) : null}
+
+                      >
+                        {`${node.id} - ${node.title}`}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </Card.Body>
+              </Card>
+            </div>
             )}
+{hoveredNode && (
+  <div 
+    className="card" 
+    style={{ 
+      position: 'absolute', 
+      top: `${cursorPosition.y + 200}px`, 
+      left: `${cursorPosition.x}px`,
+      maxWidth: '555px',
+      maxHeight: '355px', 
+      display: 'grid',
+      gridTemplateColumns: 'auto 1fr',  // первая колонка для изображения, вторая для содержимого
+      alignItems: 'center',  // выровнять элементы по вертикали
+      overflow: 'hidden',  // скрыть излишек содержимого
+
+    }}
+  >
+    <img 
+      src={`data:image/jpeg;base64,${graphData.nodes.get(hoveredNode).image}`} 
+      className="card-img-top" 
+      alt={`Изображение вершины ${graphData.nodes.get(hoveredNode).title}`} 
+      style={{
+        maxHeight: '355px', 
+        objectFit: 'cover',
+        width: 'auto',
+        marginRight: '15px'  // отступ между изображением и текстом
+      }} 
+    />
+    <div className="card-body" style={{ overflowY: 'auto', maxHeight: '300px' }}>
+      <h5 className="card-title">{`${graphData.nodes.get(hoveredNode).title}`}</h5>
+      <p className="card-text">{`${graphData.nodes.get(hoveredNode).description}`}</p>
+    </div>
+  </div>    
+)}
+
+
+
       {selectedNodes.length > 0 && (
         <div className="selected-nodes-list"  style={{ position: 'absolute', top: '240px', right: '320px', zIndex: 1 }}>
-          <h2>Selected Nodes</h2>
-          <ul>
+          <h2>Выбранные факторы:</h2>
+          <ListGroup>
             {selectedNodes.map((nodeId, index) => (
-              <li key={index}>{`${index + 1}|  Node ID: ${nodeId}`}</li>
+              <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1}|  Node ID: ${nodeId}`}</ListGroup.Item>
             ))}
-          </ul>
+          </ListGroup>
           <Button variant="outline-danger" onClick={handleClearSelection}>
             Clear Selection
           </Button>
@@ -469,7 +547,7 @@ return (
               <tr key={index}>
                 <td>{event.elapsedTime} seconds</td>
                 <td>{event.startTime.toLocaleString()}</td>
-                <td>{event.selectedNodes.join(', ')}</td>
+                <td>{event.selectedNodes.map(move => move.selectedNodes.join(', ')).join(', ')}</td>
                 <td>{event.resscore}</td>
               </tr>
             ))}

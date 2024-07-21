@@ -1,0 +1,11 @@
+Model Information:
+* title:	Space Ship Hallway
+* source:	https://sketchfab.com/3d-models/space-ship-hallway-e97dce00ae5549a8a3795e06bc2cfc96
+* author:	yeeyeeman (https://sketchfab.com/yeeyeeman)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Space Ship Hallway" (https://sketchfab.com/3d-models/space-ship-hallway-e97dce00ae5549a8a3795e06bc2cfc96) by yeeyeeman (https://sketchfab.com/yeeyeeman) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
