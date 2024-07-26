@@ -68,26 +68,26 @@ def calculate_score():
     # Получаем данные о вершинах из запроса
     vertices = request.json.get('selectedNodes')
     matrixName = request.json.get('matrixName')
-    print(vertices)
 
-    csv_filename = f"static/cognition/{matrixName}.csv"
 
-    df = pd.read_csv(csv_filename).sort_values(by="Controllability-ensuring index", ascending=False).to_numpy()
-    print(df)
+    # TODO:
+    # Написать функцию, которая на вход принимает имя матрицы (Carbone и тд), а на выходе отправляет словарик  типа Vadimka.json
+    # 
+
+
 
     score = 0
 
-    for key, value in vertices.items():
-        print(key, value)
-        if value == int(df[int(key)][0]):
-            score += float(df[int(key)][-1].replace(',', '.')) * 100
-        else:
-            score -= (100 - float(df[int(key)][-1].replace(',', '.')) * 100) * 0.2
-
-
-
     return jsonify({'score': score})
 
+@app.route('/get_cognition', methods=['POST'])
+def calculate_score():
+    # Получаем с БД по индексу данные по матрице
+
+    # TODO:
+    # Написать функцию, которая на вход принимает имя матрицы (Carbone и тд), а на выходе отправляет таблицу x, u, x², u²/SUM(u²)
+
+    return "NONE"
 
 # Helper function to execute queries and fetch dat
 
