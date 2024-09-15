@@ -14,6 +14,7 @@ const SolarSystem = () => {
 
   return (
     <div className="solar-system">
+      <h1 style={{color: "white"}}>Challenge your mind</h1>
       <Canvas style={{ height: "100vh" }}>
         <ambientLight intensity={0.1} />
         <directionalLight position={[5, 5, 5]} />
