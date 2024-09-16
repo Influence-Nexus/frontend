@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { FaCog, FaInfoCircle } from 'react-icons/fa'; // Импортируем иконки FaCog и FaInfoCircle из react-icons/fa
-import GraphComponent from './GraphComp';
+import GraphComponent from '../GraphComp/GraphComp';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Graph.css'; // Импортируем файл CSS для стилизации
+import '../GraphComp/Graph.css'; // Импортируем файл CSS для стилизации
 
 const MatrixDetails = () => {
   const { matrix_id } = useParams();

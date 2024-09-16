@@ -2,7 +2,7 @@ import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import Spaceship from './Spaceship';
-import GameInfo from './GameInfo';
+import GameInfo from '../UsersPages/GameInfo';
 import "./SpaceshipView.css"
 
 function SpaceshipView() {
