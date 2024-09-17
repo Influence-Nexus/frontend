@@ -8,9 +8,15 @@ const Header = () => {
       <SocialIcons />
       <nav>
         <ul>
-          <li>Главная</li>
-          <li>Контакты</li>
-          <li>О проекте</li>
+          <li>
+            <a href="/">Главная</a>
+          </li>
+          <li>
+            <a href="/">Контакты</a>
+          </li>
+          <li>
+            <a href="/">О проекте</a>
+          </li>
         </ul>
       </nav>
     </header>

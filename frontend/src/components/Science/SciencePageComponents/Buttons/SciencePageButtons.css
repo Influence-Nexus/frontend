@@ -1,4 +1,4 @@
-.SciencePage-div button {
+.SciencePageButtons-div button {
   color: white;
   border: 1px solid white;
   height: 3.5rem;
@@ -9,11 +9,16 @@
   padding: 0;
 }
 
-.SciencePage-div p {
+.SciencePageButtons-div p {
   margin: 0;
 }
 
-.SciencePage-div {
+.SciencePageButtons-div a {
+  text-decoration: none;
+  color: white
+}
+
+.SciencePageButtons-div {
   display: flex;
   gap: 1.5em;
   margin-left: 7.5em;
@@ -31,10 +36,15 @@
   margin-right: 1rem;
 }
 
+#science-button a {
+  display: flex;
+  align-items: center;
+}
+
 #game-button {
   background-color: #342b41;
 }
 
 #sp-h1 {
-  margin: 2.8rem 0 2.7rem 7.5rem;
+  margin: 2.5em 0 0 7.5rem;
 }

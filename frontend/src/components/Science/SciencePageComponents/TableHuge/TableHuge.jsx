@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import "./TableHuge.css";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const TableHeader1 = [
-  { title: "Cognition", width: "264px", colSpan: 2 },
-  { title: "Player", width: "264px", colSpan: 2 },
+  { title: "Cognition", width: "240px", colSpan: 2 },
+  { title: "Player", width: "240px", colSpan: 2 },
 ];
 
 const TableHeader2 = [
-  { title: "ID", width: "45px" },
-  { title: "Score", width: "161px" },
-  { title: "S", width: "161px" },
-  { title: "Score", width: "161px" },
+  { title: "ID", key: "ID", width: "60px" },
+  { title: "Score", key: "Score1", width: "160px" },
+  { title: "S", key: "S", width: "60px" },
+  { title: "Score", key: "Score2", width: "160px" },
 ];
 
 const generateRandomData = () => {
@@ -29,6 +31,30 @@ const generateRandomData = () => {
 
 export const TableHuge = () => {
   const [data, setData] = useState(generateRandomData());
+
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
+  const [hoveredSortButton, setHoveredSortButton] = useState(null);
+
+  const onSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === "ascending" ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === "ascending" ? 1 : -1;
+    }
+    return 0;
+  });
 
   return (
     <div className="table-container">
@@ -49,15 +75,33 @@ export const TableHuge = () => {
           {/* Вторая строка заголовков */}
           <tr>
             {TableHeader2.map((header, index) => (
-              <th key={index} style={{ width: header.width }}>
+              <th
+                key={index}
+                style={{
+                  width: header.width,
+                  position: "relative",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={() => setHoveredSortButton(index)}
+                onMouseLeave={() => setHoveredSortButton(null)}
+                onClick={() => onSort(header.key)}
+              >
                 {header.title}
+                {(hoveredSortButton === index ||
+                  sortConfig.key === header.key) &&
+                  (sortConfig.key === header.key &&
+                  sortConfig.direction === "ascending" ? (
+                    <KeyboardArrowDownIcon style={{ marginLeft: "5px" }} />
+                  ) : (
+                    <KeyboardArrowUpIcon style={{ marginLeft: "5px" }} />
+                  ))}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {/* Строки с данными */}
-          {data.map((row, index) => (
+          {sortedData.map((row, index) => (
             <tr key={index}>
               <td>{row.ID}</td>
               <td>{row.Score1}</td>
