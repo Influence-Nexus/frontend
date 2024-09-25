@@ -1,5 +1,5 @@
-import React from 'react';
-import './MainContent.css';
+import React from "react";
+import "./MainContent.css";
 
 const MainContent = () => {
   return (
@@ -14,12 +14,15 @@ const MainContent = () => {
         <span className="decision">DECISION</span>
       </div>
       <div className="buttons">
-        <button className="play-button">Играть</button>
-        <button className="about-button">О проекте</button>
+        <a href="/solar">
+          <button className="play-button">Играть</button>
+        </a>
+        <a href="/about">
+          <button className="about-button">О проекте</button>
+        </a>
       </div>
     </main>
   );
-}
+};
 
 export default MainContent;
-    

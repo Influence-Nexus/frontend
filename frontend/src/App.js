@@ -10,6 +10,7 @@ import MainContent from './components/MainContent/MainContent';
 import SolarSystem from './components/SoralSystem/SolarSystem';
 import SpaceshipView from './components/SpaceShip/SpaceshipView';
 import { SciencePage } from './components/Science/Page/SciencePage';
+import { About } from './components/AboutPage/About';
 
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<MainContent />} />
+        <Route path='/about' element={<About />} />
         <Route path="/matrix/:matrix_id" element={<MatrixDetails />} />
         <Route path="/model" element={<Graph />} />
         <Route path="/cabine" element={<SpaceshipView />} />

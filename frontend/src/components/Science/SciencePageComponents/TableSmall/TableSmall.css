@@ -3,18 +3,21 @@
   height: 336px;
   color: white;
   margin-left: 7.5em;
-  
+  max-height: 300px;
+  overflow-y: scroll;  
 }
 
 .small-table-container table {
   width: 100%;
+  text-align: center;
+  border-collapse: collapse;
 }
 
 .small-table-container th,
 td {
   border: 1px solid #ddd;
   padding: 0;
-  text-align: center;
   height: 48px;
+
 }
 

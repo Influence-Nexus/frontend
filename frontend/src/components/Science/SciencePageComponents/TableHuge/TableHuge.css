@@ -3,7 +3,8 @@
     height: 336px;
     color: white;
     margin-right: 7.5em;
-    
+    max-height: 300px;
+    overflow-y: scroll;  
   }
   
 .table-container table {
@@ -16,6 +17,7 @@
   td {
     padding: 10px;
     border: 1px solid white;
+    max-height: 45px;
   }
   
   

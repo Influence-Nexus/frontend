@@ -5,16 +5,31 @@
 }
 
 .Conditions-div {
-    margin: 6em 0 0 7.5em;
-}
-
-.Conditions-div p{
-    color: white;
-    font-size: 25px;
+  margin: 2.5em 0 0 7.5em;
 }
 
 .Conditions-div h1 {
-    color: white;
-    font-size: 65px;
-    width: 310px;
+  color: white;
+  font-size: 65px;
+  width: 310px;
+}
+
+.Restrictions-div {
+  color: white;
+}
+
+.Restrictions-div h1 {
+  color: white;
+  font-size: 65px;
+  width: 310px;
+}
+
+.Restrictions-div p {
+  color: white;
+  font-size: 25px;
+}
+
+.Conditions-Restrictins-div {
+  display: flex;
+  gap: 33.5em;
 }
