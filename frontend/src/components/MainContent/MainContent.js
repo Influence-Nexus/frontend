@@ -1,7 +1,25 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './MainContent.css';
 
 const MainContent = () => {
+  const audioRef = useRef(null);
+
+  const playMusic = () => {
+    const music = document.getElementById('backgroundMusic');
+    if (music) {
+      music.play().catch((error) => {
+        console.error('Не удалось запустить музыку:', error);
+      });
+    }
+  };
+
+  const pauseMusic = () => {
+    const music = document.getElementById('backgroundMusic');
+    if (music) {
+      music.pause();
+    }
+  };
+
   return (
     <main>
       <h1>Challenge your mind!</h1>
@@ -14,7 +32,7 @@ const MainContent = () => {
         <span className="decision">DECISION</span>
       </div>
       <div className="buttons">
-        <button className="play-button">Играть</button>
+        <button className="play-button" onClick={playMusic}>Играть</button>
         <button className="about-button">О проекте</button>
       </div>
     </main>
