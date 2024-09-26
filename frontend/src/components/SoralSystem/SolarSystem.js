@@ -15,7 +15,17 @@ const SolarSystem = () => {
 
   return (
     <div className="solar-system">
-      <h1 style={{color: "white"}}>Challenge your mind</h1>
+      <div style={{ position: 'absolute', top: '240px', left: '320px', zIndex: 1 }}  >
+
+      <h1 style={{color: "white", fontSize:"80px ", right:"80px"}}>
+            Звёздная система Al-Dafira<br></br>
+Pick a planet:
+            
+            
+          </h1>
+
+      </div>
+      
       <Canvas style={{ height: "100vh" }}>
         <ambientLight intensity={0.1} />
         <directionalLight position={[5, 5, 5]} />
@@ -63,7 +73,7 @@ const Sun = ({ sunRef }) => {
       <sphereGeometry args={[1, 32, 32]} />
       <meshStandardMaterial emissive={"#f5be76"} emissiveIntensity={7} />
       <Text position={[0, -3.5, 0]} fontSize={0.8} color="#ffffff">
-        Аль-Дафира
+        THIS IS A SUUUUUUN
       </Text>
     </mesh>
   );

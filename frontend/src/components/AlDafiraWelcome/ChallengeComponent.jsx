@@ -25,15 +25,13 @@ const ChallengeComponent = () => {
           alt=""
         />
         <div className={styles.contentWrapper}>
-          <h1 className={styles.challengeTitle}>
+          <h1 style={{color: "white", fontSize:"80px "}}>
             Challenge your mind <span style={{ fontFamily: 'Reggae One, sans-serif' }}>!</span>
           </h1>
-          <p className={styles.invitationText}>
-            Приглашаем Вас в звездную систему{' '}
-            <span className={styles.highlightedText}>Al-Dafira</span>{' '}
-            в Северном созвездии{' '}
-            <span className={styles.highlightedText}>Coma Berenices</span>
-          </p>
+          <h1 style={{color: "white", fontSize:"120px ", right:"80px"}}>
+          Coma Berenices 
+          </h1>
+          
           <button className={styles.ctaButton} onClick={handleGoClick}>
             GO
           </button>
