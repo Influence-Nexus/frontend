@@ -10,11 +10,11 @@ export const SciencePage = () => {
     <div>
       <SciencePageButtons />
       <h1 id='sp-h1'>Model: name</h1>
+      <Conditions />
       <div className='Tables-Comp-Div'>
       <TableSmall />
       <TableHuge />
       </div>
-      <Conditions />
     </div>
   )
 }

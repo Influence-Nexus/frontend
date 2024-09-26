@@ -13,10 +13,20 @@ main {
     font-family: 'Monospace', sans-serif;
     font-size: 4rem;
     display: flex;
+    justify-content: center;
     gap: 0.5rem;
     color: #ffd700;
   }
   
+  .codemain{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+  }
+
   .words {
     font-size: 3rem;
     display: flex;

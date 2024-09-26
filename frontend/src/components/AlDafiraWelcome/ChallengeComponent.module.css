@@ -1,0 +1,219 @@
+.challengeContainer {
+
+  display: flex;
+
+  flex-direction: column;
+
+  color: #fff;
+
+}
+
+.fullScreenVideo {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000; /* Установите высокий z-index, чтобы видео было поверх остальных элементов */
+  object-fit: cover; /* Масштабирует видео, чтобы оно заполнило весь экран, сохраняя пропорции */
+}
+
+
+.heroSection {
+
+  display: flex;
+
+  flex-direction: column;
+
+  position: relative;
+
+  min-height: 1250px;
+
+  width: 100%;
+
+  align-items: center;
+
+  padding: 61px 80px 223px;
+
+}
+
+
+@media (max-width: 991px) {
+
+  .heroSection {
+
+    max-width: 100%;
+
+    padding: 0 20px 100px;
+
+  }
+
+}
+
+
+.backgroundImage {
+
+  position: absolute;
+
+  inset: 0;
+
+  height: 100%;
+
+  width: 100%;
+
+  object-fit: cover;
+
+  object-position: center;
+
+}
+
+.contentWrapper {
+
+  position: relative;
+
+  display: flex;
+
+  margin-bottom: -45px;
+
+  width: 1322px;
+
+  max-width: 100%;
+
+  flex-direction: column;
+
+  align-items: center;
+
+}
+
+
+@media (max-width: 991px) {
+
+  .contentWrapper {
+
+    margin-bottom: 10px;
+
+  }
+
+}
+
+
+.challengeTitle {
+
+  font: 400 96px Moon Dance, -apple-system, Roboto, Helvetica, sans-serif;
+
+}
+
+
+@media (max-width: 991px) {
+
+  .challengeTitle {
+
+    max-width: 100%;
+
+    font-size: 40px;
+
+  }
+
+}
+
+.invitationText {
+
+  text-align: center;
+
+  align-self: stretch;
+
+  margin-top: 324px;
+
+  font: 500 64px Montserrat Alternates, -apple-system, Roboto, Helvetica, sans-serif;
+
+}
+
+
+@media (max-width: 991px) {
+
+  .invitationText {
+
+    max-width: 100%;
+
+    margin-top: 40px;
+
+    font-size: 40px;
+
+  }
+
+}
+
+
+.ctaButton {
+
+  background-color: #ffe81c;
+
+  margin-top: 237px;
+
+  width: 244px;
+
+  max-width: 100%;
+
+  overflow: hidden;
+
+  color: #000;
+
+  white-space: nowrap;
+
+  padding: 11px 70px;
+
+  font: 700 36px Montserrat, -apple-system, Roboto, Helvetica, sans-serif;
+
+  border: 1px solid #ffe81c;
+
+  cursor: pointer;
+
+}
+
+@media (max-width: 991px) {
+
+  .ctaButton {
+
+    margin-top: 40px;
+
+    white-space: initial;
+
+    padding: 0 20px;
+
+  }
+
+}
+
+
+.visually-hidden {
+
+  position: absolute;
+
+  width: 1px;
+
+  height: 1px;
+
+  padding: 0;
+
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+
+  border: 0;
+
+}
+
+
+.highlightedText {
+
+  font-weight: 400;
+
+  color: #ffe600;
+
+}
+
+

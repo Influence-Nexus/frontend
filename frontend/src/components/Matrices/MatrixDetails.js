@@ -45,20 +45,16 @@ const MatrixDetails = () => {
 
   return (
     <div className="container mt-4">
-      {matrixInfo.matrix_info && (
+      {matrixInfo && (
         <div>
           <div className='local-header' style={{ zIndex: 12 }}>
             <div>
-              <h1 className="display-6">{matrixInfo.matrix_info.matrix_name}</h1>
+              <h1 className="display-6">{matrixInfo.matrix_name}</h1>
 
               <Button variant="primary" onClick={handleOpenModal} style={{ zIndex: 1000 }}>
                 <FaInfoCircle /> Показать описание {/* Иконка FaInfoCircle внутри кнопки */}
               </Button>
-
-              <Button variant="success" onClick={handleOpenSettingsModal} style={{ marginLeft: '10px' }}>
-                <FaCog /> {/* Иконка FaCog внутри кнопки */}
-                Настройки графа
-              </Button>
+              
             </div>
           </div>
 
@@ -80,9 +76,9 @@ const MatrixDetails = () => {
 
           <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
-              <Modal.Title>{matrixInfo.matrix_info.matrix_name}</Modal.Title>
+              <Modal.Title>{matrixInfo.matrix_name}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>{matrixInfo.matrix_info.description}</Modal.Body>
+            <Modal.Body>{matrixInfo.description}</Modal.Body>
           </Modal>
 
           <Modal show={showSettingsModal} onHide={handleCloseSettingsModal}>
@@ -138,7 +134,7 @@ const MatrixDetails = () => {
         </div>
       )}
 
-      {!matrixInfo.matrix_info && <p>Загрузка...</p>}
+      {!matrixInfo && <p>Загрузка...</p>}
     </div>
   );
 };

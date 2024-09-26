@@ -1,6 +1,7 @@
 import React from "react";
 import "./Header.css";
 import SocialIcons from "./SocialIcons";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -8,7 +9,7 @@ const Header = () => {
       <SocialIcons />
       <nav>
         <ul>
-          <li>Главная</li>
+          <li><Link style={{color:"#ffd700"}} to={"/"}>Главная</Link></li>
           <li>Контакты</li>
           <li>О проекте</li>
         </ul>

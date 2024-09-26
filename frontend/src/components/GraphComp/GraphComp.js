@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
 import './Graph.css'; // Import the CSS file for styling
 import 'bootstrap/dist/css/bootstrap.min.css'; // Подключаем файл стилей Bootstrap
@@ -8,6 +9,10 @@ import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import KeyIcon from "@mui/icons-material/Key";
+
+import "../Science/SciencePageComponents/Buttons/SciencePageButtons.css";
+
 
 import { FaMedal, FaStar, FaStopwatch  } from 'react-icons/fa';
 
@@ -75,6 +80,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
     if (matrixInfo) {
        console.log(matrixInfo);
        const edges = matrixInfo.edges;
+       const oldnodes = matrixInfo.nodes;
    
        const nodes = new Map();
        const nodesDataSet = new DataSet();
@@ -96,17 +102,18 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
        });
    
        edges.forEach(({ from, to, value }) => {
+        console.log(from, to, value)
          if (value !== 0) {
-           const fromId = indexMap.get(from.id);
-           const toId = indexMap.get(to.id);
+           const fromId = from;
+           const toId = to;
    
            if (!nodes.has(fromId)) {
-             nodes.set(fromId, { id: fromId, label: `${fromId}`, title: from.name, ru_name: from.ru_name, description: from.description, image: from.image});
+             nodes.set(fromId, { id: fromId, label: `${fromId}`, title: oldnodes[fromId].name, description: from.description});
              nodesDataSet.add(nodes.get(fromId));
            }
    
            if (!nodes.has(toId)) {
-             nodes.set(toId, { id: toId, label: `${toId}`, title: to.name, target: to.target, ru_name: to.ru_name, description: to.description,  image: to.image });
+             nodes.set(toId, { id: toId, label: `${toId}`, title: oldnodes[fromId].name, target: to.target, description: to.description });
    
              // Проверяем, является ли вершина целевой (target) и устанавливаем соответствующий цвет
              if (to.target === 1) {
@@ -118,8 +125,17 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
    
              nodesDataSet.add(nodes.get(toId));
            }
-   
-           edgesDataSet.add({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.ru_name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`,label: value.toString(), smooth: { type: "curvedCW", roundness:edgeRoundness } });
+
+           console.log({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`,label: value.toString(), smooth: { type: "curvedCW", roundness:edgeRoundness } })
+  
+           try{
+            edgesDataSet.add({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`,label: value.toString(), smooth: { type: "curvedCW", roundness:edgeRoundness } });
+
+           }catch (e) {
+            // инструкции для обработки ошибок
+            console.log(e);
+          }
+          
          }
        });
    
@@ -376,15 +392,19 @@ return (
     <button class="nav-link active" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph" type="button" role="tab" aria-controls="pills-graph" aria-selected="true">Graph</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-history-tab" data-bs-toggle="pill" data-bs-target="#pills-history" type="button" role="tab" aria-controls="pills-history" aria-selected="false">History</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
-  </li>
+
+<button class="nav-link" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph" type="button" role="tab" aria-controls="pills-graph" aria-selected="true">  <Link to={"/science"}>Science</Link>
+  <KeyIcon key={0} />
+  <KeyIcon key={1} />
+  <KeyIcon key={2} /></button>
+
+</li>
+    {/* <li class="nav-item" role="presentation">
+      <button class="nav-link" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+    </li> */}
 </ul>
-<Button variant="primary" onClick={handleShowHistoryModal} style={{top: '20px', left: '244px', position: 'absolute', zIndex: 1 }}>
-  Show History
-</Button>
+
+
 
 <Modal show = {showHistoryModal} onHide={handleCloseHistoryModal} backdrop="static" keyboard={false}>
   <Modal.Header closeButton>
@@ -473,7 +493,7 @@ return (
               </Card>
             </div>
             )}
-{hoveredNode && (
+{/* {hoveredNode && (
   <div 
     className="card" 
     style={{ 
@@ -505,7 +525,7 @@ return (
       <p className="card-text">{`${graphData.nodes.get(hoveredNode).description}`}</p>
     </div>
   </div>    
-)}
+)} */}
 
 
 

@@ -14,16 +14,20 @@ export const SciencePageButtons = () => {
   };
 
   return (
-    <div className="SciencePage-div">
+    <div className="SciencePageButtons-div">
       <button id="game-button">
-        <p>Game</p>
+        <a href="/solar">
+          <p>Game</p>
+        </a>
       </button>
 
       <button id="science-button" onClick={() => handleCheckSequence()}>
-        <p>Science</p>
-        {Array.from({ length: science }, (_, index) => (
-          <KeyIcon key={index} />
-        ))}
+        <a href="/science">
+          <p>Science</p>
+          {Array.from({ length: science }, (_, index) => (
+            <KeyIcon key={index} sx={{marginRight: "4px"}}/>
+          ))}
+        </a>
       </button>
     </div>
   );

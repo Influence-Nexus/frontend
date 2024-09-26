@@ -1,21 +1,22 @@
 .table-container {
-    width: 525px;
-    height: 336px;
-    color: white;
-    margin-right: 7.5em;
-    
-  }
-  
+  width: 525px;
+  height: 336px;
+  color: white;
+  margin-right: 7.5em;
+  max-height: 300px;
+  overflow-y: scroll;  
+}
+
 .table-container table {
-  width: 100%;
-  text-align: center;
-  border-collapse: collapse;
-  }
-  
+width: 100%;
+text-align: center;
+border-collapse: collapse;
+}
+
 .table-container th,
-  td {
-    padding: 10px;
-    border: 1px solid white;
-  }
-  
-  
+td {
+  padding: 10px;
+  border: 1px solid white;
+  max-height: 45px;
+}
+

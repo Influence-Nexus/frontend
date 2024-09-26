@@ -21,7 +21,7 @@ const MainContent = () => {
   };
 
   return (
-    <main>
+    <main className='codemain'>
       <h1>Challenge your mind!</h1>
       <div className="code">
         <span className="co">Co</span>

@@ -3,6 +3,7 @@ import { Canvas, useLoader, useFrame, useThree } from '@react-three/fiber';
 import { EffectComposer, GodRays } from '@react-three/postprocessing';
 import { OrbitControls, Stars, Html, Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { Link } from 'react-router-dom';
 import { Carousel, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css'; // Import the CSS file for styling
@@ -167,17 +168,27 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
     ]
   };
 
+  const cardcreds = {
+    "Blue-Green": {"name": "Blue-Green", "desc": "Жители планеты Blue-Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений."},
+    "Violet": {"name": "Violet", "desc": "Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей."},
+    "Orange": {"name": "Orange", "desc": "Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей."},
+
+  }
+
   return (
       <div className=" planet-cardcard text-white bg-dark mb-3">
 
+
       <div className="segment-cards">
+      <h1 style={{fontSize: "80px"}}>{cardcreds[selectedPlanet.name].name}</h1>
+      <h3>{cardcreds[selectedPlanet.name].desc}</h3>
         {cards[selectedPlanet.name].map((segment, index) => (
           <div key={segment.index} className={`card text-white bg-secondary mb-3 segment-card segment-card-${index}`}>
             <div className="card-header">{segment.title}</div>
             <div className="card-body">
             <img className="d-block w-100" src={segment.image} alt={segment.title} />
               <p className="card-text">{segment.description}</p>
-              <a href={segment.link} target="_blank" rel="noopener noreferrer" className="btn btn-primary mt-1">Learn More</a>
+              <a href={segment.link} target="_blank" rel="noopener noreferrer" className="btn btn-primary mt-1"> <Link to={`/matrix/${index + 1}`}>Играть</Link> </a>
             </div>
           </div>
         ))}

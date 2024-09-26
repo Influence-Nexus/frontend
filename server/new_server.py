@@ -21,6 +21,8 @@ for filename in os.listdir(matrix_files_directory):
         matrix_ids[matrix_id_counter] = matrix_name
         matrix_id_counter += 1
 
+print(matrix_ids)
+
 
 def get_matrix_data(matrix_id):
     """
@@ -88,6 +90,7 @@ def get_matrices():
 def get_matrix_info(matrix_id):
     try:
         matrix_data = get_matrix_data(matrix_id)
+        print(matrix_data)
         if matrix_data:
 
             return jsonify({
