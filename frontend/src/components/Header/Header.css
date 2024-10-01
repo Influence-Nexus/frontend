@@ -1,21 +1,32 @@
 .App-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-  }
-  
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-    margin: 0;
-    padding: 0;
-  }
-  
-  nav ul li {
-    font-size: 1.2rem;
-    color: #ffd700;
-    
-  }
-  
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.App-header a {
+  color: white;
+  text-decoration: none;
+}
+
+.App-header a:hover {
+  color: #ffd700;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  font-size: 1.2rem;
+  color: white;
+}
+
+nav ul li:hover {
+  color: #ffd700;
+}

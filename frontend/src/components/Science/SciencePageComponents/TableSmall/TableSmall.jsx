@@ -4,11 +4,31 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const TableHeader = [
-  { title: "ID", key: "ID", width: "50px" },
-  { title: "Response", key: "Response", width: "120px" },
-  { title: "Impact", key: "Impact", width: "120px" },
-  { title: "Eff_in", key: "Eff_in", width: "120px" },
-  { title: "Control_in", key: "Control_in", width: "120px" },
+  { title: "ID", key: "ID", width: "75px", height: "75px" },
+  {
+    title: "Реакция (отклик) модели на внешнее воздействие",
+    key: "Response",
+    width: "170px",
+    height: "75px",
+  },
+  {
+    title: "Сила внешнего воздействия",
+    key: "Impact",
+    width: "200px",
+    height: "75px",
+  },
+  {
+    title: "Взвешенная реакция",
+    key: "Eff_in",
+    width: "120px",
+    height: "75px",
+  },
+  {
+    title: "Взвешенное воздействие",
+    key: "Control_in",
+    width: "120px",
+    height: "75px",
+  },
 ];
 
 const generateRandomData = () => {
@@ -52,50 +72,71 @@ export const TableSmall = () => {
   });
 
   return (
-    <div className="small-table-container">
-      <table>
-        <thead>
-          <tr>
-            {TableHeader.map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  width: header.width,
-                  position: "relative",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={() => setHoveredSortButton(index)}
-                onMouseLeave={() => setHoveredSortButton(null)}
-                onClick={() => onSort(header.key)}
-              >
-                {header.title}
-                {(hoveredSortButton === index || sortConfig.key === header.key) &&
-                  (sortConfig.key === header.key && sortConfig.direction === "ascending" ? (
-                    <KeyboardArrowDownIcon style={{ marginLeft: "5px" }} />
-                  ) : (
-                    <KeyboardArrowUpIcon style={{ marginLeft: "5px" }} />
-                  ))}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {sortedData.map((row, index) => (
-            <tr key={index}>
-              {TableHeader.map((header, columnIndex) => (
-                <td
-                  key={columnIndex}
+    <div id="small-table-alignment-div">
+      <h2 id="small-table-name">
+        Откилки и воздействия, расчитанные алгоритмом [
+        <a href="https://arxiv.org">1</a>]
+      </h2>
+      <ol id="steps-list">
+      <li>
+          <p>Find the strength of each node from</p>
+        </li>
+        <li>
+          <p>Compare the result of the first table with your points obtained during the game</p>
+        </li>
+        <li>
+          <p>Play with our data and check your points</p>
+        </li>
+      </ol>
+
+      <div className="small-table-container">
+        <table>
+          <thead>
+            <tr>
+              {TableHeader.map((header, index) => (
+                <th
+                  key={index}
                   style={{
                     width: header.width,
+                    height: header.height,
+                    position: "relative",
+                    cursor: "pointer",
                   }}
+                  onMouseEnter={() => setHoveredSortButton(index)}
+                  onMouseLeave={() => setHoveredSortButton(null)}
+                  onClick={() => onSort(header.key)}
                 >
-                  {row[header.key]}
-                </td>
+                  {header.title}
+                  {(hoveredSortButton === index ||
+                    sortConfig.key === header.key) &&
+                    (sortConfig.key === header.key &&
+                    sortConfig.direction === "ascending" ? (
+                      <KeyboardArrowDownIcon />
+                    ) : (
+                      <KeyboardArrowUpIcon />
+                    ))}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {sortedData.map((row, index) => (
+              <tr key={index}>
+                {TableHeader.map((header, columnIndex) => (
+                  <td
+                    key={columnIndex}
+                    style={{
+                      width: header.width,
+                    }}
+                  >
+                    {row[header.key]}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

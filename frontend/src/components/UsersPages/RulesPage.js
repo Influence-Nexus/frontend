@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const RulesPage = () => {
     return (
-      <div className="container mt-5">
+      <div className="container mt-5" style={{color: "white"}}>
         <h1 className="mb-4">Правила игры в Influence Nexus</h1>
         <h2>Основные принципы</h2>
         <p>

@@ -1,22 +1,30 @@
-.table-container {
-  width: 525px;
-  height: 336px;
+.huge-table-container {
   color: white;
-  margin-right: 7.5em;
-  max-height: 300px;
-  overflow-y: scroll;  
+  max-height: 400px;
+  overflow-y: auto;  
 }
 
-.table-container table {
+.huge-table-container table {
 width: 100%;
 text-align: center;
 border-collapse: collapse;
 }
 
-.table-container th,
+.huge-table-container th,
 td {
   padding: 10px;
   border: 1px solid white;
-  max-height: 45px;
+  max-height: 50px;
 }
 
+#huge-table-name {
+  color: white;
+  height: 72px;
+  align-content: center;
+  font-size: 28px;
+}
+
+#huge-table-alignment-div{
+  margin-right: 3em;
+  width: 690px;
+}

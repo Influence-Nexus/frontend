@@ -9,7 +9,7 @@ const Header = () => {
       <SocialIcons />
       <nav>
         <ul>
-          <li><Link style={{color:"#ffd700"}} to={"/"}>Главная</Link></li>
+          <li><Link to={"/"}>Главная</Link></li>
           <li>Контакты</li>
           <li>О проекте</li>
         </ul>

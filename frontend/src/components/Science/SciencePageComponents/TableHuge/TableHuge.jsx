@@ -4,15 +4,15 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const TableHeader1 = [
-  { title: "Cognition", width: "240px", colSpan: 2 },
-  { title: "Player", width: "240px", colSpan: 2 },
+  { title: "Расчётные данные", width: "300px", colSpan: 2 },
+  { title: "Ваш игровой результат", width: "300px", colSpan: 2 },
 ];
 
 const TableHeader2 = [
-  { title: "ID", key: "ID", width: "60px" },
-  { title: "Score", key: "Score1", width: "160px" },
-  { title: "S", key: "S", width: "60px" },
-  { title: "Score", key: "Score2", width: "160px" },
+  { title: "Вершина", key: "ID", width: "150px", height: "75px" },
+  { title: "Счёт", key: "Score1", width: "240px", height: "75px" },
+  { title: "Вершина", key: "S", width: "150px", height: "75px" },
+  { title: "Счёт", key: "Score2", width: "240px", height: "75px" },
 ];
 
 const generateRandomData = () => {
@@ -57,67 +57,71 @@ export const TableHuge = () => {
   });
 
   return (
-    <div className="table-container">
-      <table>
-        <thead>
-          {/* Первая строка заголовков */}
-          <tr>
-            {TableHeader1.map((header, index) => (
-              <th
-                key={index}
-                colSpan={header.colSpan}
-                style={{ width: header.width }}
-              >
-                {header.title}
-              </th>
-            ))}
-          </tr>
-          {/* Вторая строка заголовков */}
-          <tr>
-            {TableHeader2.map((header, index) => (
-              <th
-                key={index}
-                style={{
-                  width: header.width,
-                  position: "relative",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={() => setHoveredSortButton(index)}
-                onMouseLeave={() => setHoveredSortButton(null)}
-                onClick={() => onSort(header.key)}
-              >
-                {header.title}
-                {(hoveredSortButton === index ||
-                  sortConfig.key === header.key) &&
-                  (sortConfig.key === header.key &&
-                  sortConfig.direction === "ascending" ? (
-                    <KeyboardArrowDownIcon style={{ marginLeft: "5px" }} />
-                  ) : (
-                    <KeyboardArrowUpIcon style={{ marginLeft: "5px" }} />
-                  ))}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {/* Строки с данными */}
-          {sortedData.map((row, index) => (
-            <tr key={index}>
-              <td>{row.ID}</td>
-              <td>{row.Score1}</td>
-              <td>{row.S}</td>
-              <td>{row.Score2}</td>
+    <div id="huge-table-alignment-div">
+      <h2 id="huge-table-name">Сравнительная таблица</h2>
+      <div className="huge-table-container">
+        <table>
+          <thead>
+            {/* Первая строка заголовков */}
+            <tr>
+              {TableHeader1.map((header, index) => (
+                <th
+                  key={index}
+                  colSpan={header.colSpan}
+                  style={{ width: header.width }}
+                >
+                  {header.title}
+                </th>
+              ))}
             </tr>
-          ))}
-          {/* Последняя строка с символом суммы */}
-          <tr>
-            <td>Σ</td>
-            <td>{data.reduce((sum, row) => sum + row.Score1, 0)}</td>
-            <td>{data.reduce((sum, row) => sum + row.S, 0)}</td>
-            <td>{data.reduce((sum, row) => sum + row.Score2, 0)}</td>
-          </tr>
-        </tbody>
-      </table>
+            {/* Вторая строка заголовков */}
+            <tr>
+              {TableHeader2.map((header, index) => (
+                <th
+                  key={index}
+                  style={{
+                    width: header.width,
+                    height: header.height,
+                    position: "relative",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={() => setHoveredSortButton(index)}
+                  onMouseLeave={() => setHoveredSortButton(null)}
+                  onClick={() => onSort(header.key)}
+                >
+                  {header.title}
+                  {(hoveredSortButton === index ||
+                    sortConfig.key === header.key) &&
+                    (sortConfig.key === header.key &&
+                    sortConfig.direction === "ascending" ? (
+                      <KeyboardArrowDownIcon style={{ marginLeft: "5px" }} />
+                    ) : (
+                      <KeyboardArrowUpIcon style={{ marginLeft: "5px" }} />
+                    ))}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {/* Строки с данными */}
+            {sortedData.map((row, index) => (
+              <tr key={index}>
+                <td>{row.ID}</td>
+                <td>{row.Score1}</td>
+                <td>{row.S}</td>
+                <td>{row.Score2}</td>
+              </tr>
+            ))}
+            {/* Последняя строка с символом суммы */}
+            <tr>
+              <td>Σ</td>
+              <td>{data.reduce((sum, row) => sum + row.Score1, 0)}</td>
+              <td>{data.reduce((sum, row) => sum + row.S, 0)}</td>
+              <td>{data.reduce((sum, row) => sum + row.Score2, 0)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
