@@ -25,10 +25,10 @@ const ChallengeComponent = () => {
           alt=""
         />
         <div className={styles.contentWrapper}>
-          <h1 style={{color: "white", fontSize:"80px "}}>
+          <h1 className="challengeText">
             Challenge your mind <span style={{ fontFamily: 'Reggae One, sans-serif' }}>!</span>
           </h1>
-          <h1 style={{color: "white", fontSize:"120px ", right:"80px"}}>
+          <h1 className={styles.comabla}>
           Coma Berenices 
           </h1>
           

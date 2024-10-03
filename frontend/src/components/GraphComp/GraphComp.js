@@ -15,6 +15,7 @@ import "../Science/SciencePageComponents/Buttons/SciencePageButtons.css";
 
 
 import { FaMedal, FaStar, FaStopwatch  } from 'react-icons/fa';
+import VerticalProgressBar from './VerticalProgress';
 
 
 
@@ -384,7 +385,10 @@ const makeMove = async () => {
 
 return (
     <div style={{ display: 'flex', zIndex: -1 }} >
+
+      
       <div style={{ position: 'relative', flex: '1', paddingRight: '20px' }}>
+
       {/* Stopwatch */}
 
       <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style={{top: '20px', position: 'absolute', zIndex: 1 }}>
@@ -393,15 +397,10 @@ return (
   </li>
   <li class="nav-item" role="presentation">
 
-<button class="nav-link" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph" type="button" role="tab" aria-controls="pills-graph" aria-selected="true">  <Link to={"/science"}>Science</Link>
-  <KeyIcon key={0} />
-  <KeyIcon key={1} />
-  <KeyIcon key={2} /></button>
-
 </li>
-    {/* <li class="nav-item" role="presentation">
+    <li class="nav-item" role="presentation">
       <button class="nav-link" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
-    </li> */}
+    </li>
 </ul>
 
 
@@ -439,29 +438,40 @@ return (
 
       </div>
 
+      <div className="VerticalProgressBar-container" style={{top: '280px', position: 'absolute', zIndex: 1, color: "white"}}>
+      End Game
+        <VerticalProgressBar currentTime={elapsedTime} maxTime={3600} />
+      Start game
+
+      </div>
+
+
       <div class="tab-content" id="pills-tabContent">
           <div class="tab-pane fade show active" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab">
-          <div className="stopwatch-container" style={{ right: 75, position: 'absolute', zIndex: 1, color: "white" }}>
-          <h3>Процесс игры</h3>
-          <div>
-          <div>
-    <p><FaStopwatch />{`Elapsed Time: ${elapsedTime} seconds`}</p>
-    <p>
-      <FaMedal /> {`Score: ${score}`} {/* Иконка рядом с полем "Набранные очки" */}
-    </p>
-    <p>
-      <FaStar /> {`Max Score Per Move: ${maxScorePerMove}`} {/* Иконка рядом с полем "Максимальное количество очков за ход" */}
-    </p>
-  </div>          </div>
-          <div>
-            <Button variant="success" onClick={handleStart} disabled={isRunning}>
-              Start
-            </Button>{' '}
-            <Button variant="danger" onClick={handleStop} disabled={!isRunning}>
-              Stop
-            </Button>
-          </div>
-        </div>
+                  <div className="stopwatch-container" style={{ right: 75, position: 'absolute', zIndex: 1, color: "white" }}>
+                    <div className="stopwatch-container-time"> 
+                      <h3>Time</h3>
+                      <p><FaStopwatch />{ `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}`}</p>
+                    </div>
+                    <div className="stopwatch-container-score">
+                      <h3>Score</h3>
+                      <p>
+                        <FaMedal /> {`${score}`} {/* Иконка рядом с полем "Набранные очки" */}
+                      </p>
+                    </div>
+                    <div className="stopwatch-container-table">
+                      <h3> Vertices</h3>
+
+                    </div>
+                    <div className="stopwatch-container-buttons">
+                    <Button variant="success" onClick={handleStart} disabled={isRunning}>
+                      Start
+                    </Button>{' '}
+                    <Button variant="danger" onClick={handleStop} disabled={!isRunning}>
+                      Stop
+                    </Button>
+                  </div>                  
+                </div>
 
           {/* Graph container */}
           {graphData && (
@@ -606,9 +616,7 @@ return (
           )}
         </div>
           </div>
-      </div>
-
-      
+      </div>    
     </div>
   );
 };

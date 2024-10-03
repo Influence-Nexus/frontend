@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { FaCog, FaInfoCircle } from 'react-icons/fa'; // Импортируем иконки FaCog и FaInfoCircle из react-icons/fa
+import KeyIcon from "@mui/icons-material/Key";
 import GraphComponent from '../GraphComp/GraphComp';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../GraphComp/Graph.css'; // Импортируем файл CSS для стилизации
@@ -49,10 +50,16 @@ const MatrixDetails = () => {
         <div>
           <div className='local-header' style={{ zIndex: 12 }}>
             <div>
-              <h1 className="display-6">{matrixInfo.matrix_name}</h1>
+              <h1 className='matrix-name'>Crime & Punishment 28_12_2023{matrixInfo.matrix_name}</h1>
 
-              <Button variant="primary" onClick={handleOpenModal} style={{ zIndex: 1000 }}>
+              <Button className="game-button" variant="primary" onClick={handleOpenModal} style={{ zIndex: 1000 }}>
                 <FaInfoCircle /> Показать описание {/* Иконка FaInfoCircle внутри кнопки */}
+              </Button>
+
+              <Button className="game-button" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph" type="button" role="tab" aria-controls="pills-graph" aria-selected="true"> <Link style={{color:"white"}} to={"/science"}>Science</Link>
+                <KeyIcon key={0} />
+                <KeyIcon key={1} />
+                <KeyIcon key={2} />
               </Button>
               
             </div>

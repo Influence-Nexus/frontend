@@ -65,3 +65,55 @@
   background-color: rgba(0, 123, 255, 0.25);
 }
 
+.stopwatch-container{
+  top: 280px;
+  padding: 10px;
+  border-radius: 32px;
+  border: 3px solid white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgba(169, 169, 169, 0.65);
+
+  height: 600px;
+}
+
+.stopwatch-container-buttons{
+  align-self: flex-end !important;
+  justify-self: end !important;
+}
+
+.stopwatch-container-time{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white  ;
+  font-size: 28px;
+}
+
+.stopwatch-container-score{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white  ;
+  font-size: 28px;
+}
+
+
+
+.stopwatch-container-table{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white  ;
+  font-size: 28px;
+  height: 380px;
+}
+
+.VerticalProgressBar-container{
+  height: 630px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}

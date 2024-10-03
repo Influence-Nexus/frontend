@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
+import VerticalProgressBar from './VerticalProgress';
 import './Graph.css'; // Import the CSS file for styling
 import { Link } from 'react-router-dom';
 

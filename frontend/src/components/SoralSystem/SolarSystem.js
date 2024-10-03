@@ -17,11 +17,8 @@ const SolarSystem = () => {
     <div className="solar-system">
       <div style={{ position: 'absolute', top: '240px', left: '320px', zIndex: 1 }}  >
 
-      <h1 style={{color: "white", fontSize:"80px ", right:"80px"}}>
-            Звёздная система Al-Dafira<br></br>
-Pick a planet:
-            
-            
+      <h1 className='text-block-solar'>
+            Звёздная система Al-Dafira<br></br>           
           </h1>
 
       </div>
@@ -55,13 +52,13 @@ const Scene = ({ sunRef, setHoveredPlanet, setSelectedPlanet, selectedPlanet }) 
     <>
       <Sun sunRef={sunRef} />
       <Orbit radius={12} speed={0.3}>
-        <Planet name="Blue-Green" description="Жители планеты Blue-Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений." textureUrl="/textures/check2.png" size={0.5} setHoveredPlanet={setHoveredPlanet} setSelectedPlanet={setSelectedPlanet} selectedPlanet={selectedPlanet} />
+        <Planet name="Blue-Green" description="Жители планеты Blue-Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений." textureUrl="/textures/drive-download-20241003T122711Z-001/1523-A seamless, natural-style texture inspir-Juggernaut XL - Jugg_XI_by_RunDiffusion-768700044.png" size={0.5} setHoveredPlanet={setHoveredPlanet} setSelectedPlanet={setSelectedPlanet} selectedPlanet={selectedPlanet} />
       </Orbit>
       <Orbit radius={16} speed={-0.05}>
-        <Planet name="Orange" description="Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей." textureUrl="/textures/checktexture.png" size={0.8} setHoveredPlanet={setHoveredPlanet} setSelectedPlanet={setSelectedPlanet} selectedPlanet={selectedPlanet} />
+        <Planet name="Orange" description="Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей." textureUrl="/textures/drive-download-20241003T122711Z-001/1524-A seamless texture representing the adva-Juggernaut XL - Jugg_XI_by_RunDiffusion-422941055.png" size={0.8} setHoveredPlanet={setHoveredPlanet} setSelectedPlanet={setSelectedPlanet} selectedPlanet={selectedPlanet} />
       </Orbit>
       <Orbit radius={19} speed={0.05}>
-        <Planet name="Violet" description="Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей." textureUrl="/textures/checktexture.png" size={1} setHoveredPlanet={setHoveredPlanet} setSelectedPlanet={setSelectedPlanet} selectedPlanet={selectedPlanet} />
+        <Planet name="Violet" description="Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей." textureUrl="/textures/1534-A seamless texture representing the sust-Juggernaut XL - Jugg_XI_by_RunDiffusion-1572952848.png" size={1} setHoveredPlanet={setHoveredPlanet} setSelectedPlanet={setSelectedPlanet} selectedPlanet={selectedPlanet} />
       </Orbit>
     </>
   );
@@ -73,7 +70,7 @@ const Sun = ({ sunRef }) => {
       <sphereGeometry args={[1, 32, 32]} />
       <meshStandardMaterial emissive={"#f5be76"} emissiveIntensity={7} />
       <Text position={[0, -3.5, 0]} fontSize={0.8} color="#ffffff">
-        THIS IS A SUUUUUUN
+      Al-Dafira
       </Text>
     </mesh>
   );
@@ -134,13 +131,25 @@ const Planet = ({ name, description, textureUrl, size, setHoveredPlanet, setSele
         onClick={handleClick}
       >
         <sphereGeometry args={[size, 32, 32]} />
-        <meshStandardMaterial map={texture} emissive={"#ffffff"} emissiveIntensity={0.5} />
+        <meshStandardMaterial 
+          map={texture} // Используем текстуру
+          emissiveIntensity={0.5} 
+          roughness={0.5} // Установите шероховатость
+          metalness={0.5} // Установите металлический эффект
+        />
       </mesh>
+      <Text position={[0, -3.5, 0]} fontSize={0.8} color="#ffffff">
+        {name}
+      </Text>
     </group>
   );
 }
 
 const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 6;
+
+
   const cards = {
     "Blue-Green": [
       { index: 0, title: "Carbon sequestration", description: "Связывание углерода", link: "https://search.app/VePfKaJAwjYRozsM7", image: "https://pics.craiyon.com/2023-09-23/cd587327ae3648c493067e63fbe16932.webp" },
@@ -178,6 +187,11 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
     ]
   };
 
+
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = cards[selectedPlanet.name].slice(indexOfFirstCard, indexOfLastCard);
+
   const cardcreds = {
     "Blue-Green": {"name": "Blue-Green", "desc": "Жители планеты Blue-Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений."},
     "Violet": {"name": "Violet", "desc": "Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей."},
@@ -185,23 +199,50 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
 
   }
 
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(cards[selectedPlanet.name].length / cardsPerPage);
+
+
   return (
       <div className=" planet-cardcard text-white bg-dark mb-3">
 
 
-      <div className="segment-cards">
+      <div className="segment-domen">
       <h1 style={{fontSize: "80px"}}>{cardcreds[selectedPlanet.name].name}</h1>
+
+
       <h3>{cardcreds[selectedPlanet.name].desc}</h3>
-        {cards[selectedPlanet.name].map((segment, index) => (
+      <div className="segment-cards">
+        {currentCards.map((segment, index) => (
           <div key={segment.index} className={`card text-white bg-secondary mb-3 segment-card segment-card-${index}`}>
             <div className="card-header">{segment.title}</div>
             <div className="card-body">
             <img className="d-block w-100" src={segment.image} alt={segment.title} />
               <p className="card-text">{segment.description}</p>
-              <a href={segment.link} target="_blank" rel="noopener noreferrer" className="btn btn-primary mt-1"> <Link to={`/matrix/${index + 1}`}>Играть</Link> </a>
+              <a href={segment.link} target="_blank" rel="noopener noreferrer" className="btn btn-primary mt-1"> <Link style={{color: "white"}} to={`/matrix/${index + 1}`}>Играть</Link> </a>
             </div>
           </div>
         ))}
+      </div>
+
+      <div className='pagination-button'>
+        {/* Кнопки пагинации */}
+        <div className="pagination">
+          {currentPage > 1 && (
+            <Button onClick={() => paginate(currentPage - 1)}>Previous</Button>
+          )}
+          {currentPage < totalPages && (
+            <Button onClick={() => paginate(currentPage + 1)}>Next</Button>
+          )}
+        </div>
+         {/* Добавляем кнопку для возврата к виду солнечной системы */}
+      <Button variant="secondary" onClick={() => setSelectedPlanet(null)} className="mb-3">
+          Вернуться к солнечной системе
+      </Button>
+      </div>
+
+  
       </div>
     </div>
   );

@@ -10,37 +10,7 @@
 
   align-items: center;
 
-  padding: 20px 56px 120px 23px;
-
-}
-
-
-@media (max-width: 991px) {
-
-  .mainContainer {
-
-    padding: 0 20px 100px;
-
-  }
-
-}
-
-
-.header {
-
-  align-self: stretch;
-
-  display: flex;
-
-  width: 100%;
-
-  align-items: flex-start;
-
-  gap: 20px;
-
-  flex-wrap: wrap;
-
-  justify-content: space-between;
+  padding: 0px 56px 120px 23px;
 
 }
 
@@ -126,8 +96,9 @@
 
   color: rgba(255, 255, 255, 1);
   font-size: 81px;
+  font-family: 'Cursive', sans-serif;
 
-  margin-top: 106px;
+  margin-top: 50px;
 
 
 }
@@ -151,7 +122,8 @@
 .codeText {
 
   margin-top: 5px;
-  color: rgba(255, 232, 28, 1);
+  color: rgba(255, 232, 28, 0);
+  -webkit-text-stroke: 7px rgba(255, 232, 28, 1);; /* Толщина и цвет обводки */
 
 
   font: 400 180px Major Mono Display, -apple-system, Roboto, Helvetica, sans-serif;
@@ -203,13 +175,11 @@
 
   display: flex;
 
-  margin-top: 104px;
-
-  width: 539px;
+  margin-top: 70px;
 
   max-width: 100%;
 
-  gap: 20px;
+  gap: 100px;
 
   white-space: nowrap;
 
@@ -268,7 +238,9 @@
 
   overflow: hidden;
 
-  color: rgba(255, 232, 28, 1);
+  background-color: rgba(14, 10, 32, 1);;
+
+  color: rgb(255, 255, 255) !important;
 
   font-weight: 300;
 

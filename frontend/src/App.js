@@ -6,7 +6,6 @@ import MatrixDetails from './components/Matrices/MatrixDetails';
 import Graph from './components/GraphComp/Graph';
 import Header from './components/Header/Header';
 import RulesPage from './components/UsersPages/RulesPage';
-import MainContent from './components/MainContent/MainContent';
 import SolarSystem from './components/SoralSystem/SolarSystem';
 import SpaceshipView from './components/SpaceShip/SpaceshipView';
 import ChallengeComponent from './components/AlDafiraWelcome/ChallengeComponent'

@@ -33,4 +33,14 @@
     transition: transform 0.3s ease-in-out; /* Анимация увеличения */
   }
   
-  
+  .game-button{
+    background-color: #342B41 !important;
+    border-radius: 15px !important;
+    border: 3px solid white !important;
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+  }
+
+  .matrix-name{
+    color: #FFE81C;
+  }
