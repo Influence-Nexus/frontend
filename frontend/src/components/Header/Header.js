@@ -9,9 +9,9 @@ const Header = () => {
       <SocialIcons />
       <nav>
         <ul>
-          <li><Link to={"/"}>Главная</Link></li>
-          <li>Контакты</li>
-          <li>О проекте</li>
+          <li><Link to={"/"}>Main</Link></li>
+          {/* <li>Контакты</li> */}
+          <li>Project</li>
         </ul>
       </nav>
     </header>

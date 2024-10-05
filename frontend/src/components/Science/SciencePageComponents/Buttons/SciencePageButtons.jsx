@@ -22,12 +22,12 @@ export const SciencePageButtons = () => {
       </button>
 
       <button id="science-button" onClick={() => handleCheckSequence()}>
-        <a href="/science">
+        {/* <a href="/science"> */}
           <p>Science</p>
           {Array.from({ length: science }, (_, index) => (
             <KeyIcon key={index} sx={{marginRight: "4px"}}/>
           ))}
-        </a>
+        {/* </a> */}
       </button>
     </div>
   );

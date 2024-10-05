@@ -58,7 +58,7 @@ export const TableHuge = () => {
 
   return (
     <div id="huge-table-alignment-div">
-      <h2 id="huge-table-name">Сравнительная таблица</h2>
+      <h2 id="huge-table-name">Резултаты</h2>
       <div className="huge-table-container">
         <table>
           <thead>

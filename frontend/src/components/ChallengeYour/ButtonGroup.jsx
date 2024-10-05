@@ -30,9 +30,9 @@ const ButtonGroup = () => {
 
     <div className={styles.buttonContainer}>
 
-      <button className={styles.playButton} onClick={playMusic}><Link style={{color:"black"}} to={"./ChallengeComponent"}>Играть</Link> </button>
+      <button className={styles.playButton} onClick={playMusic}><Link style={{color:"black"}} to={"./ChallengeComponent"}>Play</Link> </button>
 
-      <button className={styles.aboutButton}><Link style={{color:"rgba(255, 232, 28, 1)"}} to={"./rules"}>Об игре</Link></button>
+      <button className={styles.aboutButton}><Link style={{color:"rgba(255, 232, 28, 1)"}} to={"./rules"}>About</Link></button>
 
     </div>
 

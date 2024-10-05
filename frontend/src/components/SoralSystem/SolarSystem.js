@@ -17,9 +17,9 @@ const SolarSystem = () => {
     <div className="solar-system">
       <div style={{ position: 'absolute', top: '240px', left: '320px', zIndex: 1 }}  >
 
-      <h1 className='text-block-solar'>
+      {/* <h1 className='text-block-solar'>
             Звёздная система Al-Dafira<br></br>           
-          </h1>
+          </h1> */}
 
       </div>
       
