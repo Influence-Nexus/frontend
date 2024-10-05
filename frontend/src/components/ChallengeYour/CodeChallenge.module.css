@@ -120,7 +120,7 @@
 
 
 .codeText {
-
+  height: 180px;
   margin-top: 5px;
   color: rgba(255, 232, 28, 0);
   -webkit-text-stroke: 7px rgba(255, 232, 28, 1);; /* Толщина и цвет обводки */
@@ -179,7 +179,7 @@
 
   max-width: 100%;
 
-  gap: 100px;
+  gap: 50px;
 
   white-space: nowrap;
 

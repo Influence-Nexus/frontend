@@ -6,12 +6,15 @@
 }
 
 .App-header a {
-  color: white;
+  color: #ffd700;
+  /* color: white; */
   text-decoration: none;
 }
 
 .App-header a:hover {
-  color: #ffd700;
+  /* color: #ffd700; */
+  color: white;
+
 }
 
 nav ul {
@@ -24,9 +27,13 @@ nav ul {
 
 nav ul li {
   font-size: 1.2rem;
-  color: white;
+  /* color: white; */
+  color: #ffd700;
+  
 }
 
 nav ul li:hover {
-  color: #ffd700;
+  /* color: #ffd700; */
+  color: white;
+
 }
