@@ -449,8 +449,8 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
 
   const cardcreds = {
     "Blue-Green": {"name": "Blue-Green", "desc": "Жизнь в окружении природы / Сбережение природы / Качество среды обитания.", "src": "/imgs/green.jpg", "color": "#52ffbd"},
-    "Orange": {"name": "Orange", "desc": "Совершенное общественное устройство/ Баланс социальных факторов/ Настройка институционального комплекса.", "src": "/imgs/green.jpg", "color": "#52ffbd"},
-    "Violet": {"name": "Violet", "desc": "Устойчивое жизнеобеспечение  / Сбережение природы / Надежность и безопасность.", "src": "/imgs/green.jpg", "color": "#eea8ff"},
+    "Orange": {"name": "Orange", "desc": "Совершенное общественное устройство/ Баланс социальных факторов/ Настройка институционального комплекса.", "src": "/imgs/orange.jpg", "color": "#ff8b2b"},
+    "Violet": {"name": "Violet", "desc": "Устойчивое жизнеобеспечение  / Сбережение природы / Надежность и безопасность.", "src": "/imgs/viol.png", "color": "#eea8ff"},
 
   }
 
@@ -465,7 +465,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       <div className="segment-domen">
         <div className="segment-domen-header">
           <div className="segment-domen-planet">
-            <img className="planet-image" src={cardcreds[selectedPlanet.name].name} />
+            <img className="planet-image" src={cardcreds[selectedPlanet.name].src} />
             <div>
             <h1 className="planet-name" style={{fontSize: "80px", color: cardcreds[selectedPlanet.name].color}}>{cardcreds[selectedPlanet.name].name}</h1>
             <h3><span style={{color: cardcreds[selectedPlanet.name].color}}>Стратегия жизни: </span>{cardcreds[selectedPlanet.name].desc}</h3>
