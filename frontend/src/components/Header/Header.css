@@ -17,6 +17,14 @@
 
 }
 
+.App-header ul li.active a {
+  color: white; /* Цвет для активного пункта */
+}
+
+.App-header ul li.active:hover a {
+  color: #ffd700;
+}
+
 nav ul {
   list-style: none;
   display: flex;

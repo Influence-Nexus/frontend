@@ -73,7 +73,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: rgba(169, 169, 169, 0.65);
+  /* background-color: rgba(169, 169, 169, 0.65); */
+  background-color: rgba(255, 255, 255, 0.17);
 
   height: 600px;
 }
@@ -116,4 +117,41 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+}
+
+.GraphReviewModalBody {
+  display: flex;
+  justify-content: center;
+}
+
+.GraphReviewModalFooter {
+  display: flex;
+  justify-content: center !important;
+  gap: 2em;
+}
+
+#buttonOkGraphReview {
+  color: #342B41;
+  background-color: #56B077;
+  border: 0px solid transparent;
+  border-radius: 15px;
+  width: 120px;
+  height: 50px;
+}
+
+#buttonOkGraphReview p {
+  margin: 0;
+}
+
+#buttonNoGraphReview  {
+  color: 56B077;
+  background-color: #342B41;
+  border: 0px solid transparent;
+  border-radius: 15px;
+  width: 120px;
+  height: 50px;
+}
+
+#buttonNoGraphReview p {
+  margin: 0;
 }
