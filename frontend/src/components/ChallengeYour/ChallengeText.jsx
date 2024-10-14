@@ -17,7 +17,7 @@ const ChallengeText = () => {
 
       <div className={styles.codeText}>
 
-        C<span style={{fontSize: '128px'}}>O</span>D<span style={{fontSize: '128px'}}>E</span>
+        C<span style={{fontSize: '168px'}}>о</span>D<span style={{fontSize: '128px'}}>Е</span>
 
       </div>
 

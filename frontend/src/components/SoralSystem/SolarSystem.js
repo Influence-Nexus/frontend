@@ -193,9 +193,9 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
   const currentCards = cards[selectedPlanet.name].slice(indexOfFirstCard, indexOfLastCard);
 
   const cardcreds = {
-    "Blue-Green": {"name": "Blue-Green", "desc": "Жители планеты Blue-Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений."},
-    "Violet": {"name": "Violet", "desc": "Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей."},
-    "Orange": {"name": "Orange", "desc": "Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей."},
+    "Blue-Green": {"name": "Blue-Green", "desc": "Жизнь в окружении природы / Сбережение природы / Качество среды обитания.", "src": "/imgs/green.jpg", "color": "#52ffbd"},
+    "Orange": {"name": "Orange", "desc": "Совершенное общественное устройство/ Баланс социальных факторов/ Настройка институционального комплекса.", "src": "/imgs/green.jpg", "color": "#52ffbd"},
+    "Violet": {"name": "Violet", "desc": "Устойчивое жизнеобеспечение  / Сбережение природы / Надежность и безопасность.", "src": "/imgs/green.jpg", "color": "#eea8ff"},
 
   }
 
@@ -209,10 +209,17 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
 
 
       <div className="segment-domen">
-      <h1 style={{fontSize: "80px"}}>{cardcreds[selectedPlanet.name].name}</h1>
+        <div className="segment-domen-header">
+          <div className="segment-domen-planet">
+            <img className="planet-image" src={cardcreds[selectedPlanet.name].name} />
+            <div>
+            <h1 className="planet-name" style={{fontSize: "80px", color: cardcreds[selectedPlanet.name].color}}>{cardcreds[selectedPlanet.name].name}</h1>
+            <h3><span style={{color: cardcreds[selectedPlanet.name].color}}>Стратегия жизни: </span>{cardcreds[selectedPlanet.name].desc}</h3>
+            </div>
+          </div>
+            <p className="return-main" style={{color: cardcreds[selectedPlanet.name].color, borderColor: cardcreds[selectedPlanet.name].color}}>Главная</p>
+        </div>
 
-
-      <h3>{cardcreds[selectedPlanet.name].desc}</h3>
       <div className="segment-cards">
         {currentCards.map((segment, index) => (
           <div key={segment.index} className={`card text-white bg-secondary mb-3 segment-card segment-card-${index}`}>
@@ -220,7 +227,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
             <div className="card-body">
             <img className="d-block w-100" src={segment.image} alt={segment.title} />
               <p className="card-text">{segment.description}</p>
-              <a href={segment.link} target="_blank" rel="noopener noreferrer" className="btn btn-primary mt-1"> <Link style={{color: "white"}} to={`/matrix/${index + 1}`}>Играть</Link> </a>
+              <Link className="btn-CHECK" style={{color: cardcreds[selectedPlanet.name].color, borderColor: cardcreds[selectedPlanet.name].color}}to={`/matrix/${index + 1}`}>pick</Link>
             </div>
           </div>
         ))}
@@ -230,10 +237,10 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
         {/* Кнопки пагинации */}
         <div className="pagination">
           {currentPage > 1 && (
-            <Button onClick={() => paginate(currentPage - 1)}>Previous</Button>
+            <Button onClick={() => paginate(currentPage - 1)}> O </Button>
           )}
           {currentPage < totalPages && (
-            <Button onClick={() => paginate(currentPage + 1)}>Next</Button>
+            <Button onClick={() => paginate(currentPage + 1)}>O</Button>
           )}
         </div>
          {/* Добавляем кнопку для возврата к виду солнечной системы */}

@@ -20,14 +20,14 @@
 }
 
 .segment-domen{
-  text-align: center;
+  text-align: left;
   z-index: 23;
   background-color: rgb(0, 0, 0);
   position: absolute;
   display: flex;
   flex-direction: column;
   align-content: center;
-  justify-content: center;
+  justify-content: space-around;
   margin-top: 20px;
   top: 5%;
   left: 5%;
@@ -67,3 +67,44 @@
     color: white;
     border: 1px solid rgb(255, 255, 255);
   }
+.segment-domen-header{
+  display: flex;
+  justify-content: space-between;
+}
+
+.planet-name{
+
+}
+
+.planet-image{
+  width: 150px;
+  height: 150px ;
+
+}
+
+.return-main{
+  border: 3px solid white;
+  padding: 5px;
+  border-radius: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  max-height: 40px;
+}
+
+.segment-domen-planet{
+  display: flex;
+  gap: 20px;
+}
+
+.btn-CHECK{
+  background-color: black;
+  border: 3px solid;
+  padding: 5px;
+  border-radius: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  align-self: last baseline;
+
+}

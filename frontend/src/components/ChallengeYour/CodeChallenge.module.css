@@ -126,7 +126,7 @@
   -webkit-text-stroke: 7px rgba(255, 232, 28, 1);; /* Толщина и цвет обводки */
 
 
-  font: 400 180px Major Mono Display, -apple-system, Roboto, Helvetica, sans-serif;
+  font: 400 180px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica, sans-serif;
 
 }
 
