@@ -210,14 +210,14 @@
 
   overflow: hidden;
 
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(0, 0, 0, 1);
 
   font-weight: 700;
 
   padding: 11px 70px;
 
   border: 1px solid rgba(255, 232, 28, 1);
-
+  transition: all 0.3s ease;
 }
 
 
@@ -233,23 +233,36 @@
 
 }
 
+.playButton:hover {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  transition: all 0.3s ease;
+}
 
 .aboutButton {
 
   overflow: hidden;
 
-  background-color: rgba(14, 10, 32, 1);;
+  /* background-color: rgba(14, 10, 32, 1);; */
+  background-color: transparent;
 
-  color: rgb(255, 255, 255) !important;
-
+  /* color: rgb(255, 255, 255) !important; */
+  color: rgba(255, 232, 28, 1);
   font-weight: 300;
 
   padding: 11px 67px;
 
   border: 3px solid rgba(255, 232, 28, 1);
+  transition: all 0.3s ease;
 
 }
 
+.aboutButton:hover {
+  color: white;
+  border: 3px solid white;
+  transition: all 0.3s ease;
+}
 
 @media (max-width: 991px) {
 

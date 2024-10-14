@@ -19,14 +19,16 @@ const VerticalProgressBar = ({ currentTime, maxTime }) => {
           flexDirection: 'column-reverse', // Заполнение снизу вверх
           justifyContent: 'flex-start', // Прогресс начинает с нижней части
           overflow: 'hidden', // Прогресс не выходит за пределы контейнера
-          backgroundColor: 'rgba(169, 169, 169, 0.8)', // Фон контейнера
+          // backgroundColor: 'rgba(169, 169, 169, 0.8)', // Фон контейнера
+          backgroundColor: 'rgba(255, 255, 255, 0.17)'
         }}
       >
         <div
           style={{
             height: `${progress}%`, // Высота зависит от прогресса
             width: '100%',
-            backgroundColor: '#342B41',
+            // backgroundColor: '#342B41',
+            backgroundColor: "rgba(169, 169, 169, 0.8)",
             transition: 'height 0.1s ease', // Плавный переход изменения высоты
           }}
         />
