@@ -481,7 +481,9 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
             <div className="card-body">
             <img className="d-block w-100" src={segment.image} alt={segment.title} />
               <p className="card-text">{segment.description}</p>
-              <Link className="btn-CHECK" style={{color: cardcreds[selectedPlanet.name].color, borderColor: cardcreds[selectedPlanet.name].color}}to={`/matrix/${index + 1}`}>pick</Link>
+              <div className="text-center">
+                <Link className="btn-CHECK" style={{color: cardcreds[selectedPlanet.name].color, borderColor: cardcreds[selectedPlanet.name].color}}to={`/matrix/${index + 1}`}>pick</Link>
+              </div>
             </div>
           </div>
         ))}
