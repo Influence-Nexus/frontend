@@ -449,9 +449,8 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
 
   const cardcreds = {
     "Blue-Green": {"name": "Blue-Green", "desc": "Жизнь в окружении природы / Сбережение природы / Качество среды обитания.", "src": "/imgs/green.jpg", "color": "#52ffbd"},
-    "Orange": {"name": "Orange", "desc": "Совершенное общественное устройство/ Баланс социальных факторов/ Настройка институционального комплекса.", "src": "/imgs/orange.jpg", "color": "#ff8b2b"},
-    "Violet": {"name": "Violet", "desc": "Устойчивое жизнеобеспечение  / Сбережение природы / Надежность и безопасность.", "src": "/imgs/viol.png", "color": "#eea8ff"},
-
+    "Orange": {"name": "Orange", "desc": "Совершенное общественное устройство / Баланс социальных факторов / Настройка институционального комплекса.", "src": "/imgs/orange.jpg", "color": "#ff8b2b"},
+    "Violet": {"name": "Violet", "desc": "Устойчивое жизнеобеспечение / Сбережение природы / Надежность и безопасность.", "src": "/imgs/viol.png", "color": "#eea8ff"},
   }
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
