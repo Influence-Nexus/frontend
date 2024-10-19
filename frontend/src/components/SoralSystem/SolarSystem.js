@@ -123,7 +123,7 @@ const Sun = ({ sunRef }) => {
     <mesh ref={sunRef}>
       <sphereGeometry args={[1, 32, 32]} />
       <meshStandardMaterial emissive={"#f5be76"} emissiveIntensity={7} />
-      <Text position={[0, -3.5, 0]} fontSize={0.8} color="#ffffff">
+      <Text position={[0, 3.5, 0]} fontSize={0.8} color="#ffffff">
         Al-Dafira
       </Text>
     </mesh>
