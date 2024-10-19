@@ -226,7 +226,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
     "Blue-Green": [
       {
         index: 0,
-        title: "Carbon sequestration",
+        title: "Связывание углерода",
         description: "Связывание углерода",
         link: "https://search.app/VePfKaJAwjYRozsM7",
         image:
@@ -234,7 +234,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       },
       {
         index: 1,
-        title: "Global Warming",
+        title: "Глобальное потепление",
         description: "Глобальное потепление",
         link: "https://search.app/xXaWBqBmVUwJikXc9",
         image:
@@ -242,7 +242,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       },
       {
         index: 2,
-        title: "Habitat quality and availability",
+        title: "Качество и доступность среды обитания",
         description: "Качество и доступность среды обитания",
         link: "https://search.app/2aWfsW4YhZRGbd6UA",
         image:
@@ -250,7 +250,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       },
       {
         index: 3,
-        title: "Commercial fishing",
+        title: "Коммерческое рыболовство",
         description: "Коммерческое рыболовство",
         link: "https://search.app/CWyYe4kaJtaShWyR8",
         image:
@@ -258,7 +258,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       },
       {
         index: 4,
-        title: "Sport fishing",
+        title: "Спортивная рыбалка",
         description: "Спортивная рыбалка",
         link: "https://www.craiyon.com/image/2h8pJ0zuQD6mawpHOjH3zw",
         image:
@@ -266,7 +266,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       },
       {
         index: 5,
-        title: "Recreational boating",
+        title: "Прогулочное катание на лодках",
         description: "Прогулочное катание на лодках",
         link: "https://www.craiyon.com/image/lMkDXUSNTuuwRuBOoFBeug",
         image:
@@ -274,7 +274,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       },
       {
         index: 6,
-        title: "Wild rice production",
+        title: "Производство дикого риса",
         description: "Производство дикого риса",
         link: "https://search.app/5ANeLspNrfGqRovKA",
         image:
@@ -282,7 +282,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       },
       {
         index: 7,
-        title: "Yield of winter wheat",
+        title: "Урожайность озимой пшеницы",
         description: "Урожайность озимой пшеницы",
         link: "https://www.craiyon.com/image/-bcetbHzQheAf0vSOaLmpQ",
         image:
@@ -290,16 +290,15 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       },
       {
         index: 8,
-        title: "Wildfire Risk",
+        title: "Риск лесного пожара",
         description: "Риск лесного пожара",
         link: "",
         image: "/textures/wildfire.png",
       },
       {
         index: 9,
-        title: "Deforestation in a rural mountainous area",
-        description:
-          "Деградация среды обитания за счет вырубки лесов в сельской горной местности",
+        title: "Деградация среды обитания",
+        description: "Деградация среды обитания за счет вырубки лесов в сельской горной местности",
         link: "https://www.craiyon.com/image/riRK9KyZREqUyhEEWcf_UQ",
         image:
           "https://pics.craiyon.com/2023-09-26/0ba6de42a92742eca6765d15c71337d4.webp",
