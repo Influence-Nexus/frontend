@@ -211,7 +211,7 @@ const Planet = ({
           metalness={0.5} // Установите металлический эффект
         />
       </mesh>
-      <Text position={[0, -3.5, 0]} fontSize={0.8} color="#ffffff">
+      <Text position={[0, 3.5, 0]} fontSize={0.8} color="#ffffff">
         {name}
       </Text>
     </group>
