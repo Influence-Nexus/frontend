@@ -466,7 +466,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
             <h3><span style={{color: cardcreds[selectedPlanet.name].color}}>Стратегия жизни: </span>{cardcreds[selectedPlanet.name].desc}</h3>
             </div>
           </div>
-          <Link to="/" className="return-main" style={{color: cardcreds[selectedPlanet.name].color, borderColor: cardcreds[selectedPlanet.name].color}}>Главная</Link>
+          <Link to="/" className="return-main" style={{color: cardcreds[selectedPlanet.name].color, borderColor: cardcreds[selectedPlanet.name].color}}>Main</Link>
         </div>
 
       <div className="segment-cards">

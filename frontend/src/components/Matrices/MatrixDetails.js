@@ -113,7 +113,7 @@ const MatrixDetails = () => {
                   <p>Ok</p>
                 </button>
                 <button id="buttonNoGraphReview" onClick={handleCloseReviewWindow}>
-                  <p>No</p>
+                  <p>Cancel</p>
                 </button>
               </Modal.Footer>
             
