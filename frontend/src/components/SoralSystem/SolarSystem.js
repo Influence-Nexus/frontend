@@ -19,11 +19,14 @@ const SolarSystem = () => {
   return (
     <div className="solar-system">
       <div
-        style={{ position: "absolute", top: "240px", left: "320px", zIndex: 1 }}
+        style={{display: "flex", flexDirection: 'column', alignItems: "center", position: "absolute", top: "120px", left: "31%", zIndex: 1 }}
       >
-        {/* <h1 className='text-block-solar'>
-            Звёздная система Al-Dafira<br></br>           
-          </h1> */}
+        <h1 className="text-block-solar">
+          Al-Dafira
+        </h1>       
+        <h1 className="text-block-solar">
+          Challenge your mind<span style={{fontFamily: "Reggae One, cursive"}}>!</span>
+        </h1>
       </div>
 
       <Canvas style={{ height: "100vh" }}>
@@ -123,7 +126,7 @@ const Sun = ({ sunRef }) => {
     <mesh ref={sunRef}>
       <sphereGeometry args={[1, 32, 32]} />
       <meshStandardMaterial emissive={"#f5be76"} emissiveIntensity={7} />
-      <Text position={[0, 3.5, 0]} fontSize={0.8} color="#ffffff">
+      <Text position={[0, 5, 0]} fontSize={1.7} color="#ffffff">
         Al-Dafira
       </Text>
     </mesh>
@@ -211,7 +214,7 @@ const Planet = ({
           metalness={0.5} // Установите металлический эффект
         />
       </mesh>
-      <Text position={[0, 3.5, 0]} fontSize={0.8} color="#ffffff">
+      <Text position={[0, 3.5, 0]} fontSize={1} color="#ffffff">
         {name}
       </Text>
     </group>
@@ -298,7 +301,8 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       {
         index: 9,
         title: "Деградация среды обитания",
-        description: "Деградация среды обитания за счет вырубки лесов в сельской горной местности",
+        description:
+          "Деградация среды обитания за счет вырубки лесов в сельской горной местности",
         link: "https://www.craiyon.com/image/riRK9KyZREqUyhEEWcf_UQ",
         image:
           "https://pics.craiyon.com/2023-09-26/0ba6de42a92742eca6765d15c71337d4.webp",
@@ -307,22 +311,27 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
     Violet: [
       {
         index: 0,
-        title: "Средства к существованию на основе разведения крупного рогатого скота",
-        description: "Средства к существованию на основе разведения крупного рогатого скота",
+        title:
+          "Средства к существованию на основе разведения крупного рогатого скота",
+        description:
+          "Средства к существованию на основе разведения крупного рогатого скота",
         link: "https://search.app/v3gP3M1KYo56szXT8",
         image: "IMAGE_LINK_11",
       },
       {
         index: 1,
-        title: "Средства к существованию, основанные на растениеводстве и мелком скотоводстве",
-        description: "Средства к существованию, основанные на растениеводстве и мелком скотоводстве",
+        title:
+          "Средства к существованию, основанные на растениеводстве и мелком скотоводстве",
+        description:
+          "Средства к существованию, основанные на растениеводстве и мелком скотоводстве",
         link: "https://search.app/1tYx1f76uoSNkcho9",
         image: "IMAGE_LINK_12",
       },
       {
         index: 2,
         title: "Средства к существованию, не связанные с сельским хозяйством",
-        description: "Нефермерские средства к существованию в сельской местности",
+        description:
+          "Нефермерские средства к существованию в сельской местности",
         link: "https://search.app/SeUHtX8h8zrJR51r5",
         image: "IMAGE_LINK_13",
       },
@@ -444,10 +453,25 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
   );
 
   const cardcreds = {
-    "Blue-Green": {"name": "Blue-Green", "desc": "Жизнь в окружении природы / Сбережение природы / Качество среды обитания.", "src": "/imgs/green.jpg", "color": "#52ffbd"},
-    "Orange": {"name": "Orange", "desc": "Совершенное общественное устройство / Баланс социальных факторов / Настройка институционального комплекса.", "src": "/imgs/orange.jpg", "color": "#ff8b2b"},
-    "Violet": {"name": "Violet", "desc": "Устойчивое жизнеобеспечение / Сбережение природы / Надежность и безопасность.", "src": "/imgs/viol.png", "color": "#eea8ff"},
-  }
+    "Blue-Green": {
+      name: "Blue-Green",
+      desc: "Жизнь в окружении природы / Сбережение природы / Качество среды обитания.",
+      src: "/imgs/green.jpg",
+      color: "#52ffbd",
+    },
+    Orange: {
+      name: "Orange",
+      desc: "Совершенное общественное устройство / Баланс социальных факторов / Настройка институционального комплекса.",
+      src: "/imgs/orange.jpg",
+      color: "#ff8b2b",
+    },
+    Violet: {
+      name: "Violet",
+      desc: "Устойчивое жизнеобеспечение / Сбережение природы / Надежность и безопасность.",
+      src: "/imgs/viol.png",
+      color: "#eea8ff",
+    },
+  };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -460,29 +484,70 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       <div className="segment-domen">
         <div className="segment-domen-header">
           <div className="segment-domen-planet">
-            <img className="planet-image" src={cardcreds[selectedPlanet.name].src} />
+            <img
+              className="planet-image"
+              src={cardcreds[selectedPlanet.name].src}
+            />
             <div>
-            <h1 className="planet-name" style={{fontSize: "80px", color: cardcreds[selectedPlanet.name].color}}>{cardcreds[selectedPlanet.name].name}</h1>
-            <h3><span style={{color: cardcreds[selectedPlanet.name].color}}>Стратегия жизни: </span>{cardcreds[selectedPlanet.name].desc}</h3>
+              <h1
+                className="planet-name"
+                style={{
+                  fontSize: "80px",
+                  color: cardcreds[selectedPlanet.name].color,
+                }}
+              >
+                {cardcreds[selectedPlanet.name].name}
+              </h1>
+              <h3>
+                <span style={{ color: cardcreds[selectedPlanet.name].color }}>
+                  Стратегия жизни:{" "}
+                </span>
+                {cardcreds[selectedPlanet.name].desc}
+              </h3>
             </div>
           </div>
-          <Link to="/" className="return-main" style={{color: cardcreds[selectedPlanet.name].color, borderColor: cardcreds[selectedPlanet.name].color}}>Main</Link>
+          <Link
+            to="/"
+            className="return-main"
+            style={{
+              color: cardcreds[selectedPlanet.name].color,
+              borderColor: cardcreds[selectedPlanet.name].color,
+            }}
+          >
+            Main
+          </Link>
         </div>
 
-      <div className="segment-cards">
-        {currentCards.map((segment, index) => (
-          <div key={segment.index} className={`card text-white bg-secondary mb-3 segment-card segment-card-${index}`}>
-            <div className="card-header">{segment.title}</div>
-            <div className="card-body">
-            <img className="d-block w-100" src={segment.image} alt={segment.title} />
-              <p className="card-text">{segment.description}</p>
-              <div className="text-center">
-                <Link className="btn-CHECK" style={{color: cardcreds[selectedPlanet.name].color, borderColor: cardcreds[selectedPlanet.name].color}}to={`/matrix/${index + 1}`}>pick</Link>
+        <div className="segment-cards">
+          {currentCards.map((segment, index) => (
+            <div
+              key={segment.index}
+              className={`card text-white bg-secondary mb-3 segment-card segment-card-${index}`}
+            >
+              <div className="card-header">{segment.title}</div>
+              <div className="card-body">
+                <img
+                  className="d-block w-100"
+                  src={segment.image}
+                  alt={segment.title}
+                />
+                {/* <p className="card-text">{segment.description}</p> */}
+                <div className="text-center">
+                  <Link
+                    className="btn-CHECK"
+                    style={{
+                      color: cardcreds[selectedPlanet.name].color,
+                      borderColor: cardcreds[selectedPlanet.name].color,
+                    }}
+                    to={`/matrix/${index + 1}`}
+                  >
+                    pick
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
         <div className="pagination-button">
           {/* Кнопки пагинации */}
