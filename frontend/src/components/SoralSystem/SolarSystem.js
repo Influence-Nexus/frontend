@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect  } from "react";
 import { Canvas, useLoader, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, GodRays } from "@react-three/postprocessing";
 import { OrbitControls, Stars, Html, Text } from "@react-three/drei";
@@ -15,6 +15,15 @@ const SolarSystem = () => {
   const [hoveredPlanet, setHoveredPlanet] = useState(null);
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const sunRef = useRef();
+
+  useEffect(() => {
+    const appHeader = document.querySelector('.App-header');
+    if (selectedPlanet) {
+      appHeader.style.display = 'none';
+    } else {
+      appHeader.style.display = 'flex';
+    }
+  }, [selectedPlanet]);
 
   return (
     <div className="solar-system">
