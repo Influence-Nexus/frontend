@@ -19,7 +19,6 @@ const MatrixDetails = () => {
   const [physicsEnabled, setPhysicsEnabled] = useState(false);
   const [nodeSize, setNodeSize] = useState(40);
   const [edgeRoundness, setEdgeRoundness] = useState(0.1);
-  const [showReviewWindow, setShowReviewWindow] = useState(false) // Состояние для окна "Исследуйте граф"
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -34,7 +33,6 @@ const MatrixDetails = () => {
   const handlePhysicsToggle = () => setPhysicsEnabled(!physicsEnabled);
   const handleNodeSizeChange = (size) => setNodeSize(size);
   const handleEdgeRoundnessChange = (roundness) => setEdgeRoundness(roundness);
-  const handleCloseReviewWindow = () => setShowReviewWindow(false) // Функция закрытия окна "Исследуйте граф"
 
   useEffect(() => {
     // Получение подробной информации о выбранной матрице
@@ -43,9 +41,7 @@ const MatrixDetails = () => {
       .then((data) => setMatrixInfo(data))
       .catch((error) =>
         console.error("Ошибка при получении информации о матрице:", error)
-      );
-      setShowReviewWindow(true); // Показывает окно "Исследуйте граф" при загрузке страницы
-  }, [matrix_id]);
+      );}, [matrix_id]);
 
   return (
     <div className="container mt-4">
@@ -103,21 +99,6 @@ const MatrixDetails = () => {
               />
             )}
           </div>
-          {/* Окно "Исследуйте граф" */}
-          <Modal show={showReviewWindow} onHide={handleCloseReviewWindow} centered>
-            <Modal.Body className="GraphReviewModalBody">
-              <Modal.Title>Исследуйте граф</Modal.Title>
-              </Modal.Body>
-              <Modal.Footer className="GraphReviewModalFooter">
-                <button id="buttonOkGraphReview" onClick={handleCloseReviewWindow}>
-                  <p>Ok</p>
-                </button>
-                <button id="buttonNoGraphReview" onClick={handleCloseReviewWindow}>
-                  <p>Cancel</p>
-                </button>
-              </Modal.Footer>
-            
-          </Modal>
           <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
               <Modal.Title>{matrixInfo.matrix_name}</Modal.Title>

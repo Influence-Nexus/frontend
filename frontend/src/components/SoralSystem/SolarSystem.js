@@ -1,15 +1,14 @@
-import React, { useRef, useState, useEffect  } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Canvas, useLoader, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, GodRays } from "@react-three/postprocessing";
 import { OrbitControls, Stars, Html, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { Link } from "react-router-dom";
-import { Carousel, Button } from "react-bootstrap";
+import { Carousel, Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css"; // Import the CSS file for styling
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import CloseIcon from "@mui/icons-material/Cancel";
+import { motion } from "framer-motion";
 
 const SolarSystem = () => {
   const [hoveredPlanet, setHoveredPlanet] = useState(null);
@@ -17,24 +16,31 @@ const SolarSystem = () => {
   const sunRef = useRef();
 
   useEffect(() => {
-    const appHeader = document.querySelector('.App-header');
+    const appHeader = document.querySelector(".App-header");
     if (selectedPlanet) {
-      appHeader.style.display = 'none';
+      appHeader.style.display = "none";
     } else {
-      appHeader.style.display = 'flex';
+      appHeader.style.display = "flex";
     }
   }, [selectedPlanet]);
 
   return (
     <div className="solar-system">
       <div
-        style={{display: "flex", flexDirection: 'column', alignItems: "center", position: "absolute", top: "120px", left: "31%", zIndex: 1 }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          position: "absolute",
+          top: "120px",
+          left: "31%",
+          zIndex: 1,
+        }}
       >
+        <h1 className="text-block-solar">Al-Dafira</h1>
         <h1 className="text-block-solar">
-          Al-Dafira
-        </h1>       
-        <h1 className="text-block-solar">
-          Challenge your mind<span style={{fontFamily: "Reggae One, cursive"}}>!</span>
+          Challenge your mind
+          <span style={{ fontFamily: "Reggae One, cursive" }}>!</span>
         </h1>
       </div>
 
@@ -231,8 +237,16 @@ const Planet = ({
 };
 
 const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
+  const [showReviewWindow, setShowReviewWindow] = useState(false); // Состояние для окна "Исследуйте граф"
+  const [selectedCardIndex, setSelectedCardIndex] = useState(null); // Хранилище для индексов
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 6;
+
+  const handleCloseReviewWindow = () => setShowReviewWindow(false); // Функция закрытия окна "Исследуйте граф"
+  const handleOpenReviewWindow = (index) => {
+    setShowReviewWindow(true);
+    setSelectedCardIndex(index);
+  }; // Function to open the window
 
   const cards = {
     "Blue-Green": [
@@ -454,12 +468,13 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
     ],
   };
 
-  const indexOfLastCard = currentPage * cardsPerPage;
-  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = cards[selectedPlanet.name].slice(
-    indexOfFirstCard,
-    indexOfLastCard
-  );
+  // const indexOfLastCard = currentPage * cardsPerPage;
+  // const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  // const currentCards = cards[selectedPlanet.name].slice(
+  //   indexOfFirstCard,
+  //   indexOfLastCard
+  // );
+  const currentCards = cards[selectedPlanet.name];
 
   const cardcreds = {
     "Blue-Green": {
@@ -481,12 +496,6 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
       color: "#eea8ff",
     },
   };
-
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const totalPages = Math.ceil(
-    cards[selectedPlanet.name].length / cardsPerPage
-  );
 
   return (
     <div className=" planet-cardcard text-white bg-dark mb-3">
@@ -533,54 +542,81 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
               key={segment.index}
               className={`card text-white bg-secondary mb-3 segment-card segment-card-${index}`}
             >
-              <div className="card-header">{segment.title}</div>
+              <div className="card-header">
+                <p>{segment.title}</p>
+              </div>
               <div className="card-body">
                 <img
-                  className="d-block w-100"
+                  width={160}
+                  height={160}
                   src={segment.image}
                   alt={segment.title}
                 />
-                {/* <p className="card-text">{segment.description}</p> */}
                 <div className="text-center">
-                  <Link
+                  <button
                     className="btn-CHECK"
                     style={{
                       color: cardcreds[selectedPlanet.name].color,
                       borderColor: cardcreds[selectedPlanet.name].color,
                     }}
-                    to={`/matrix/${index + 1}`}
+                    onClick={() => handleOpenReviewWindow(index)} // Open modal on button click
                   >
                     pick
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="pagination-button">
-          {/* Кнопки пагинации */}
-          <div className="pagination">
-            {currentPage > 1 && (
-              <Button onClick={() => paginate(currentPage - 1)}>
-                <ArrowBackIosIcon />
-              </Button>
-            )}
-            {currentPage < totalPages && (
-              <Button onClick={() => paginate(currentPage + 1)}>
-                <ArrowForwardIosIcon />
-              </Button>
-            )}
-          </div>
-          {/* Добавляем кнопку для возврата к виду солнечной системы */}
-          <Button
-            variant="secondary"
-            onClick={() => setSelectedPlanet(null)}
-            className="mb-3"
+        {/* Добавляем кнопку для возврата к виду солнечной системы */}
+        <Button
+          variant="secondary"
+          onClick={() => setSelectedPlanet(null)}
+          className="mb-3"
+          size="sm"
+          style={{
+            width: "55px",
+            position: "absolute",
+            top: "90%",
+            left: "95%",
+          }}
+        >
+          <CloseIcon />
+        </Button>
+        {/* Окно "Исследуйте граф" */}
+        <motion.div
+          initial={{ x: "-100%", opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: "100%", opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Modal
+            show={showReviewWindow}
+            onHide={handleCloseReviewWindow}
+            centered
+            dialogClassName="custom-modal"
+            contentClassName="custom-modal-content"
           >
-            <CloseIcon />
-          </Button>
-        </div>
+            <Modal.Body className="GraphReviewModalBody">
+              <Modal.Title>Исследуйте граф</Modal.Title>
+            </Modal.Body>
+            <Modal.Footer className="GraphReviewModalFooter">
+              <Link
+                id="buttonOkGraphReview"
+                to={`/matrix/${selectedCardIndex + 1}`}
+              >
+                <p>Ok</p>
+              </Link>
+              <button
+                id="buttonNoGraphReview"
+                onClick={handleCloseReviewWindow}
+              >
+                <p>Cancel</p>
+              </button>
+            </Modal.Footer>
+          </Modal>
+        </motion.div>
       </div>
     </div>
   );
