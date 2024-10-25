@@ -10,7 +10,6 @@
   z-index: 10;
   width: 80%;
   max-width: 450px;
-  
 }
 
 .segment-cards {
@@ -19,10 +18,9 @@
   justify-content: center;
   margin-top: 20px;
   text-align: center;
-  
 }
 
-.segment-domen{
+.segment-domen {
   text-align: left;
   z-index: 23;
   background-color: rgb(0, 0, 0);
@@ -38,16 +36,12 @@
   right: 5%;
   padding: 15px;
   border: 1px solid rgb(194, 194, 194);
-
-  
 }
 
-.pagination-button{
+.pagination-button {
   display: flex;
   justify-content: space-between;
 }
-
-
 
 .segment-card {
   width: 200px;
@@ -56,41 +50,36 @@
   height: 350px;
 }
 
-
-
-  .text-block-solar{
+  .text-block-solar{ 
     color: white;
     font: 400 72px "Moon Dance", cursive;
   }
 
-
-.segment-domen-header{
+.segment-domen-header {
   display: flex;
   justify-content: space-between;
 }
 
-.planet-image{
+.planet-image {
   width: 150px;
-  height: 150px ;
-
+  height: 150px;
 }
 
-.return-main{
+.return-main {
   border: 3px solid white;
   padding: 5px;
   border-radius: 10px;
   padding-left: 15px;
   padding-right: 15px;
-
   max-height: 40px;
 }
 
-.segment-domen-planet{
+.segment-domen-planet {
   display: flex;
   gap: 20px;
 }
 
-.btn-CHECK{
+.btn-CHECK {
   background-color: black;
   border: 3px solid;
   padding: 5px;
@@ -102,5 +91,4 @@
   left: calc(34% + 1px);
   top: 85%;
   align-self: last baseline;
-
 }

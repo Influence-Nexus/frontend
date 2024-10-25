@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css"; // Import the CSS file for styling
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import CloseIcon from "@mui/icons-material/Cancel";
 
 const SolarSystem = () => {
   const [hoveredPlanet, setHoveredPlanet] = useState(null);
@@ -578,7 +578,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
             onClick={() => setSelectedPlanet(null)}
             className="mb-3"
           >
-            <RestartAltIcon />
+            <CloseIcon />
           </Button>
         </div>
       </div>
