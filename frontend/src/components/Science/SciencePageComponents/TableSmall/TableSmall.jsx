@@ -6,25 +6,25 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 const TableHeader = [
   { title: "ID", key: "ID", width: "75px", height: "75px" },
   {
-    title: "Реакция (отклик) модели на внешнее воздействие",
+    title: "Реакция (отклик) узлов модели на воздействие",
     key: "Response",
     width: "170px",
     height: "75px",
   },
   {
-    title: "Сила внешнего воздействия",
+    title: "Сила воздействия от узла",
     key: "Impact",
     width: "200px",
     height: "75px",
   },
   {
-    title: "Взвешенная реакция",
+    title: "Взвешенная реакция узла",
     key: "Eff_in",
     width: "120px",
     height: "75px",
   },
   {
-    title: "Взвешенное воздействие",
+    title: "Взвешенное воздействие от узла",
     key: "Control_in",
     width: "120px",
     height: "75px",
@@ -73,21 +73,13 @@ export const TableSmall = () => {
 
   return (
     <div id="small-table-alignment-div">
+
+      <h5 style={{ color: "#ffd700", height: '48px' }}>Step 1: Находим силу воздействия каждого узла по алгоритму из [Science]</h5>
+
       <h2 id="small-table-name">
-        Откилки и воздействия, расчитанные алгоритмом [
+        Отклики и воздействия, рассчитанные алгоритмом [
         <a href="https://arxiv.org">1</a>]
       </h2>
-      <ol id="steps-list">
-      <li>
-          <p>Find the strength of each node from</p>
-        </li>
-        <li>
-          <p>Compare the result of the first table with your points obtained during the game</p>
-        </li>
-        <li>
-          <p>Play with our data and check your points</p>
-        </li>
-      </ol>
 
       <div className="small-table-container">
         <table>
@@ -110,7 +102,7 @@ export const TableSmall = () => {
                   {(hoveredSortButton === index ||
                     sortConfig.key === header.key) &&
                     (sortConfig.key === header.key &&
-                    sortConfig.direction === "ascending" ? (
+                      sortConfig.direction === "ascending" ? (
                       <KeyboardArrowDownIcon />
                     ) : (
                       <KeyboardArrowUpIcon />
@@ -127,6 +119,7 @@ export const TableSmall = () => {
                     key={columnIndex}
                     style={{
                       width: header.width,
+                      fontSize: "18px"
                     }}
                   >
                     {row[header.key]}

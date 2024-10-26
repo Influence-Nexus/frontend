@@ -42,5 +42,7 @@
   }
 
   .matrix-name{
-    color: #FFE81C;
+    /* color: #FFE81C; */
+    color: purple;
+    font-family: "Montserrat";
   }

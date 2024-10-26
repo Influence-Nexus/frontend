@@ -58,7 +58,8 @@ export const TableHuge = () => {
 
   return (
     <div id="huge-table-alignment-div">
-      <h2 id="huge-table-name">Резултаты</h2>
+      <h5 style={{color: "#ffd700", height: '48px'}}>Step 2: Сравним Ваши результаты с расчётными</h5>
+      <h2 id="huge-table-name">Результаты</h2>
       <div className="huge-table-container">
         <table>
           <thead>
@@ -68,7 +69,7 @@ export const TableHuge = () => {
                 <th
                   key={index}
                   colSpan={header.colSpan}
-                  style={{ width: header.width }}
+                  style={{ width: header.width, fontSize: "18px" }}
                 >
                   {header.title}
                 </th>
@@ -84,6 +85,7 @@ export const TableHuge = () => {
                     height: header.height,
                     position: "relative",
                     cursor: "pointer",
+                    fontSize: "18px",
                   }}
                   onMouseEnter={() => setHoveredSortButton(index)}
                   onMouseLeave={() => setHoveredSortButton(null)}
@@ -93,7 +95,7 @@ export const TableHuge = () => {
                   {(hoveredSortButton === index ||
                     sortConfig.key === header.key) &&
                     (sortConfig.key === header.key &&
-                    sortConfig.direction === "ascending" ? (
+                      sortConfig.direction === "ascending" ? (
                       <KeyboardArrowDownIcon style={{ marginLeft: "5px" }} />
                     ) : (
                       <KeyboardArrowUpIcon style={{ marginLeft: "5px" }} />
@@ -105,7 +107,7 @@ export const TableHuge = () => {
           <tbody>
             {/* Строки с данными */}
             {sortedData.map((row, index) => (
-              <tr key={index}>
+              <tr key={index} style={{fontSize: "18px"}}>
                 <td>{row.ID}</td>
                 <td>{row.Score1}</td>
                 <td>{row.S}</td>
@@ -113,7 +115,7 @@ export const TableHuge = () => {
               </tr>
             ))}
             {/* Последняя строка с символом суммы */}
-            <tr>
+            <tr style={{fontSize: "18px"}}>
               <td>Σ</td>
               <td>{data.reduce((sum, row) => sum + row.Score1, 0)}</td>
               <td>{data.reduce((sum, row) => sum + row.S, 0)}</td>

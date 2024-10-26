@@ -37,7 +37,7 @@ const SolarSystem = () => {
           zIndex: 1,
         }}
       >
-        <h1 className="text-block-solar">Al-Dafira</h1>
+        {/* <h1 className="text-block-solar">Al-Dafira</h1> */}
         <h1 className="text-block-solar">
           Challenge your mind
           <span style={{ fontFamily: "Reggae One, cursive" }}>!</span>
@@ -67,7 +67,7 @@ const SolarSystem = () => {
           )}
         </EffectComposer>
       </Canvas>
-      {hoveredPlanet && (
+      {/* {hoveredPlanet && (
         <div
           style={{
             position: "absolute",
@@ -77,9 +77,9 @@ const SolarSystem = () => {
             pointerEvents: "none",
           }}
         >
-          {hoveredPlanet}
+         {hoveredPlanet}
         </div>
-      )}
+      )} */}
       {selectedPlanet && (
         <PlanetCard
           selectedPlanet={selectedPlanet}
@@ -518,7 +518,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
               </h1>
               <h3>
                 <span style={{ color: cardcreds[selectedPlanet.name].color }}>
-                  Стратегия жизни:{" "}
+                  Стратегия жизни:
                 </span>
                 {cardcreds[selectedPlanet.name].desc}
               </h3>
@@ -589,7 +589,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
           initial={{ x: "-100%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: "100%", opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 10 }}
         >
           <Modal
             show={showReviewWindow}
@@ -599,7 +599,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
             contentClassName="custom-modal-content"
           >
             <Modal.Body className="GraphReviewModalBody">
-              <Modal.Title>Исследуйте граф</Modal.Title>
+              <Modal.Title>Graph Preview</Modal.Title>
             </Modal.Body>
             <Modal.Footer className="GraphReviewModalFooter">
               <Link
@@ -612,7 +612,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
                 id="buttonNoGraphReview"
                 onClick={handleCloseReviewWindow}
               >
-                <p>Cancel</p>
+                <p>Next</p>
               </button>
             </Modal.Footer>
           </Modal>

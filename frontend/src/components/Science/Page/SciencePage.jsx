@@ -9,7 +9,7 @@ export const SciencePage = () => {
   return (
     <div>
       <SciencePageButtons />
-      <h1 style={{ textAlign: "center" }} id="sp-h1">
+      <h1 style={{ textAlign: "center", marginTop: "1.5em", color: "#ffd700"}} id="sp-h1">
         Model: name
       </h1>
       <Conditions />
@@ -18,6 +18,7 @@ export const SciencePage = () => {
         <TableSmall />
         <TableHuge />
       </div>
+      <h5 style={{color: "#ffd700", marginLeft: "6em"}}>Step 3: Сыграем с нашими данными</h5>
     </div>
   );
 };

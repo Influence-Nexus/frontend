@@ -45,6 +45,7 @@ const MatrixDetails = () => {
 
   return (
     <div className="container mt-4">
+      <h1 style={{color: "white", textAlign: "center", font: "400 72px Moon Dance, cursive"}}>Challenge your mind!</h1>
       {matrixInfo && (
         <div>
           <div className="local-header" style={{ zIndex: 12 }}>
@@ -59,19 +60,19 @@ const MatrixDetails = () => {
                 onClick={handleOpenModal}
                 style={{ zIndex: 1000 }}
               >
-                <FaInfoCircle /> Preview{" "}
+                <FaInfoCircle /> Preview
                 {/* Иконка FaInfoCircle внутри кнопки */}
               </Button>
 
               <Button
                 className="game-button"
-                id="pills-graph-tab"
-                data-bs-toggle="pill"
-                data-bs-target="#pills-graph"
-                type="button"
-                role="tab"
-                aria-controls="pills-graph"
-                aria-selected="true"
+                // id="pills-graph-tab"
+                // data-bs-toggle="pill"
+                // data-bs-target="#pills-graph"
+                // type="button"
+                // role="tab"
+                // aria-controls="pills-graph"
+                // aria-selected="true"
               >
                 {" "}
                 <Link style={{ color: "white" }} to={"/science"}>
@@ -79,11 +80,10 @@ const MatrixDetails = () => {
                 </Link>
                 <KeyIcon key={0} />
                 <KeyIcon key={1} />
-                <KeyIcon key={2} />
+                {/* <KeyIcon key={2} /> */}
               </Button>
             </div>
           </div>
-
           <div>
             {matrixInfo.edges && (
               <GraphComponent
