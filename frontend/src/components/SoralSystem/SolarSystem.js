@@ -519,8 +519,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
               <h3>
                 <span style={{ color: cardcreds[selectedPlanet.name].color }}>
                   Стратегия жизни:
-                </span>
-                {cardcreds[selectedPlanet.name].desc}
+                </span> {cardcreds[selectedPlanet.name].desc}
               </h3>
             </div>
           </div>

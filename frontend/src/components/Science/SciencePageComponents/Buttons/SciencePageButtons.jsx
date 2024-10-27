@@ -9,7 +9,7 @@ export const SciencePageButtons = () => {
     if (science != 0) {
       setScience(science - 1);
     } else {
-      alert("У вас больше нет попыток!");
+      alert("You have no more attempts!");
     }
   };
 
