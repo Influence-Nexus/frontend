@@ -8,7 +8,7 @@ import { Carousel, Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css"; // Import the CSS file for styling
 import CloseIcon from "@mui/icons-material/Cancel";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 
 const SolarSystem = () => {
   const [hoveredPlanet, setHoveredPlanet] = useState(null);
@@ -239,14 +239,40 @@ const Planet = ({
 const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
   const [showReviewWindow, setShowReviewWindow] = useState(false); // Состояние для окна "Исследуйте граф"
   const [selectedCardIndex, setSelectedCardIndex] = useState(null); // Хранилище для индексов
-  const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 6;
+  const [isClosing, setIsClosing] = useState(false); // Для работы анимации
+  const [isZoomed, setIsZoomed] = useState(false); // State for zoom effect
+  // const [picked, setPicked] = useState(null);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const cardsPerPage = 6;
 
-  const handleCloseReviewWindow = () => setShowReviewWindow(false); // Функция закрытия окна "Исследуйте граф"
+  const handleCloseReviewWindow = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      setShowReviewWindow(false);
+    }, 850);
+  };
+
   const handleOpenReviewWindow = (index) => {
-    setShowReviewWindow(true);
-    setSelectedCardIndex(index);
-  }; // Function to open the window
+    setIsZoomed(true); // Set zoom state
+    setTimeout(() => {
+      setShowReviewWindow(true);
+      setSelectedCardIndex(index);
+      // setPicked(index);
+    }, 850); // Delay to allow zoom animation to complete
+  };
+
+  const handleZoomOut = () => {
+    setIsZoomed(false);
+    setSelectedCardIndex(null)
+  };
+
+
+  const handleCardClick = (event) => {
+    if (isZoomed) {
+      event.stopPropagation(); // Prevent the click from propagating to the parent
+    }
+  };
 
   const cards = {
     "Blue-Green": [
@@ -498,7 +524,7 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
   };
 
   return (
-    <div className=" planet-cardcard text-white bg-dark mb-3">
+    <div className="planet-cardcard text-white bg-dark mb-3">
       <div className="segment-domen">
         <div className="segment-domen-header">
           <div className="segment-domen-planet">
@@ -519,7 +545,8 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
               <h3>
                 <span style={{ color: cardcreds[selectedPlanet.name].color }}>
                   Стратегия жизни:
-                </span> {cardcreds[selectedPlanet.name].desc}
+                </span>{" "}
+                {cardcreds[selectedPlanet.name].desc}
               </h3>
             </div>
           </div>
@@ -539,29 +566,50 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
           {currentCards.map((segment, index) => (
             <div
               key={segment.index}
-              className={`card text-white bg-secondary mb-3 segment-card segment-card-${index}`}
+              className={`card text-white bg-secondary mb-3 segment-card segment-card-${index} ${isZoomed && index === selectedCardIndex ? 'zoomed' : ''}`}
+              onClick={isZoomed && index === selectedCardIndex ? handleZoomOut : () => {}}
             >
               <div className="card-header">
                 <p>{segment.title}</p>
               </div>
-              <div className="card-body">
+              <div className="card-body" onClick={handleCardClick}>
                 <img
-                  width={160}
-                  height={160}
+                  width={isZoomed && index === selectedCardIndex ? 300 : 160}
+                  height={isZoomed && index === selectedCardIndex ? 300 : 160}
                   src={segment.image}
                   alt={segment.title}
                 />
+                {isZoomed && index === selectedCardIndex && (
+                  <div className="card-description">
+                    <p>{segment.description}</p>
+                  </div>
+                )}
                 <div className="text-center">
-                  <button
-                    className="btn-CHECK"
-                    style={{
-                      color: cardcreds[selectedPlanet.name].color,
-                      borderColor: cardcreds[selectedPlanet.name].color,
-                    }}
-                    onClick={() => handleOpenReviewWindow(index)} // Open modal on button click
-                  >
-                    pick
-                  </button>
+                  {isZoomed && index === selectedCardIndex ? (
+                    <button
+                      className="btn-CLOSE"
+                      style={{
+                        color: cardcreds[selectedPlanet.name].color,
+                        borderColor: cardcreds[selectedPlanet.name].color,
+                        backgroundColor: "transparent",
+                        borderRadius: "10px"
+                      }}
+                      onClick={handleZoomOut}
+                    >
+                      Close
+                    </button>
+                  ) : (
+                    <button
+                      className="btn-CHECK"
+                      style={{
+                        color: cardcreds[selectedPlanet.name].color,
+                        borderColor: cardcreds[selectedPlanet.name].color,
+                      }}
+                      onClick={() => handleOpenReviewWindow(index)} // Open modal on button click
+                    >
+                      pick
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -584,38 +632,29 @@ const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
           <CloseIcon />
         </Button>
         {/* Окно "Исследуйте граф" */}
-        <motion.div
-          initial={{ x: "-100%", opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: "100%", opacity: 0 }}
-          transition={{ duration: 10 }}
+        <Modal
+          show={showReviewWindow}
+          centered
+          animation={false}
+          className={`modal-window ${isClosing ? "in" : "out"}`}
+          dialogClassName="custom-modal"
+          contentClassName="custom-modal-content"
         >
-          <Modal
-            show={showReviewWindow}
-            onHide={handleCloseReviewWindow}
-            centered
-            dialogClassName="custom-modal"
-            contentClassName="custom-modal-content"
-          >
-            <Modal.Body className="GraphReviewModalBody">
-              <Modal.Title>Graph Preview</Modal.Title>
-            </Modal.Body>
-            <Modal.Footer className="GraphReviewModalFooter">
-              <Link
-                id="buttonOkGraphReview"
-                to={`/matrix/${selectedCardIndex + 1}`}
-              >
-                <p>Ok</p>
-              </Link>
-              <button
-                id="buttonNoGraphReview"
-                onClick={handleCloseReviewWindow}
-              >
-                <p>Next</p>
-              </button>
-            </Modal.Footer>
-          </Modal>
-        </motion.div>
+          <Modal.Body className="GraphReviewModalBody">
+            <Modal.Title>Graph Preview</Modal.Title>
+          </Modal.Body>
+          <Modal.Footer className="GraphReviewModalFooter">
+            <Link
+              id="buttonOkGraphReview"
+              to={`/matrix/${selectedCardIndex + 1}`}
+            >
+              <p>Ok</p>
+            </Link>
+            <button id="buttonNoGraphReview" onClick={handleCloseReviewWindow}>
+              <p>Next</p>
+            </button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </div>
   );

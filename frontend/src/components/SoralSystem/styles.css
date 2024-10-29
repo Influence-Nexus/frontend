@@ -161,3 +161,65 @@
   overflow: hidden;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
 }
+
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+
+.modal-window.out {
+  animation: slideInFromLeft 0.9s ease-in-out;
+}
+
+.modal-window.in {
+  animation: slideOutToRight 0.9s ease-in-out;
+}
+
+
+.zoomed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(2px) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s ease;
+}
+
+.zoomed .card {
+  width: 80%;
+  height: 80%;
+  transform: scale(1.5);
+
+  transition: transform 0.5s ease;
+}
+
+.card-description {
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: center;
+}
