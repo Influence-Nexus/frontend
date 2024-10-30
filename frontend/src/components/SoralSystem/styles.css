@@ -99,7 +99,6 @@
   padding: 0;
   align-content: center;
   font-family: "Montserrat";
-
 }
 .card-header p {
   margin: 0;
@@ -120,11 +119,10 @@
   align-content: center;
 }
 
-
 #buttonOkGraphReview {
-  color: #342B41;
+  color: #342b41;
   display: flex;
-  background-color: #56B077;
+  background-color: #56b077;
   border: 0px solid transparent;
   border-radius: 15px;
   width: 120px;
@@ -137,12 +135,12 @@
   margin: 0;
 }
 
-#buttonNoGraphReview  {
+#buttonNoGraphReview {
   /* background-color: #342B41; */
   background: transparent;
   /* border: 0px solid transparent; */
-  border: 1px solid #56B077;
-  color: #56B077;
+  border: 1px solid #56b077;
+  color: #56b077;
   font-weight: 800;
   border-radius: 15px;
   width: 120px;
@@ -153,7 +151,6 @@
   margin: 0;
 }
 
-
 .custom-modal-content {
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(3px);
@@ -161,7 +158,6 @@
   overflow: hidden;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
 }
-
 
 @keyframes slideInFromLeft {
   from {
@@ -185,7 +181,6 @@
   }
 }
 
-
 .modal-window.out {
   animation: slideInFromLeft 0.9s ease-in-out;
 }
@@ -193,7 +188,6 @@
 .modal-window.in {
   animation: slideOutToRight 0.9s ease-in-out;
 }
-
 
 .zoomed {
   position: fixed;
@@ -207,15 +201,30 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.5s ease;
+  transform: scale(1.5);
+  transition: transform 0.5s ease, background 0.5s ease;
 }
 
-.zoomed .card {
-  width: 80%;
-  height: 80%;
-  transform: scale(1.5);
+.zoomed .card-body {
+  position: relative !important;
+  top: 15%;
+  flex: none;
+  width: 25%;
+  /* height: 15%; */
+  background-color: #6c757d;
+}
 
-  transition: transform 0.5s ease;
+.zoomed .card-header {
+  position: relative;
+  top: 15%;
+  flex: none;
+  background-color: #6c757d;
+  width: 25%;
+}
+
+.unzoomed {
+  transform: scale(1);
+  transition: transform 0.7s ease;
 }
 
 .card-description {
