@@ -27,7 +27,6 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
     setTimeout(() => {
       setShowReviewWindow(true);
       setSelectedCardIndex(index);
-      // setPicked(index);
     }, 700); // Delay to allow zoom animation to complete
   };
 
@@ -111,7 +110,7 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
               <div className="card-body" onClick={handleCardClick}>
                 <img
                   width={isZoomed && index === selectedCardIndex ? "80%" : 160}
-                  height={isZoomed && index === selectedCardIndex ? 350 : 160}
+                  height={isZoomed && index === selectedCardIndex ? "310px" : 160}
                   src={segment.image}
                   alt={segment.title}
                 />
@@ -177,7 +176,7 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
           contentClassName="custom-modal-content"
         >
           <Modal.Body className="GraphReviewModalBody">
-            <Modal.Title>Graph Preview</Modal.Title>
+            <Modal.Title id="graph-preview-title">Graph Preview</Modal.Title>
           </Modal.Body>
           <Modal.Footer className="GraphReviewModalFooter">
             <Link

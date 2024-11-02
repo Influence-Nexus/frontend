@@ -111,12 +111,18 @@
   color: rgb(255, 218, 150);
 }
 
+#graph-preview-title {
+  font-size: 2em;
+  font-family: "Montserrat";
+}
+
 .GraphReviewModalFooter {
   display: flex;
   justify-content: center !important;
   gap: 2em;
   text-align: center;
   align-content: center;
+  border: none;
 }
 
 #buttonOkGraphReview {

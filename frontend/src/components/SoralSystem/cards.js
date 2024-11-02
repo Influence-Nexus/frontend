@@ -1,5 +1,5 @@
 export const cards = {
-  "Blue-Green": [
+  "Green": [
     {
       index: 0,
       title: "Связывание углерода",
@@ -78,6 +78,7 @@ export const cards = {
       image:
         "https://pics.craiyon.com/2023-09-26/0ba6de42a92742eca6765d15c71337d4.webp",
     },
+
   ],
   Violet: [
     {
@@ -216,8 +217,8 @@ export const cards = {
 };
 
 export const cardcreds = {
-  "Blue-Green": {
-    name: "Blue-Green",
+  "Green": {
+    name: "Green",
     desc: "Жизнь в окружении природы / Сбережение природы / Качество среды обитания.",
     src: "/imgs/green.jpg",
     color: "#52ffbd",

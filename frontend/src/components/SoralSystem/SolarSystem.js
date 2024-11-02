@@ -43,8 +43,8 @@ const SolarSystem = () => {
       </div>
 
       <Canvas style={{ height: "100vh" }}>
-        <ambientLight intensity={0.1} />
-        <directionalLight position={[5, 5, 5]} />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[0, 4, 10]} />
         <Stars />
         <OrbitControls />
         <Scene
@@ -57,8 +57,8 @@ const SolarSystem = () => {
           {sunRef.current && (
             <GodRays
               sun={sunRef.current}
-              density={0.96}
-              decay={0.93}
+              density={0.91}
+              decay={0.9}
               weight={0.5}
               samples={60}
             />
@@ -99,10 +99,11 @@ const Scene = ({
       <Sun sunRef={sunRef} />
       <Orbit radius={12} speed={0.3}>
         <Planet
-          name="Blue-Green"
-          description="Жители планеты Blue-Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений."
-          textureUrl="/textures/drive-download-20241003T122711Z-001/1523-A seamless, natural-style texture inspir-Juggernaut XL - Jugg_XI_by_RunDiffusion-768700044.png"
-          size={0.5}
+          name="Green"
+          description="Жители планеты Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений."
+          // textureUrl="/imgs/1_green_upd.jpg"
+          textureUrl="/imgs/green.jpg"
+          size={1}
           setHoveredPlanet={setHoveredPlanet}
           setSelectedPlanet={setSelectedPlanet}
           selectedPlanet={selectedPlanet}
@@ -112,8 +113,9 @@ const Scene = ({
         <Planet
           name="Orange"
           description="Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей."
-          textureUrl="/textures/drive-download-20241003T122711Z-001/1524-A seamless texture representing the adva-Juggernaut XL - Jugg_XI_by_RunDiffusion-422941055.png"
-          size={0.8}
+          // textureUrl="/textures/drive-download-20241003T122711Z-001/1524-A seamless texture representing the adva-Juggernaut XL - Jugg_XI_by_RunDiffusion-422941055.png"
+          textureUrl="/imgs/orange.jpg"
+          size={1.1}
           setHoveredPlanet={setHoveredPlanet}
           setSelectedPlanet={setSelectedPlanet}
           selectedPlanet={selectedPlanet}
@@ -124,7 +126,7 @@ const Scene = ({
           name="Violet"
           description="Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей."
           textureUrl="/textures/1534-A seamless texture representing the sust-Juggernaut XL - Jugg_XI_by_RunDiffusion-1572952848.png"
-          size={1}
+          size={1.3}
           setHoveredPlanet={setHoveredPlanet}
           setSelectedPlanet={setSelectedPlanet}
           selectedPlanet={selectedPlanet}
