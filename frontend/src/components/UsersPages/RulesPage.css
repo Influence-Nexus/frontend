@@ -1,0 +1,44 @@
+  /* Общие стили для списка */
+  .outer-list, .inner-list {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  /* Стиль для элементов списка */
+  .item {
+    display: flex;
+    align-items: baseline;
+  }
+
+  /* Стиль для маркеров (A., A.1., ...) */
+  .marker {
+    font-weight: bold;
+    margin-right: 0.5rem;
+    font-size: 1.75rem;
+  }
+
+  /* Отступ для вложенных элементов списка */
+  .inner-list {
+    padding-left: 2rem;
+  }
+
+
+
+
+  /* Внутренний список (1), 2), ...) */
+  .inner-list-brackets {
+    list-style: none;
+    counter-reset: inner-counter;
+    padding-left: 2rem;
+  }
+
+  .inner-list-brackets > li {
+    counter-increment: inner-counter;
+    display: flex;
+  }
+
+  .inner-list-brackets > li::before {
+    content: counter(inner-counter) ")";
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }

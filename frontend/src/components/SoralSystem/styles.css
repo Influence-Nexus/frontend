@@ -211,16 +211,23 @@
   flex: none;
   width: 25%;
   /* height: 15%; */
-  background-color: #6c757d;
+  background-color: #6c757d9c;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+
 }
 
 .zoomed .card-header {
   position: relative;
   top: 15%;
   flex: none;
-  background-color: #6c757d;
+  background-color: #6c757d9c;
   width: 25%;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  color: rgb(255, 218, 150);
 }
+
 
 .unzoomed {
   transform: scale(1);
@@ -231,4 +238,5 @@
   margin-top: 20px;
   font-size: 18px;
   text-align: center;
+  color: rgb(255, 218, 150);
 }
