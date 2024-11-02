@@ -80,15 +80,13 @@ const RulesPage = () => {
                   окрашены серым цветом.
                 </p>
               </li>
-              <img
-                src="https://drive.google.com/file/d/1RPsEfzXIpeRbGwZ2OBtQicl7VStNAmG9/view?usp=sharing"
-                alt="Graph"
-              />
+              
             </ol>
             <h3>
               <span style={{ fontStyle: "italic" }}>Пример</span>. Модель
               «Преступление и наказание»
             </h3>
+            <img src="imgs/graph_example.png" width="300" /><br />
             <ol className="outer-list-brackets">
               <li>
                 <p>
