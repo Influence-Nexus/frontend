@@ -12,6 +12,10 @@ const SolarSystem = () => {
   const [hoveredPlanet, setHoveredPlanet] = useState(null);
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const sunRef = useRef();
+  
+  const handleHoverPlanet = setTimeout(() => {
+    setHoveredPlanet('Orange')
+  }, 500)
 
   useEffect(() => {
     const appHeader = document.querySelector(".App-header");
@@ -31,7 +35,7 @@ const SolarSystem = () => {
           alignItems: "center",
           position: "absolute",
           top: "120px",
-          left: "31%",
+          left: "35%",
           zIndex: 1,
         }}
       >
@@ -42,7 +46,7 @@ const SolarSystem = () => {
         </h1>
       </div>
 
-      <Canvas style={{ height: "100vh" }}>
+      <Canvas style={{ height: "100vh" }} camera={{ position: [15, 5, 25], fov: 70 }}>
         <ambientLight intensity={0.5} />
         <directionalLight position={[0, 4, 10]} />
         <Stars />

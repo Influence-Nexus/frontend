@@ -6,7 +6,11 @@
 
   color: #fff;
 
+  overflow: hidden;
 }
+
+
+
 
 .fullScreenVideo {
   position: fixed; 
@@ -55,7 +59,7 @@
   font-size: 81px;
   font-family: 'Cursive', sans-serif;
 
-  margin-right: 850px;
+  margin-right: 85%;
 
 }
 
@@ -72,12 +76,16 @@
   object-fit: cover;
 
   object-position: center;
+  
 
 }
 
 .contentWrapper {
+  text-align: center;
 
-  position: relative;
+  position: absolute;
+
+  top: -2%;
 
   display: flex;
 
@@ -225,3 +233,43 @@
 }
 
 
+
+
+/* Горящая статичная звезда */
+.burningStar {
+  position: absolute;
+  top: 150px; /* Настройте позицию звезды */
+  left: 350px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.8), 
+              0 0 20px 5px rgba(255, 255, 255, 0.6), 
+              0 0 30px 10px rgba(255, 255, 255, 0.4);
+}
+
+/* Эффект приближения фона */
+.backgroundImage {
+  animation: zoomBackground 10s ease-in-out forwards;
+
+}
+
+/* Анимация приближения фона */
+@keyframes zoomBackground {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* Обработка z-index для header */
+.header {
+  position: relative;
+  z-index: 10; /* Задать значение выше фона */
+}
+
+.letsGoText {
+  font: 400 81px 'Cursive', sans-serif;
+  position: absolute;
+  left: 80%;
+  top: 125%;
+}

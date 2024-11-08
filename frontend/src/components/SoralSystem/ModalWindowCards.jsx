@@ -109,8 +109,8 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
               </div>
               <div className="card-body" onClick={handleCardClick}>
                 <img
-                  width={isZoomed && index === selectedCardIndex ? "80%" : 160}
-                  height={isZoomed && index === selectedCardIndex ? "310px" : 160}
+                  width={isZoomed && index === selectedCardIndex ? "250" : 160}
+                  height={isZoomed && index === selectedCardIndex ? "250px" : 160}
                   src={segment.image}
                   alt={segment.title}
                 />
