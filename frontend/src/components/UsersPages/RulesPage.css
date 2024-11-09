@@ -42,3 +42,11 @@
     font-weight: bold;
     margin-right: 0.5rem;
   }
+
+
+
+
+  #listik {
+    list-style-type: '👉';
+    padding-inline-start: 1ch;
+  }

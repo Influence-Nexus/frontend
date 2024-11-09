@@ -56,10 +56,10 @@
 
 .comabla{
   color: rgba(255, 255, 255, 1);
-  font-size: 81px;
+  font-size: 64px;
   font-family: 'Cursive', sans-serif;
 
-  margin-right: 85%;
+  margin-right: 65%;
 
 }
 
@@ -268,8 +268,8 @@
 }
 
 .letsGoText {
-  font: 400 81px 'Cursive', sans-serif;
+  font: 400 96px 'Cursive', sans-serif;
   position: absolute;
-  left: 80%;
+  left: 70%;
   top: 125%;
 }

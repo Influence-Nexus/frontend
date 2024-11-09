@@ -29,6 +29,11 @@ export const SciencePageButtons = () => {
           ))}
         {/* </a> */}
       </button>
+
+
+      <button id="algo-button" onClick={() => handleCheckSequence()}>
+          <h4>Algorithm</h4>
+      </button>
     </div>
   );
 };

@@ -1,19 +1,21 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./RulesPage.css";
+import { Link } from 'react-router-dom';
+
 
 const RulesPage = () => {
   return (
     <div className="container mt-5" style={{ color: "white" }}>
-      <h1 className="mb-4" style={{ textAlign: "center" }}>
-        ВСТРЕЧАЙТЕ ЭКВИЛИБРИУМ!
+      <h1 className="mb-4" style={{ textAlign: "center", color: 'rgb(114, 144, 255)', fontSize: "4em", fontFamily: "Moon Dance, regular, cursive" }}>
+        Встречайте Equilibrium!
       </h1>
       <h2 style={{ textAlign: "center" }}>Цель игры</h2>
       <p>
         &emsp;&emsp;Набрать как можно больше очков из 100 возможных за одну
         игру. Это означает уровень изменения ситуации в лучшую сторону благодаря
         Вашей стратегии действий. Игра заканчивается, когда у игрока не остается
-        больше ходов.
+        больше ходов. ВИДЕО с соответствующими действиями доступно по кнопке <button style={{ borderRadius: "10px", color: "white", backgroundColor: "#4F75FF" }} href="/">GUIDE</button>
       </p>
       <h2 style={{ textAlign: "center" }}>Ход игры</h2>
       <p>&emsp;&emsp;Игра идет в два этапа:</p>
@@ -80,7 +82,7 @@ const RulesPage = () => {
                   окрашены серым цветом.
                 </p>
               </li>
-              
+
             </ol>
             <h3>
               <span style={{ fontStyle: "italic" }}>Пример</span>. Модель
@@ -250,9 +252,7 @@ const RulesPage = () => {
               <p>
                 <strong>Максимально возможная </strong>(оптимальная) реакция
                 модели рассчитывается алгоритмом игры с помощью специального
-                математического инструментария, расположенного по
-                <a href="https://github.com/Simon1093/cognition/"> адресу </a> и
-                доступно по кнопке Science.
+                математического алгоритма - <Link to={"/science"}><button style={{ borderRadius: "10px", color: "white", backgroundColor: "#4F75FF" }}>Algorithm</button></Link>.
               </p>
             </li>
             <li>

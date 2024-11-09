@@ -76,9 +76,14 @@ export const TableSmall = () => {
 
       <h5 style={{ color: "#ffd700", height: '48px' }}>Step 1: Находим силу воздействия каждого узла по алгоритму из [Science]</h5>
 
-      <h2 id="small-table-name">
+      {/* <h2 id="small-table-name">
         Отклики и воздействия, рассчитанные алгоритмом [
         <a href="https://arxiv.org">1</a>]
+      </h2> */}
+      
+      <h2 id="small-table-name">
+        Отклики и воздействия, рассчитанные   
+        <a href="https://arxiv.org"> алгоритмом</a>
       </h2>
 
       <div className="small-table-container">

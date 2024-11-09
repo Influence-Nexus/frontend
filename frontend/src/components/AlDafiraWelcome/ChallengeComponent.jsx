@@ -74,7 +74,7 @@ const ChallengeComponent = () => {
         <div className={styles.contentWrapper}>
           <h1 className="challengeText">
             Challenge your mind
-            <span style={{ fontFamily: "Reggae One, sans-serif" }}>!</span>
+            <span style={{ fontFamily: "Reggae One, cursive" }}>!</span>
           </h1>
           <h1 className={styles.comabla}>Coma Berenices</h1>
 

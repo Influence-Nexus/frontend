@@ -15,7 +15,7 @@ const SolarSystem = () => {
   
   const handleHoverPlanet = setTimeout(() => {
     setHoveredPlanet('Orange')
-  }, 500)
+  }, 100)
 
   useEffect(() => {
     const appHeader = document.querySelector(".App-header");
