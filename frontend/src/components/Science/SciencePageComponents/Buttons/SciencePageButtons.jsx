@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./SciencePageButtons.css";
 import KeyIcon from "@mui/icons-material/Key";
+import { Link } from "react-router-dom";
 
 export const SciencePageButtons = () => {
   const [science, setScience] = useState(2);
@@ -30,10 +31,11 @@ export const SciencePageButtons = () => {
         {/* </a> */}
       </button>
 
-
-      <button id="algo-button" onClick={() => handleCheckSequence()}>
+    <Link to="/algorithm">
+      <button id="algo-button">
           <h4>Algorithm</h4>
       </button>
+      </Link>
     </div>
   );
 };

@@ -1,52 +1,144 @@
-  /* Общие стили для списка */
-  .outer-list, .inner-list {
-    list-style-type: none;
-    padding-left: 0;
-  }
+.Rules-div {
+  font-family: "Montserrat";
+  color: white;
+}
+.Rules-div strong{
+  font-weight: 850;
+}
+.Rules-div h1 {
+  margin: 0;
+  padding: 0;
+  font-size: 5em;
+}
 
-  /* Стиль для элементов списка */
-  .item {
-    display: flex;
-    align-items: baseline;
-  }
+.Rules-div h2 {
+  margin: 0;
+  padding: 0;
+}
 
-  /* Стиль для маркеров (A., A.1., ...) */
-  .marker {
-    font-weight: bold;
-    margin-right: 0.5rem;
-    font-size: 1.75rem;
-  }
+.Rules-div h3 {
+  margin: 0;
+  padding: 0;
+}
 
-  /* Отступ для вложенных элементов списка */
-  .inner-list {
-    padding-left: 2rem;
-  }
+.Rules-div h4 {
+  margin: 0;
+  padding: 0;
+}
+
+.Rules-div h5 {
+  margin: 0;
+  padding: 0;
+}
+
+.Rules-div p {
+  margin: 0;
+  padding: 0;
+  font-size: 1.8em !important;
+}
+
+.Rules-div a {
+  margin: 0;
+  padding: 0;
+  font-size: 1.5em !important;
+}
+
+#video-span {
+  color: red;
+}
+
+#sub-topic {
+  color: rgb(114, 144, 255);
+  text-align: center;
+  font-weight: bold;
+  font-size: 2.5em;
+}
+
+#sub-paragraph {
+  margin-left: 2rem;
+}
 
 
 
+#listik {
+  list-style-type: "✔️";
+  padding-inline-start: 1ch;
+}
 
-  /* Внутренний список (1), 2), ...) */
-  .inner-list-brackets {
-    list-style: none;
-    counter-reset: inner-counter;
-    padding-left: 2rem;
-  }
+.Example-crime-div {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
 
-  .inner-list-brackets > li {
-    counter-increment: inner-counter;
-    display: flex;
-  }
+#crime-img {
+  width: 150%;
+}
 
-  .inner-list-brackets > li::before {
-    content: counter(inner-counter) ")";
-    font-weight: bold;
-    margin-right: 0.5rem;
-  }
+.Start-End-Phrase {
+  text-align: center;
+  color: rgb(114, 144, 255);
+  font-size: 4em;
+  font-family: "Moon Dance", regular, cursive;
+}
+
+#letter-sublist-uncolored {
+  margin-left: 5em;
+}
+
+#letter-sublist-uncolored li::marker {
+  color: red;
+  font-size: 1.5em;
+}
+
+#letter-list-uncolored li::marker {
+  color: red;
+  /* font-size: 1.5em; */
+  font-size: calc(1.325rem + .9vw);
+}
+
+
+#sub-list-colored-span {
+  color: red;
+  font-size: 1.5em;
+
+}
+
+#sub-list-colored-div {
+  display: flex;
+  text-align: start;
+  margin-left: 3em;
+  gap: 10px;
+  align-items: center;
+}
+
+#num-list-uncolored li::marker {
+  color: white;
+  font-size: 1.5em;
+}
+
+#disc-list-uncolored li::marker {
+  color: white;
+  font-size: 2em;
+}
 
 
 
+.strong-text-p {
+  font-weight: 1000;
+}
 
-  #listik {
-    list-style-type: '👉';
-    padding-inline-start: 1ch;
-  }
+#list-header-h2 {
+  font-weight: 800;
+  
+
+}
+
+#spanned-list-header-p {
+  color: rgb(114, 144, 255);
+}
+
+
+.players-capabilities-list{
+  margin-left: 2.5em;
+}

@@ -12,6 +12,7 @@ import ChallengeComponent from './components/AlDafiraWelcome/ChallengeComponent'
 import CodeChallenge from './components/ChallengeYour/CodeChallenge';
 
 import { SciencePage } from './components/Science/Page/SciencePage';
+import { AlgoPage } from './components/Science/AlgoPAge/AlgoPage';
 
 
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/rules" element={<RulesPage />} />
         <Route path="/science" element={<SciencePage />} />
         <Route path="/ChallengeComponent" element={<ChallengeComponent />} />
+        <Route path="/algorithm" element={<AlgoPage />} />
       </Routes>
     </Router>
   );
