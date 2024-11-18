@@ -197,7 +197,7 @@ const RulesPage = () => {
                 связей между ними. Для этого, при наведении курсора на объект
                 представляется:
               </p>
-              <ul type="circle" className="players-capabilities-list">
+              <ul type="circle" id="players-capabilities-list">
                 <li>
                   <p>перечень узлов модели;</p>
                 </li>
@@ -279,6 +279,7 @@ const RulesPage = () => {
                     borderRadius: "10px",
                     color: "white",
                     backgroundColor: "#4F75FF",
+                    fontSize: "0.6em"
                   }}
                 >
                   Algorithm

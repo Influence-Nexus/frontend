@@ -3,16 +3,16 @@ import { Canvas, useLoader, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, GodRays } from "@react-three/postprocessing";
 import { OrbitControls, Stars, Html, Text } from "@react-three/drei";
 import * as THREE from "three";
-import {PlanetCard} from "./ModalWindowCards"
+import { PlanetCard } from "./ModalWindowCards";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css"; // Import the CSS file for styling
-
 
 const SolarSystem = () => {
   const [hoveredPlanet, setHoveredPlanet] = useState(null);
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const sunRef = useRef();
-  
+
+
   const handleHoverPlanet = setTimeout(() => {
     setHoveredPlanet('Orange')
   }, 100)
@@ -39,7 +39,6 @@ const SolarSystem = () => {
           zIndex: 1,
         }}
       >
-        {/* <h1 className="text-block-solar">Al-Dafira</h1> */}
         <h1 className="text-block-solar">
           Challenge your mind
           <span style={{ fontFamily: "Reggae One, cursive" }}>!</span>
@@ -69,19 +68,6 @@ const SolarSystem = () => {
           )}
         </EffectComposer>
       </Canvas>
-      {/* {hoveredPlanet && (
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            color: "white",
-            pointerEvents: "none",
-          }}
-        >
-         {hoveredPlanet}
-        </div>
-      )} */}
       {selectedPlanet && (
         <PlanetCard
           selectedPlanet={selectedPlanet}
@@ -101,12 +87,13 @@ const Scene = ({
   return (
     <>
       <Sun sunRef={sunRef} />
+
       <Orbit radius={12} speed={0.3}>
         <Planet
           name="Green"
           description="Жители планеты Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений."
-          // textureUrl="/imgs/1_green_upd.jpg"
-          textureUrl="/imgs/green.jpg"
+          textureUrl="/imgs/new/craiyon_212148.png"
+
           size={1}
           setHoveredPlanet={setHoveredPlanet}
           setSelectedPlanet={setSelectedPlanet}
@@ -117,7 +104,6 @@ const Scene = ({
         <Planet
           name="Orange"
           description="Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей."
-          // textureUrl="/textures/drive-download-20241003T122711Z-001/1524-A seamless texture representing the adva-Juggernaut XL - Jugg_XI_by_RunDiffusion-422941055.png"
           textureUrl="/imgs/orange.jpg"
           size={1.1}
           setHoveredPlanet={setHoveredPlanet}
@@ -218,6 +204,42 @@ const Planet = ({
     });
   };
 
+  const createAtmosphereMaterial = (glowColor) => {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        c: { type: "f", value: 0.2 },
+        p: { type: "f", value: 4.0 },
+        glowColor: { type: "c", value: new THREE.Color(glowColor) },
+        viewVector: { type: "v3", value: camera.position }
+      },
+      vertexShader: `
+        uniform vec3 viewVector;
+        uniform float c;
+        uniform float p;
+        varying float intensity;
+        void main() 
+        {
+          vec3 vNormal = normalize(normalMatrix * normal);
+          vec3 vNormel = normalize(normalMatrix * viewVector);
+          intensity = pow(c - dot(vNormal, vNormel), p);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 glowColor;
+        varying float intensity;
+        void main() 
+        {
+          vec3 glow = glowColor * intensity;
+          gl_FragColor = vec4(glow, 1.0);
+        }
+      `,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+      transparent: true
+    });
+  };
+
   return (
     <group ref={planetRef}>
       <mesh
@@ -227,19 +249,35 @@ const Planet = ({
       >
         <sphereGeometry args={[size, 32, 32]} />
         <meshStandardMaterial
-          map={texture} // Используем текстуру
+          map={texture}
           emissiveIntensity={0.5}
-          roughness={0.5} // Установите шероховатость
-          metalness={0.5} // Установите металлический эффект
+          roughness={0.6}
+          metalness={0.1}
         />
       </mesh>
+      {name === "Green" && (
+        <mesh>
+          <sphereGeometry args={[size * 1.1, 32, 32]} />
+          <primitive object={createAtmosphereMaterial("#87CEFA")} /> {/* Light greenish-blue */}
+        </mesh>
+      )}
+      {name === "Orange" && (
+        <mesh>
+          <sphereGeometry args={[size * 1.1, 32, 32]} />
+          <primitive object={createAtmosphereMaterial("#FFD700")} /> {/* Light orange-yellow */}
+        </mesh>
+      )}
+      {name === "Violet" && (
+        <mesh>
+          <sphereGeometry args={[size * 1.1, 32, 32]} />
+          <primitive object={createAtmosphereMaterial("#E6E6FA")} /> {/* Light lavender */}
+        </mesh>
+      )}
       <Text position={[0, 3.5, 0]} fontSize={1} color="#ffffff">
         {name}
       </Text>
     </group>
   );
 };
-
-
 
 export default SolarSystem;

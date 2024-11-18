@@ -61,9 +61,10 @@
 
 
 #listik {
-  list-style-type: "✔️";
+  list-style-type: "√";
   padding-inline-start: 1ch;
 }
+
 
 .Example-crime-div {
   display: flex;
@@ -139,6 +140,10 @@
 }
 
 
-.players-capabilities-list{
+#players-capabilities-list{
   margin-left: 2.5em;
+}
+
+#players-capabilities-list li::marker {
+  color: white;
 }
