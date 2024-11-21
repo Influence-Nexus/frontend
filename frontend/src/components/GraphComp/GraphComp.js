@@ -14,7 +14,7 @@ import KeyIcon from "@mui/icons-material/Key";
 import "../Science/SciencePageComponents/Buttons/SciencePageButtons.css";
 
 
-import { FaMedal, FaStar, FaStopwatch  } from 'react-icons/fa';
+import { FaMedal, FaStar, FaStopwatch } from 'react-icons/fa';
 import VerticalProgressBar from './VerticalProgress';
 
 
@@ -23,6 +23,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
   const [graphData, setGraphData] = useState(null);
   const [highlightedNode, setHighlightedNode] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
+  const [selectedEdges, setSelectedEdges] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [stopwatchHistory, setStopwatchHistory] = useState([]);
@@ -46,7 +47,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
       return acc;
     }, {});
   };
-  
+
 
 
 
@@ -79,96 +80,110 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
 
   useEffect(() => {
     if (matrixInfo) {
-       console.log(matrixInfo);
-       const edges = matrixInfo.edges;
-       const oldnodes = matrixInfo.nodes;
-   
-       const nodes = new Map();
-       const nodesDataSet = new DataSet();
-       const edgesDataSet = new DataSet();
-   
-       // Шаг 1: Собираем все существующие индексы
-       const indexes = new Set();
-       edges.forEach(({ from, to }) => {
-         indexes.add(from.id);
-         indexes.add(to.id);
-       });
-   
-       // Шаг 2: Создаем отображение старых индексов на новые
-       const indexMap = new Map();
-       let newIndex = 1;
-       indexes.forEach(index => {
-         indexMap.set(index, newIndex);
-         newIndex++;
-       });
-   
-       edges.forEach(({ from, to, value }) => {
+      console.log(matrixInfo);
+      const edges = matrixInfo.edges;
+      const oldnodes = matrixInfo.nodes;
+
+      const nodes = new Map();
+      const nodesDataSet = new DataSet();
+      const edgesDataSet = new DataSet();
+
+      // Шаг 1: Собираем все существующие индексы
+      const indexes = new Set();
+      edges.forEach(({ from, to }) => {
+        indexes.add(from.id);
+        indexes.add(to.id);
+      });
+
+      // Шаг 2: Создаем отображение старых индексов на новые
+      const indexMap = new Map();
+      let newIndex = 1;
+      indexes.forEach(index => {
+        indexMap.set(index, newIndex);
+        newIndex++;
+      });
+
+      edges.forEach(({ from, to, value }) => {
         console.log(from, to, value)
-         if (value !== 0) {
-           const fromId = from;
-           const toId = to;
-   
-           if (!nodes.has(fromId)) {
-             nodes.set(fromId, { id: fromId, label: `${fromId}`, title: oldnodes[fromId].name, description: from.description});
-             nodesDataSet.add(nodes.get(fromId));
-           }
-   
-           if (!nodes.has(toId)) {
-             nodes.set(toId, { id: toId, label: `${toId}`, title: oldnodes[fromId].name, target: to.target, description: to.description });
-   
-             // Проверяем, является ли вершина целевой (target) и устанавливаем соответствующий цвет
-             if (to.target === 1) {
-               nodes.get(toId).color = 'gold';
-               nodes.get(toId).font = {
+        if (value !== 0) {
+          const fromId = from;
+          const toId = to;
+
+          if (!nodes.has(fromId)) {
+            nodes.set(fromId, { id: fromId, label: `${fromId}`, title: oldnodes[fromId].name, description: from.description });
+            nodesDataSet.add(nodes.get(fromId));
+          }
+
+          if (!nodes.has(toId)) {
+            nodes.set(toId, { id: toId, label: `${toId}`, title: oldnodes[fromId].name, target: to.target, description: to.description });
+
+            // Проверяем, является ли вершина целевой (target) и устанавливаем соответствующий цвет
+            if (to.target === 1) {
+              nodes.get(toId).color = 'gold';
+              nodes.get(toId).font = {
                 size: 25,
               }
-             }
-   
-             nodesDataSet.add(nodes.get(toId));
-           }
+            }
 
-           console.log({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`,label: value.toString(), smooth: { type: "curvedCW", roundness:edgeRoundness } })
-  
-           try{
-            edgesDataSet.add({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`,label: value.toString(), smooth: { type: "curvedCW", roundness:edgeRoundness } });
+            nodesDataSet.add(nodes.get(toId));
+          }
 
-           }catch (e) {
+          console.log({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`, label: value.toString(), smooth: { type: "curvedCW", roundness: edgeRoundness } })
+
+          try {
+            edgesDataSet.add({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`, label: value.toString(), smooth: { type: "curvedCW", roundness: edgeRoundness } });
+
+          } catch (e) {
             // инструкции для обработки ошибок
             console.log(e);
           }
-          
-         }
-       });
-   
-       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
-    }
-   }, [matrixInfo]);
-   
-  
 
-   const handleNodeClick = (event) => {
-    const clickedNodeIds = event.nodes;
-    if (clickedNodeIds.length === 1) {
-       const clickedNodeId = clickedNodeIds[0];
-       // Проверяем, находится ли выделенный узел в массиве заблокированных узлов
-       if (!lockedNodes[clickedNodeId]) {
-         // Toggle the selected state of the clicked node
-         setSelectedNodes((prevSelectedNodes) => {
-           if (prevSelectedNodes.includes(clickedNodeId)) {
-             // Deselect the node
-             return prevSelectedNodes.filter(nodeId => nodeId !== clickedNodeId);
-           } else {
-             // Select the node
-             return [...prevSelectedNodes, clickedNodeId];
-           }
-         });
-       }
+        }
+      });
+
+      setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
-   };
-   
+  }, [matrixInfo]);
+
+
+
+  const handleNodeClick = (event) => {
+    const clickedNodeIds = event.nodes;
+    const clickedEdgeIds = event.edges;
+    if (clickedNodeIds.length === 1) {
+      const clickedNodeId = clickedNodeIds[0];
+      // Проверяем, находится ли выделенный узел в массиве заблокированных узлов
+      if (!lockedNodes[clickedNodeId]) {
+        // Toggle the selected state of the clicked node
+        setSelectedNodes((prevSelectedNodes) => {
+          if (prevSelectedNodes.includes(clickedNodeId)) {
+            // Deselect the node
+            return prevSelectedNodes.filter(nodeId => nodeId !== clickedNodeId);
+          } else {
+            // Select the node
+            return [...prevSelectedNodes, clickedNodeId];
+          }
+        });
+      }
+    } if (clickedEdgeIds.length > 0) {
+      setSelectedEdges((prevSelectedEdges) => {
+        const newSelectedEdges = new Set(prevSelectedEdges);
+        clickedEdgeIds.forEach(edgeId => {
+          if (newSelectedEdges.has(edgeId)) {
+            newSelectedEdges.delete(edgeId);
+          } else {
+            newSelectedEdges.add(edgeId);
+          }
+        });
+        return Array.from(newSelectedEdges);
+      });
+    }
+  };
+
 
   const handleClearSelection = () => {
     setSelectedNodes([]);
+    setSelectedEdges([]);
   };
 
   const handleStart = () => {
@@ -205,10 +220,12 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
       console.log(lockedNodes);
 
 
-      const options = {     
+      const options = {
         edges: {
           smooth: {
-            type: 'cubicBezier',
+            // type: 'cubicBezier',
+            type: 'curvedCW',
+            roundness: edgeRoundness,
           },
           scaling: {
             min: 1,
@@ -222,6 +239,10 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
             },
           },
           arrows: { to: true },
+          color: {
+            highlight: "red"
+          },
+          chosen: true
         },
         physics: {
           enabled: physicsEnabled,
@@ -238,7 +259,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
             iterations: 1000,
             updateInterval: 25
           }
-       },
+        },
 
         //   repulsion: {
         //     centralGravity: 1,
@@ -280,19 +301,16 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
             background: selectedNodes.includes(node.id) || lockedNodes[node.id] ? 'gray' : node.target ? "gold" : "#0b001a",
           },
           fixed: lockedNodes[node.id] ? { x: true, y: true } : { x: false, y: false },
-          interaction: lockedNodes[node.id] ? false : true, 
+          interaction: lockedNodes[node.id] ? false : true,
         })));
-        
 
         allEdges.update(allEdges.get().map(edge => ({
           id: edge.id,
           color: {
-            color: edge.value > 0 ? "white" : "gold", // Green for positive, Red for negative
+            color: selectedEdges.includes(edge.id) ? "red" : edge.value > 0 ? "white" : "gold",
           },
         })));
-         
       } else {
-        // If the graph is not created yet, create a new one
         const newNetwork = new Network(container, graphData, options);
         newNetwork.on('click', handleNodeClick);
         newNetwork.on('hoverNode', (event) => {
@@ -300,185 +318,176 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
           setShowNodeList(true);
           setHoveredNode(event.node);
           setCursorPosition({ x: event.pointer.DOM.x, y: event.pointer.DOM.y });
-
-
-          
         });
         newNetwork.on('blurNode', () => {
           setHighlightedNode(null);
           setShowNodeList(false);
           setHoveredNode(null);
-
         });
-
         newNetwork.on('selectNode', (params) => {
-          // Фильтруем узлы, исключая те, которые находятся в массиве lockedNodes
           const selectableNodes = params.nodes.filter(id => !Object.keys(lockedNodes).includes(id));
-          // Устанавливаем выделение для узлов, которые не находятся в массиве lockedNodes
           newNetwork.setSelection({
-             nodes: selectableNodes,
-             edges: params.edges, // Если вам нужно управлять выделением ребер, добавьте их здесь
+            nodes: selectableNodes,
+            edges: params.edges,
           });
-         });
-
-
+        });
         networkRef.current = newNetwork;
       }
     }
-  }, [graphData, selectedNodes, lockedNodes]);
+  }, [graphData, selectedNodes, selectedEdges, lockedNodes]);
 
-// Inside the makeMove function
-const makeMove = async () => {
-  try {
-    let selectedNodesDictionary = createSelectedNodesDictionary(selectedNodes, lastIndex);
-    console.log(lastIndex);
-    const response = await fetch('http://localhost:5000/calculate_score', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ selectedNodes: selectedNodesDictionary, matrixName: matrixInfo.matrix_info.matrix_name}),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server responded with status ${response.status}`);
-    }
-
-    const responseData = await response.json();
-
-    if (responseData && typeof responseData === 'object') {
-      if (!isRunning){
-        handleStart();
-      }
-      setMoveHistory([...moveHistory, { selectedNodes, score: responseData.score }]);
-      setScore(score + responseData.score);
-      if (responseData.score > maxScorePerMove) {
-        setMaxScorePerMove(responseData.score);
-      }
-      setLastIndex(prevLastIndex => {
-        const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
-        console.log("Max index:", maxIndex);
-        console.log("Previous last index:", prevLastIndex);
-        const newIndex = maxIndex + 1;
-        console.log("New index:", newIndex);
-        return newIndex;
+  // Inside the makeMove function
+  const makeMove = async () => {
+    try {
+      let selectedNodesDictionary = createSelectedNodesDictionary(selectedNodes, lastIndex);
+      console.log(lastIndex);
+      const response = await fetch('http://localhost:5000/calculate_score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ selectedNodes: selectedNodesDictionary, matrixName: matrixInfo.matrix_info.matrix_name }),
       });
-      setServerResponseData(responseData);
-      setShowHistoryModal(true);
-      handleClearSelection();
 
-      // Блокировать выбранные вершины
-      const newLockedNodes = {};
-      selectedNodes.forEach((nodeId) => {
-        newLockedNodes[nodeId] = true;
-      });
-      setLockedNodes({ ...lockedNodes, ...newLockedNodes });
-    } else {
-      console.error('Error: Invalid or missing server response data');
+      if (!response.ok) {
+        throw new Error(`Server responded with status ${response.status}`);
+      }
+
+      const responseData = await response.json();
+
+      if (responseData && typeof responseData === 'object') {
+        if (!isRunning) {
+          handleStart();
+        }
+        setMoveHistory([...moveHistory, { selectedNodes, score: responseData.score }]);
+        setScore(score + responseData.score);
+        if (responseData.score > maxScorePerMove) {
+          setMaxScorePerMove(responseData.score);
+        }
+        setLastIndex(prevLastIndex => {
+          const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
+          console.log("Max index:", maxIndex);
+          console.log("Previous last index:", prevLastIndex);
+          const newIndex = maxIndex + 1;
+          console.log("New index:", newIndex);
+          return newIndex;
+        });
+        setServerResponseData(responseData);
+        setShowHistoryModal(true);
+        handleClearSelection();
+
+        // Блокировать выбранные вершины
+        const newLockedNodes = {};
+        selectedNodes.forEach((nodeId) => {
+          newLockedNodes[nodeId] = true;
+        });
+        setLockedNodes({ ...lockedNodes, ...newLockedNodes });
+      } else {
+        console.error('Error: Invalid or missing server response data');
+      }
+    } catch (error) {
+      console.error('Error making move:', error);
     }
-  } catch (error) {
-    console.error('Error making move:', error);
-  }
-};
+  };
 
-    
 
-return (
+
+  return (
     <div style={{ display: 'flex', zIndex: -1 }} >
 
-      
+
       <div style={{ position: 'relative', flex: '1', paddingRight: '20px' }}>
 
-      {/* Stopwatch */}
+        {/* Stopwatch */}
 
-      <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style={{top: '20px', position: 'absolute', zIndex: 1 }}>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph" type="button" role="tab" aria-controls="pills-graph" aria-selected="true">Graph</button>
-  </li>
-  <li class="nav-item" role="presentation">
+        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style={{ top: '20px', position: 'absolute', zIndex: 1 }}>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph" type="button" role="tab" aria-controls="pills-graph" aria-selected="true">Graph</button>
+          </li>
+          <li class="nav-item" role="presentation">
 
-</li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
-    </li>
-</ul>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+          </li>
+        </ul>
 
 
 
-<Modal show = {showHistoryModal} onHide={handleCloseHistoryModal} backdrop="static" keyboard={false}>
-  <Modal.Header closeButton>
-    <Modal.Title>Move History</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Selected Nodes</th>
-          <th>Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        {moveHistory.map((move, index) => (
-          <tr key={index}>
-            <td>{move.selectedNodes.join(', ')}</td>
-            <td>{move.score}</td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-    <p>Total Score: {score}</p>
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={handleCloseHistoryModal}>
-      Close
-    </Button>
-  </Modal.Footer>
-</Modal>
+        <Modal show={showHistoryModal} onHide={handleCloseHistoryModal} backdrop="static" keyboard={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Move History</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Selected Nodes</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {moveHistory.map((move, index) => (
+                  <tr key={index}>
+                    <td>{move.selectedNodes.join(', ')}</td>
+                    <td>{move.score}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <p>Total Score: {score}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseHistoryModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
 
       </div>
 
-      <div className="VerticalProgressBar-container" style={{top: '280px', position: 'absolute', zIndex: 1, color: "white"}}>
-      End Game
+      <div className="VerticalProgressBar-container" style={{ top: '280px', position: 'absolute', zIndex: 1, color: "white" }}>
+        End Game
         <VerticalProgressBar currentTime={elapsedTime} maxTime={3600} />
-      Start game
+        Start game
 
       </div>
 
 
       <div class="tab-content" id="pills-tabContent">
-          <div class="tab-pane fade show active" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab">
-                  <div className="stopwatch-container" style={{ right: 75, position: 'absolute', zIndex: 1, color: "white" }}>
-                    <div className="stopwatch-container-time"> 
-                      <h3>Time</h3>
-                      <p><FaStopwatch />{ `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}`}</p>
-                    </div>
-                    <div className="stopwatch-container-score">
-                      <h3>Score</h3>
-                      <p>
-                        <FaMedal /> {`${score}`} {/* Иконка рядом с полем "Набранные очки" */}
-                      </p>
-                    </div>
-                    <div className="stopwatch-container-table">
-                      <h3> Vertices</h3>
+        <div class="tab-pane fade show active" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab">
+          <div className="stopwatch-container" style={{ right: 75, position: 'absolute', zIndex: 1, color: "white" }}>
+            <div className="stopwatch-container-time">
+              <h3>Time</h3>
+              <p><FaStopwatch />{`${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}`}</p>
+            </div>
+            <div className="stopwatch-container-score">
+              <h3>Score</h3>
+              <p>
+                <FaMedal /> {`${score}`} {/* Иконка рядом с полем "Набранные очки" */}
+              </p>
+            </div>
+            <div className="stopwatch-container-table">
+              <h3> Vertices</h3>
 
-                    </div>
-                    <div className="stopwatch-container-buttons">
-                    <Button variant="success" onClick={handleStart} disabled={isRunning}>
-                      Start
-                    </Button>{' '}
-                    <Button variant="danger" onClick={handleStop} disabled={!isRunning}>
-                      Stop
-                    </Button>
-                  </div>                  
-                </div>
+            </div>
+            <div className="stopwatch-container-buttons">
+              <Button variant="success" onClick={handleStart} disabled={isRunning}>
+                Start
+              </Button>{' '}
+              <Button variant="danger" onClick={handleStop} disabled={!isRunning}>
+                Stop
+              </Button>
+            </div>
+          </div>
 
           {/* Graph container */}
           {graphData && (
-              <div id="graph-container" style={{ height: '755px', width: '100%', position: 'absolute', top: 210, left: 0 , zIndex: -1, backgroundColor: "#0b001a", color: "white" }}></div>
-            )}
-            {showNodeList && (
-              <div className={`node-list-container ${showNodeList ? 'visible' : ''}`}>
+            <div id="graph-container" style={{ height: '755px', width: '100%', position: 'absolute', top: 210, left: 0, zIndex: -1, backgroundColor: "#0b001a", color: "white" }}></div>
+          )}
+          {showNodeList && (
+            <div className={`node-list-container ${showNodeList ? 'visible' : ''}`}>
               <Card>
                 <Card.Header>
                   <Card.Title>Список вершин:</Card.Title>
@@ -502,8 +511,8 @@ return (
                 </Card.Body>
               </Card>
             </div>
-            )}
-{/* {hoveredNode && (
+          )}
+          {/* {hoveredNode && (
   <div 
     className="card" 
     style={{ 
@@ -539,84 +548,95 @@ return (
 
 
 
-      {selectedNodes.length > 0 && (
-        <div className="selected-nodes-list"  style={{ position: 'absolute', top: '240px', right: '320px', zIndex: 1 }}>
-          <h2>Выбранные факторы:</h2>
-          <ListGroup>
-            {selectedNodes.map((nodeId, index) => (
-              <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1}|  Node ID: ${nodeId}`}</ListGroup.Item>
-            ))}
-          </ListGroup>
-          <Button variant="outline-danger" onClick={handleClearSelection}>
-            Clear Selection
-          </Button>
-          <Button variant="primary" onClick={makeMove} disabled={selectedNodes.length === 0}>
-              Make Move
-            </Button>
+          {selectedNodes.length > 0 && (
+            <div className="selected-nodes-list" style={{ position: 'absolute', top: '240px', right: '320px', zIndex: 1 }}>
+              <h2>Выбранные факторы:</h2>
+              <ListGroup>
+                {selectedNodes.map((nodeId, index) => (
+                  <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1}| Node ID: ${nodeId}`}</ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Button variant="outline-danger" onClick={handleClearSelection}>
+                Clear Selection
+              </Button>
+              <Button variant="primary" onClick={makeMove} disabled={selectedNodes.length === 0}>
+                Make Move
+              </Button>
+            </div>
+          )}
+
+          {selectedEdges.length > 0 && (
+            <div className="selected-edges-list" style={{ position: 'absolute', top: '240px', right: '100px', zIndex: 1 }}>
+              <h2>Выбранные связи:</h2>
+              <ListGroup>
+                {selectedEdges.map((edgeId, index) => (
+                  <ListGroup.Item key={index}>{`Edge ID: ${edgeId}`}</ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Button variant="outline-danger" onClick={handleClearSelection}>
+                Clear Selection
+              </Button>
+            </div>
+          )}
         </div>
-      )}
-          
-          
-          </div>
-          
-          <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
-            {/* Stopwatch History Table */}
-      <div className="stopwatch-history-container">
-        <h2>Games History</h2>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Elapsed Time</th>
-              <th>Start Time</th>
-              <th>Selected Nodes</th>
-              <th>Final Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stopwatchHistory.map((event, index) => (
-              <tr key={index}>
-                <td>{event.elapsedTime} seconds</td>
-                <td>{event.startTime.toLocaleString()}</td>
-                <td>{event.selectedNodes.map(move => move.selectedNodes.join(', ')).join(', ')}</td>
-                <td>{event.resscore}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-
-          </div>
-          <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            {/* Render CSV Table */}
-        <div className="csv-table-container">
-          <h2>CSV Data</h2>
-          {matrixInfo && matrixInfo.csv_data && matrixInfo.csv_data.length > 0 ? (
-            <Table striped bordered hover>
+        <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
+          {/* Stopwatch History Table */}
+          <div className="stopwatch-history-container">
+            <h2>Games History</h2>
+            <table className="table">
               <thead>
                 <tr>
-                  {/* Assuming the CSV file has headers, use them as table headers */}
-                  {Object.keys(matrixInfo.csv_data[0]).map((header) => (
-                    <th key={header}>{header}</th>
-                  ))}
+                  <th>Elapsed Time</th>
+                  <th>Start Time</th>
+                  <th>Selected Nodes</th>
+                  <th>Final Score</th>
                 </tr>
               </thead>
               <tbody>
-                {matrixInfo.csv_data.map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {Object.values(row).map((cell, cellIndex) => (
-                      <td key={cellIndex}>{cell}</td>
-                    ))}
+                {stopwatchHistory.map((event, index) => (
+                  <tr key={index}>
+                    <td>{event.elapsedTime} seconds</td>
+                    <td>{event.startTime.toLocaleString()}</td>
+                    <td>{event.selectedNodes.map(move => move.selectedNodes.join(', ')).join(', ')}</td>
+                    <td>{event.resscore}</td>
                   </tr>
                 ))}
               </tbody>
-            </Table>
-          ) : (
-            <p>No CSV data available</p>
-          )}
-        </div>
+            </table>
           </div>
-      </div>    
+
+
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          {/* Render CSV Table */}
+          <div className="csv-table-container">
+            <h2>CSV Data</h2>
+            {matrixInfo && matrixInfo.csv_data && matrixInfo.csv_data.length > 0 ? (
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    {/* Assuming the CSV file has headers, use them as table headers */}
+                    {Object.keys(matrixInfo.csv_data[0]).map((header) => (
+                      <th key={header}>{header}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {matrixInfo.csv_data.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {Object.values(row).map((cell, cellIndex) => (
+                        <td key={cellIndex}>{cell}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <p>No CSV data available</p>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

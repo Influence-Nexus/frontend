@@ -92,7 +92,7 @@ const Scene = ({
         <Planet
           name="Green"
           description="Жители планеты Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений."
-          textureUrl="/imgs/new/craiyon_212148.png"
+          textureUrl="/imgs/craiyon_212148.png"
 
           size={1}
           setHoveredPlanet={setHoveredPlanet}
@@ -104,7 +104,9 @@ const Scene = ({
         <Planet
           name="Orange"
           description="Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей."
-          textureUrl="/imgs/orange.jpg"
+          // textureUrl="/imgs/orange.jpg"
+          textureUrl="/textures/img/Orange/Orange7.png"
+          
           size={1.1}
           setHoveredPlanet={setHoveredPlanet}
           setSelectedPlanet={setSelectedPlanet}
@@ -115,7 +117,8 @@ const Scene = ({
         <Planet
           name="Violet"
           description="Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей."
-          textureUrl="/textures/1534-A seamless texture representing the sust-Juggernaut XL - Jugg_XI_by_RunDiffusion-1572952848.png"
+          textureUrl="/textures/img/Violet/craiyon_132152_Create_a_fantastical_light_violet__lavender_white_texture_as_file___Make_the_color_tr.png"
+          
           size={1.3}
           setHoveredPlanet={setHoveredPlanet}
           setSelectedPlanet={setSelectedPlanet}
@@ -251,26 +254,27 @@ const Planet = ({
         <meshStandardMaterial
           map={texture}
           emissiveIntensity={0.5}
-          roughness={0.6}
-          metalness={0.1}
+          roughness={1}
+          metalness={0.5}
         />
       </mesh>
       {name === "Green" && (
         <mesh>
           <sphereGeometry args={[size * 1.1, 32, 32]} />
-          <primitive object={createAtmosphereMaterial("#87CEFA")} /> {/* Light greenish-blue */}
+          <primitive object={createAtmosphereMaterial("#52ffbd")} /> {/* Light greenish-blue */}
         </mesh>
       )}
       {name === "Orange" && (
         <mesh>
           <sphereGeometry args={[size * 1.1, 32, 32]} />
-          <primitive object={createAtmosphereMaterial("#FFD700")} /> {/* Light orange-yellow */}
+          <primitive object={createAtmosphereMaterial("#ff8b2b")} /> {/* Light orange-yellow */}
         </mesh>
       )}
       {name === "Violet" && (
         <mesh>
           <sphereGeometry args={[size * 1.1, 32, 32]} />
-          <primitive object={createAtmosphereMaterial("#E6E6FA")} /> {/* Light lavender */}
+          {/* <primitive object={createAtmosphereMaterial("#E6E6FA")} />  */}
+          <primitive object={createAtmosphereMaterial("#eea8ff")} /> 
         </mesh>
       )}
       <Text position={[0, 3.5, 0]} fontSize={1} color="#ffffff">

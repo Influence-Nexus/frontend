@@ -44,10 +44,10 @@
 }
 
 .segment-card {
-  width: 200px;
+  width: 215px;
   margin: 10px;
   transform-origin: bottom center;
-  height: 275px;
+  height: 300px;
 }
 
 .text-block-solar {
@@ -58,6 +58,8 @@
 .segment-domen-header {
   display: flex;
   justify-content: space-between;
+  position: relative;
+  top: 2%;
 }
 
 .planet-image {
@@ -100,6 +102,7 @@
   padding: 0;
   align-content: center;
   font-family: "Montserrat";
+  font-size: 15px;
 }
 .card-header p {
   margin: 0;
