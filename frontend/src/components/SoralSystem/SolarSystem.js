@@ -117,7 +117,7 @@ const Scene = ({
         <Planet
           name="Violet"
           description="Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей."
-          textureUrl="/textures/img/Violet/craiyon_132152_Create_a_fantastical_light_violet__lavender_white_texture_as_file___Make_the_color_tr.png"
+          textureUrl="/textures/img/Violet/41421.jpg"
           
           size={1.3}
           setHoveredPlanet={setHoveredPlanet}
@@ -254,8 +254,8 @@ const Planet = ({
         <meshStandardMaterial
           map={texture}
           emissiveIntensity={0.5}
-          roughness={1}
-          metalness={0.5}
+          roughness={0.5}
+          metalness={0.3}
         />
       </mesh>
       {name === "Green" && (
