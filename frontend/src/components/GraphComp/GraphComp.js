@@ -36,7 +36,13 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
 
-
+  const templatePositions = [
+    { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
+    { x: 0, y: 0 }, { x: 0, y: 0 },
+    { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
+    { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
+    { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
+  ];
 
 
   const createSelectedNodesDictionary = (selectedNodes, startIndex) => {
@@ -140,6 +146,14 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
 
         }
       });
+      // Установка начальных позиций узлов по шаблону
+      const nodesWithPositions = nodesDataSet.get().map((node, index) => ({
+        ...node,
+        x: templatePositions[index] ? templatePositions[index].x : 0,
+        y: templatePositions[index] ? templatePositions[index].y : 0,
+        fixed: true, // Фиксируем начальные позиции узлов
+      }));
+      nodesDataSet.update(nodesWithPositions);
 
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
@@ -565,7 +579,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
             </div>
           )}
 
-          {selectedEdges.length > 0 && (
+          {/* {selectedEdges.length > 0 && (
             <div className="selected-edges-list" style={{ position: 'absolute', top: '240px', right: '100px', zIndex: 1 }}>
               <h2>Выбранные связи:</h2>
               <ListGroup>
@@ -577,7 +591,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
                 Clear Selection
               </Button>
             </div>
-          )}
+          )} */}
         </div>
         <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
           {/* Stopwatch History Table */}
