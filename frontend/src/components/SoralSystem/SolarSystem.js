@@ -105,7 +105,7 @@ const Scene = ({
           name="Orange"
           description="Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей."
           // textureUrl="/imgs/orange.jpg"
-          textureUrl="/textures/img/Orange/Orange7.png"
+          textureUrl="/textures/img/Orange/craiyon_202952_Create_a_topographic_map_featuring_images_of_the.png"
           
           size={1.1}
           setHoveredPlanet={setHoveredPlanet}

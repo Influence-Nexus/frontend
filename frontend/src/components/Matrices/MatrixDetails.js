@@ -41,19 +41,26 @@ const MatrixDetails = () => {
       .then((data) => setMatrixInfo(data))
       .catch((error) =>
         console.error("Ошибка при получении информации о матрице:", error)
-      );}, [matrix_id]);
-      
+      );
+  }, [matrix_id]);
+  console.log("Matrix: ", matrixInfo.matrix_info);
+  const matrix_info = matrixInfo.matrix_info;
   return (
     <div className="container mt-4">
-      <h1 style={{color: "white", textAlign: "center", font: "400 72px Moon Dance, cursive"}}>Challenge your mind!</h1>
-      {matrixInfo && (
+      <h1
+        style={{
+          color: "white",
+          textAlign: "center",
+          font: "400 72px Moon Dance, cursive",
+        }}
+      >
+        Challenge your mind!
+      </h1>
+      {matrix_info && (
         <div>
+          <h1 className="matrix-name">{matrix_info.matrix_name}</h1>
           <div className="local-header" style={{ zIndex: 12 }}>
             <div>
-              <h1 className="matrix-name">
-                {matrixInfo.matrix_name}
-              </h1>
-
               <Button
                 className="game-button"
                 variant="primary"

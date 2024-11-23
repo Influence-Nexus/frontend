@@ -9,7 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
-import KeyIcon from "@mui/icons-material/Key";
+
 
 import "../Science/SciencePageComponents/Buttons/SciencePageButtons.css";
 
@@ -36,13 +36,13 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
 
-  const templatePositions = [
-    { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
-    { x: 0, y: 0 }, { x: 0, y: 0 },
-    { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
-    { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
-    { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
-  ];
+  // const templatePositions = [
+  //   { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
+  //   { x: 0, y: 0 }, { x: 0, y: 0 },
+  //   { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
+  //   { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
+  //   { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
+  // ];
 
 
   const createSelectedNodesDictionary = (selectedNodes, startIndex) => {
@@ -89,7 +89,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
       console.log(matrixInfo);
       const edges = matrixInfo.edges;
       const oldnodes = matrixInfo.nodes;
-
+      const matrixName = matrixInfo.matrixName;
       const nodes = new Map();
       const nodesDataSet = new DataSet();
       const edgesDataSet = new DataSet();
@@ -147,13 +147,13 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
         }
       });
       // Установка начальных позиций узлов по шаблону
-      const nodesWithPositions = nodesDataSet.get().map((node, index) => ({
-        ...node,
-        x: templatePositions[index] ? templatePositions[index].x : 0,
-        y: templatePositions[index] ? templatePositions[index].y : 0,
-        fixed: true, // Фиксируем начальные позиции узлов
-      }));
-      nodesDataSet.update(nodesWithPositions);
+      // const nodesWithPositions = nodesDataSet.get().map((node, index) => ({
+      //   ...node,
+      //   x: templatePositions[index] ? templatePositions[index].x : 0,
+      //   y: templatePositions[index] ? templatePositions[index].y : 0,
+      //   fixed: true, // Фиксируем начальные позиции узлов
+      // }));
+      // nodesDataSet.update(nodesWithPositions);
 
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
@@ -409,7 +409,6 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
   return (
     <div style={{ display: 'flex', zIndex: -1 }} >
 
-
       <div style={{ position: 'relative', flex: '1', paddingRight: '20px' }}>
 
         {/* Stopwatch */}
@@ -461,7 +460,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
 
       </div>
 
-      <div className="VerticalProgressBar-container" style={{ top: '280px', position: 'absolute', zIndex: 1, color: "white" }}>
+      <div className="VerticalProgressBar-container" style={{ top: '370px', position: 'absolute', zIndex: 1, color: "white" }}>
         End Game
         <VerticalProgressBar currentTime={elapsedTime} maxTime={3600} />
         Start game
