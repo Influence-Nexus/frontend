@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
 import './Graph.css'; // Import the CSS file for styling
 import 'bootstrap/dist/css/bootstrap.min.css'; // Подключаем файл стилей Bootstrap
@@ -9,17 +9,30 @@ import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import KeyIcon from "@mui/icons-material/Key";
 
 
 import "../Science/SciencePageComponents/Buttons/SciencePageButtons.css";
 
 
-import { FaMedal, FaStar, FaStopwatch } from 'react-icons/fa';
+import { FaInfoCircle, FaMedal, FaStar, FaStopwatch } from 'react-icons/fa';
 import VerticalProgressBar from './VerticalProgress';
+import { InfoModalWindow } from './InfoModalWindow';
 
 
 
-const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negativeEdgeColor, nodeColor, physicsEnabled, nodeSize, edgeRoundness }) => {
+const GraphComponent = ({
+  matrixInfo,
+  backgroundColor,
+  positiveEdgeColor,
+  negativeEdgeColor,
+  nodeColor,
+  physicsEnabled,
+  nodeSize,
+  edgeRoundness,
+  selectedPlanet
+}) => {
+
   const [graphData, setGraphData] = useState(null);
   const [highlightedNode, setHighlightedNode] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
@@ -34,20 +47,14 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
   const [lastIndex, setLastIndex] = useState(0);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("graph");
 
-
-  // const templatePositions = [
-  //   { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
-  //   { x: 0, y: 0 }, { x: 0, y: 0 },
-  //   { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
-  //   { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
-  //   { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 },
-  // ];
 
 
   const createSelectedNodesDictionary = (selectedNodes, startIndex) => {
     return selectedNodes.reduce((acc, nodeId, index) => {
-      console.log(startIndex);
+      // console.log(startIndex);
       // Используем индекс плюс startIndex как ключ
       acc[index + startIndex] = nodeId;
       return acc;
@@ -60,6 +67,8 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
   const [score, setScore] = useState(0); // Состояние для набранных очков
   const [maxScorePerMove, setMaxScorePerMove] = useState(0); // Состояние для максимального количества очков за ход
 
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   const [showModal, setShowModal] = useState(false);
   const [serverResponseData, setServerResponseData] = useState(null);
@@ -86,7 +95,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
 
   useEffect(() => {
     if (matrixInfo) {
-      console.log(matrixInfo);
+      // console.log(matrixInfo);
       const edges = matrixInfo.edges;
       const oldnodes = matrixInfo.nodes;
       const matrixName = matrixInfo.matrixName;
@@ -110,7 +119,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
       });
 
       edges.forEach(({ from, to, value }) => {
-        console.log(from, to, value)
+        // console.log(from, to, value)
         if (value !== 0) {
           const fromId = from;
           const toId = to;
@@ -134,14 +143,14 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
             nodesDataSet.add(nodes.get(toId));
           }
 
-          console.log({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`, label: value.toString(), smooth: { type: "curvedCW", roundness: edgeRoundness } })
+          // console.log({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`, label: value.toString(), smooth: { type: "curvedCW", roundness: edgeRoundness } })
 
           try {
-            edgesDataSet.add({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`, label: value.toString(), smooth: { type: "curvedCW", roundness: edgeRoundness } });
+            edgesDataSet.add({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`, label: value.toString(), smooth: { type: "continues", roundness: edgeRoundness } });
 
           } catch (e) {
             // инструкции для обработки ошибок
-            console.log(e);
+            // console.log(e);
           }
 
         }
@@ -231,7 +240,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
     if (graphData) {
       const container = document.getElementById('graph-container');
 
-      console.log(lockedNodes);
+      // console.log(lockedNodes);
 
 
       const options = {
@@ -275,12 +284,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
           }
         },
 
-        //   repulsion: {
-        //     centralGravity: 1,
-        //     springLength: 300,
-        //     springConstant: 0.001,
-        //   },
-        // },
+
         nodes: {
           shape: 'circle',
           size: 40,
@@ -354,7 +358,7 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
   const makeMove = async () => {
     try {
       let selectedNodesDictionary = createSelectedNodesDictionary(selectedNodes, lastIndex);
-      console.log(lastIndex);
+      // console.log(lastIndex);
       const response = await fetch('http://localhost:5000/calculate_score', {
         method: 'POST',
         headers: {
@@ -380,10 +384,10 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
         }
         setLastIndex(prevLastIndex => {
           const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
-          console.log("Max index:", maxIndex);
-          console.log("Previous last index:", prevLastIndex);
+          // console.log("Max index:", maxIndex);
+          // console.log("Previous last index:", prevLastIndex);
           const newIndex = maxIndex + 1;
-          console.log("New index:", newIndex);
+          // console.log("New index:", newIndex);
           return newIndex;
         });
         setServerResponseData(responseData);
@@ -407,251 +411,273 @@ const GraphComponent = ({ matrixInfo, backgroundColor, positiveEdgeColor, negati
 
 
   return (
-    <div style={{ display: 'flex', zIndex: -1 }} >
-
-      <div style={{ position: 'relative', flex: '1', paddingRight: '20px' }}>
-
-        {/* Stopwatch */}
-
-        <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" style={{ top: '20px', position: 'absolute', zIndex: 1 }}>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph" type="button" role="tab" aria-controls="pills-graph" aria-selected="true">Graph</button>
-          </li>
-          <li class="nav-item" role="presentation">
-
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
-          </li>
-        </ul>
+    <div style={{ display: 'flex', zIndex: -1 }}>
+      <InfoModalWindow selectedPlanet={selectedPlanet} />
 
 
+      <div>
+        <Button
+          className="game-button"
+          variant="primary"
+          onClick={() => setActiveTab("preview")}
+          style={{ zIndex: 1000 }}
+        >
+          <FaInfoCircle /> Description
+        </Button>
 
-        <Modal show={showHistoryModal} onHide={handleCloseHistoryModal} backdrop="static" keyboard={false}>
-          <Modal.Header closeButton>
-            <Modal.Title>Move History</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
+        <Button className="game-button">
+          <Link style={{ color: "white" }} to={"/science"}>
+            Science
+          </Link>
+        </Button>
+
+        <Button
+          className="game-button"
+          variant="primary"
+          onClick={() => setActiveTab("graph")}
+          style={{ zIndex: 1000 }}
+        >
+          Graph
+        </Button>
+
+        <Button
+          className="game-button"
+          variant="primary"
+          onClick={() => setActiveTab("profile")}
+          style={{ zIndex: 1000 }}
+        >
+          Profile
+        </Button>
+      </div>
+
+      {activeTab === "graph" && (
+        <>
+          <div style={{ position: 'relative', flex: '1', paddingRight: '20px' }}>
+
+            <Modal show={showHistoryModal} onHide={handleCloseHistoryModal} backdrop="static" keyboard={false}>
+              <Modal.Header closeButton>
+                <Modal.Title>Move History</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Table striped bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Selected Nodes</th>
+                      <th>Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {moveHistory.map((move, index) => (
+                      <tr key={index}>
+                        <td>{move.selectedNodes.join(', ')}</td>
+                        <td>{move.score}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+                <p>Total Score: {score}</p>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseHistoryModal}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </div>
+
+
+          <div className="VerticalProgressBar-container" style={{ top: 400, position: 'absolute', zIndex: 1, color: "white" }}>
+            <VerticalProgressBar currentTime={elapsedTime} maxTime={3600} />
+          </div>
+
+          <div class="tab-content" id="pills-tabContent">
+
+            <div class="tab-pane fade show active" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab">
+              <div className="stopwatch-container" style={{ top: 400, right: 75, position: 'absolute', zIndex: 1, color: "white" }}>
+                <div className="stopwatch-container-time">
+                  <h3>Time</h3>
+                  <p><FaStopwatch />{`${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}`}</p>
+                </div>
+                <div className="stopwatch-container-score">
+                  <h3>Score</h3>
+                  <p>
+                    <FaMedal /> {`${score}`} {/* Иконка рядом с полем "Набранные очки" */}
+                  </p>
+                </div>
+                <div className="stopwatch-container-table">
+                  <h3> Vertices</h3>
+
+                </div>
+                <div className="stopwatch-container-buttons">
+                  <Button variant="success" onClick={handleStart} disabled={isRunning}>
+                    Start
+                  </Button>{' '}
+                  <Button variant="danger" onClick={handleStop} disabled={!isRunning}>
+                    Stop
+                  </Button>
+                </div>
+              </div>
+
+
+              {graphData && (
+                <div id="graph-container" style={{ height: '755px', width: '100%', position: 'absolute', left: 0, zIndex: -1, backgroundColor: "#0b001a", color: "white" }}></div>
+              )}
+              {showNodeList && (
+                <div className={`node-list-container ${showNodeList ? 'visible' : ''}`}>
+                  <Card>
+                    <Card.Header>
+                      <Card.Title>Список вершин:</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                      <ListGroup>
+                        {graphData.nodes.get().map((node) => (
+                          <ListGroup.Item
+                            key={node.id}
+                            action
+                            className={`list-group-item ${highlightedNode === node.id ? 'active' : ''}`}
+                            onMouseEnter={() => setHighlightedNode(node.id)}
+                            onMouseLeave={() => setHighlightedNode(null)}
+                            ref={highlightedNode === node.id ? (element) => element && element.scrollIntoView({ behavior: "smooth", block: "nearest" }) : null}
+
+                          >
+                            {`${node.id} - ${node.title}`}
+                          </ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    </Card.Body>
+                  </Card>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </>
+
+
+
+
+
+
+      )}
+      {activeTab === "profile" && (
+        <div className="csv-table-container">
+          <h2>CSV Data</h2>
+          {matrixInfo && matrixInfo.csv_data && matrixInfo.csv_data.length > 0 ? (
             <Table striped bordered hover>
               <thead>
                 <tr>
-                  <th>Selected Nodes</th>
-                  <th>Score</th>
+                  {Object.keys(matrixInfo.csv_data[0]).map((header) => (
+                    <th key={header}>{header}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {moveHistory.map((move, index) => (
-                  <tr key={index}>
-                    <td>{move.selectedNodes.join(', ')}</td>
-                    <td>{move.score}</td>
+                {matrixInfo.csv_data.map((row, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {Object.values(row).map((cell, cellIndex) => (
+                      <td key={cellIndex}>{cell}</td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
             </Table>
-            <p>Total Score: {score}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseHistoryModal}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-
-      </div>
-
-      <div className="VerticalProgressBar-container" style={{ top: '370px', position: 'absolute', zIndex: 1, color: "white" }}>
-        End Game
-        <VerticalProgressBar currentTime={elapsedTime} maxTime={3600} />
-        Start game
-
-      </div>
-
-
-      <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab">
-          <div className="stopwatch-container" style={{ right: 75, position: 'absolute', zIndex: 1, color: "white" }}>
-            <div className="stopwatch-container-time">
-              <h3>Time</h3>
-              <p><FaStopwatch />{`${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}`}</p>
-            </div>
-            <div className="stopwatch-container-score">
-              <h3>Score</h3>
-              <p>
-                <FaMedal /> {`${score}`} {/* Иконка рядом с полем "Набранные очки" */}
-              </p>
-            </div>
-            <div className="stopwatch-container-table">
-              <h3> Vertices</h3>
-
-            </div>
-            <div className="stopwatch-container-buttons">
-              <Button variant="success" onClick={handleStart} disabled={isRunning}>
-                Start
-              </Button>{' '}
-              <Button variant="danger" onClick={handleStop} disabled={!isRunning}>
-                Stop
-              </Button>
-            </div>
-          </div>
-
-          {/* Graph container */}
-          {graphData && (
-            <div id="graph-container" style={{ height: '755px', width: '100%', position: 'absolute', top: 210, left: 0, zIndex: -1, backgroundColor: "#0b001a", color: "white" }}></div>
+          ) : (
+            <p>No CSV data available</p>
           )}
-          {showNodeList && (
-            <div className={`node-list-container ${showNodeList ? 'visible' : ''}`}>
-              <Card>
-                <Card.Header>
-                  <Card.Title>Список вершин:</Card.Title>
-                </Card.Header>
-                <Card.Body>
-                  <ListGroup>
-                    {graphData.nodes.get().map((node) => (
-                      <ListGroup.Item
-                        key={node.id}
-                        action
-                        className={`list-group-item ${highlightedNode === node.id ? 'active' : ''}`}
-                        onMouseEnter={() => setHighlightedNode(node.id)}
-                        onMouseLeave={() => setHighlightedNode(null)}
-                        ref={highlightedNode === node.id ? (element) => element && element.scrollIntoView({ behavior: "smooth", block: "nearest" }) : null}
+        </div>
+      )}
 
-                      >
-                        {`${node.id} - ${node.title}`}
-                      </ListGroup.Item>
-                    ))}
-                  </ListGroup>
-                </Card.Body>
-              </Card>
-            </div>
-          )}
-          {/* {hoveredNode && (
-  <div 
-    className="card" 
-    style={{ 
-      position: 'absolute', 
-      top: `${cursorPosition.y + 200}px`, 
-      left: `${cursorPosition.x}px`,
-      maxWidth: '555px',
-      maxHeight: '355px', 
-      display: 'grid',
-      gridTemplateColumns: 'auto 1fr',  // первая колонка для изображения, вторая для содержимого
-      alignItems: 'center',  // выровнять элементы по вертикали
-      overflow: 'hidden',  // скрыть излишек содержимого
+      {activeTab === "preview" && (
+        <div>
 
-    }}
-  >
-    <img 
-      src={`data:image/jpeg;base64,${graphData.nodes.get(hoveredNode).image}`} 
-      className="card-img-top" 
-      alt={`Изображение вершины ${graphData.nodes.get(hoveredNode).title}`} 
-      style={{
-        maxHeight: '355px', 
-        objectFit: 'cover',
-        width: 'auto',
-        marginRight: '15px'  // отступ между изображением и текстом
-      }} 
-    />
-    <div className="card-body" style={{ overflowY: 'auto', maxHeight: '300px' }}>
-      <h5 className="card-title">{`${graphData.nodes.get(hoveredNode).title}`}</h5>
-      <p className="card-text">{`${graphData.nodes.get(hoveredNode).description}`}</p>
+          <h2>Preview Content</h2>
+        </div>
+      )}
+
     </div>
-  </div>    
-)} */}
+
+  )
+
+};
+export default GraphComponent;
 
 
 
-          {selectedNodes.length > 0 && (
-            <div className="selected-nodes-list" style={{ position: 'absolute', top: '240px', right: '320px', zIndex: 1 }}>
-              <h2>Выбранные факторы:</h2>
-              <ListGroup>
-                {selectedNodes.map((nodeId, index) => (
-                  <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1}| Node ID: ${nodeId}`}</ListGroup.Item>
-                ))}
-              </ListGroup>
-              <Button variant="outline-danger" onClick={handleClearSelection}>
-                Clear Selection
-              </Button>
-              <Button variant="primary" onClick={makeMove} disabled={selectedNodes.length === 0}>
-                Make Move
-              </Button>
-            </div>
-          )}
+{/* <div>
+Чтобы отслеживать положение вершин графа в библиотеке **vis.js**, вы можете использовать метод `getPositions()` для получения текущих координат узлов. Затем вы можете сохранить эти позиции и обновить их, когда это необходимо. Вот как это можно сделать:
 
-          {/* {selectedEdges.length > 0 && (
-            <div className="selected-edges-list" style={{ position: 'absolute', top: '240px', right: '100px', zIndex: 1 }}>
-              <h2>Выбранные связи:</h2>
-              <ListGroup>
-                {selectedEdges.map((edgeId, index) => (
-                  <ListGroup.Item key={index}>{`Edge ID: ${edgeId}`}</ListGroup.Item>
-                ))}
-              </ListGroup>
-              <Button variant="outline-danger" onClick={handleClearSelection}>
-                Clear Selection
-              </Button>
-            </div>
-          )} */}
-        </div>
-        <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
-          {/* Stopwatch History Table */}
-          <div className="stopwatch-history-container">
-            <h2>Games History</h2>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Elapsed Time</th>
-                  <th>Start Time</th>
-                  <th>Selected Nodes</th>
-                  <th>Final Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stopwatchHistory.map((event, index) => (
-                  <tr key={index}>
-                    <td>{event.elapsedTime} seconds</td>
-                    <td>{event.startTime.toLocaleString()}</td>
-                    <td>{event.selectedNodes.map(move => move.selectedNodes.join(', ')).join(', ')}</td>
-                    <td>{event.resscore}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+## Шаги для отслеживания положения узлов
 
+1. **Создание графа**: Инициализируйте граф с узлами и ребрами.
+2. **Отслеживание изменений**: Используйте метод `getPositions()` для получения текущих координат узлов после их перемещения.
+3. **Сохранение позиций**: Сохраните полученные координаты в массив или объект для дальнейшего использования.
+4. **Обновление позиций**: При необходимости обновите позиции узлов, используя метод `update()`.
 
-        </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-          {/* Render CSV Table */}
-          <div className="csv-table-container">
-            <h2>CSV Data</h2>
-            {matrixInfo && matrixInfo.csv_data && matrixInfo.csv_data.length > 0 ? (
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    {/* Assuming the CSV file has headers, use them as table headers */}
-                    {Object.keys(matrixInfo.csv_data[0]).map((header) => (
-                      <th key={header}>{header}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {matrixInfo.csv_data.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {Object.values(row).map((cell, cellIndex) => (
-                        <td key={cellIndex}>{cell}</td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            ) : (
-              <p>No CSV data available</p>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+## Пример кода
+
+Вот пример, который демонстрирует, как отслеживать и сохранять положение узлов:
+
+```javascript
+// Создание набора узлов
+var nodes = new vis.DataSet([
+    { id: 1, label: 'Узел 1' },
+    { id: 2, label: 'Узел 2' },
+    { id: 3, label: 'Узел 3' }
+]);
+
+// Создание набора ребер
+var edges = new vis.DataSet([
+    { from: 1, to: 2 },
+    { from: 2, to: 3 }
+]);
+
+// Инициализация контейнера
+var container = document.getElementById('mynetwork');
+var data = {
+    nodes: nodes,
+    edges: edges
 };
 
-export default GraphComponent;
+// Опции графа
+var options = {
+    physics: true // Включение физики для динамического перемещения узлов
+};
+
+// Создание сети
+var network = new vis.Network(container, data, options);
+
+// Функция сохранения позиций узлов
+function saveNodePositions() {
+    var positions = network.getPositions();
+    var savedPositions = [];
+
+    for (const [id, pos] of Object.entries(positions)) {
+        savedPositions.push({
+            id: parseInt(id),
+            x: pos.x,
+            y: pos.y
+        });
+    }
+
+    console.log(savedPositions); // Сохраненные позиции узлов
+}
+
+// Пример вызова функции сохранения позиций через определенный интервал времени
+setInterval(saveNodePositions, 5000); // Сохраняем позиции каждые 5 секунд
+
+// Обработчик события перетаскивания узлов (если необходимо)
+network.on("dragEnd", function (params) {
+    saveNodePositions(); // Сохраняем позиции после перетаскивания
+});
+```
+
+### Объяснение кода
+
+- **getPositions()**: Этот метод возвращает объект с текущими позициями всех узлов в графе.
+- **Сохранение позиций**: Позиции сохраняются в массив `savedPositions`, который можно использовать для восстановления состояния графа позже.
+- **Интервал**: Позиции сохраняются каждые 5 секунд с помощью функции `setInterval`, но вы также можете сохранять их по событию (например, после перетаскивания).
+- **dragEnd**: Событие `dragEnd` позволяет вам сохранить позиции сразу после того, как пользователь закончил перемещение узла.
+
+Эти шаги позволят вам эффективно отслеживать и сохранять положение вершин в графе на основе vis.js.
+
+</div> */}

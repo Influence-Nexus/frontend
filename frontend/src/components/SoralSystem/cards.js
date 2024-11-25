@@ -233,7 +233,7 @@ export const cardcreds = {
   Violet: {
     name: "Violet",
     desc: "Устойчивое жизнеобеспечение / Сбережение природы / Надежность и безопасность.",
-    src: "/imgs/viol.png",
+    src: "/imgs/Viol.png",
     color: "#eea8ff",
   },
 };

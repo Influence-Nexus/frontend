@@ -6,7 +6,6 @@ import "./styles.css"; // Import the CSS file for styling
 import { useState } from "react";
 
 export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
-  const [showReviewWindow, setShowReviewWindow] = useState(false); // Состояние для окна "Исследуйте граф"
   const [selectedCardIndex, setSelectedCardIndex] = useState(null); // Хранилище для индексов
   const [isClosing, setIsClosing] = useState(false); // Для работы анимации
   const [isZoomed, setIsZoomed] = useState(false); // State for zoom effect
@@ -14,18 +13,11 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
   // const [currentPage, setCurrentPage] = useState(1);
   // const cardsPerPage = 6;
 
-  const handleCloseReviewWindow = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsClosing(false);
-      setShowReviewWindow(false);
-    }, 700);
-  };
 
-  const handleOpenReviewWindow = (index) => {
+
+  const handleZoomWindow = (index) => {
     setIsZoomed(true); // Set zoom state
     setTimeout(() => {
-      setShowReviewWindow(true);
       setSelectedCardIndex(index);
     }, 700); // Delay to allow zoom animation to complete
   };
@@ -79,29 +71,43 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
               </h3>
             </div>
           </div>
-          <Link
-            to="/"
-            className="return-main"
-            style={{
-              color: cardcreds[selectedPlanet.name].color,
-              borderColor: cardcreds[selectedPlanet.name].color,
-            }}
-          >
-            Main
-          </Link>
+          <div className="Button-Group-Modal">
+            <Link
+              to="/"
+              className="return-main"
+              style={{
+                color: cardcreds[selectedPlanet.name].color,
+                borderColor: cardcreds[selectedPlanet.name].color,
+              }}
+            >
+              Main
+            </Link>
+            <Button
+              variant="secondary"
+              onClick={() => setSelectedPlanet(null)}
+              size="lg"
+              style={{
+                position: "relative",
+                backgroundColor: "transparent",
+                border: "none",
+                color: cardcreds[selectedPlanet.name].color,
+              }}
+            >
+              <CloseIcon sx={{ width: "2rem", height: "2rem" }} />
+            </Button>
+          </div>
         </div>
 
         <div className="segment-cards">
           {currentCards.map((segment, index) => (
             <div
               key={segment.index}
-              className={`card text-white bg-secondary mb-3 segment-card segment-card-${index} ${
-                isZoomed && index === selectedCardIndex ? "zoomed" : "unzoomed"
-              }`}
+              className={`card text-white bg-secondary mb-3 segment-card segment-card-${index} ${isZoomed && index === selectedCardIndex ? "zoomed" : "unzoomed"
+                }`}
               onClick={
                 isZoomed && index === selectedCardIndex
                   ? handleZoomOut
-                  : () => {}
+                  : () => { }
               }
             >
               <div className="card-header">
@@ -115,9 +121,21 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
                   alt={segment.title}
                 />
                 {isZoomed && index === selectedCardIndex && (
-                  <div className="card-description">
-                    <p>{segment.description}</p>
+                  <div>
+                    <div className="card-description">
+                      <p>{segment.description}</p>
+                    </div>
+                    <div className="card-footer"  >
+                      <Link
+                        id="buttonPlayZoommedCard"
+                        style={{ backgroundColor: cardcreds[selectedPlanet.name].color }}
+                        to={`/matrix/${selectedCardIndex + 1}`} state={{ selectedPlanet }}
+                      >
+                        <p>Play</p>
+                      </Link>
+                    </div>
                   </div>
+
                 )}
                 <div className="text-center">
                   {isZoomed && index === selectedCardIndex ? (
@@ -125,13 +143,15 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
                       className="btn-CLOSE"
                       style={{
                         color: cardcreds[selectedPlanet.name].color,
-                        borderColor: cardcreds[selectedPlanet.name].color,
+                        // borderColor: cardcreds[selectedPlanet.name].color,
+                        border: 'none',
                         backgroundColor: "transparent",
                         borderRadius: "10px",
                       }}
                       onClick={handleZoomOut}
                     >
-                      Close
+                      <CloseIcon />
+
                     </button>
                   ) : (
                     <button
@@ -140,7 +160,7 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
                         color: cardcreds[selectedPlanet.name].color,
                         borderColor: cardcreds[selectedPlanet.name].color,
                       }}
-                      onClick={() => handleOpenReviewWindow(index)} // Open modal on button click
+                      onClick={() => handleZoomWindow(index)} // Open modal on button click
                     >
                       pick
                     </button>
@@ -152,44 +172,7 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
         </div>
 
         {/* Добавляем кнопку для возврата к виду солнечной системы */}
-        <Button
-          variant="secondary"
-          onClick={() => setSelectedPlanet(null)}
-          className="mb-3"
-          size="sm"
-          style={{
-            width: "55px",
-            position: "absolute",
-            top: "90%",
-            left: "95%",
-          }}
-        >
-          <CloseIcon />
-        </Button>
         {/* Окно "Исследуйте граф" */}
-        <Modal
-          show={showReviewWindow}
-          centered
-          animation={false}
-          className={`modal-window ${isClosing ? "in" : "out"}`}
-          dialogClassName="custom-modal"
-          contentClassName="custom-modal-content"
-        >
-          <Modal.Body className="GraphReviewModalBody">
-            <Modal.Title id="graph-preview-title">Graph Preview</Modal.Title>
-          </Modal.Body>
-          <Modal.Footer className="GraphReviewModalFooter">
-            <Link
-              id="buttonOkGraphReview"
-              to={`/matrix/${selectedCardIndex + 1}`}
-            >
-              <p>Ok</p>
-            </Link>
-            <button id="buttonNoGraphReview" onClick={handleCloseReviewWindow}>
-              <p>Next</p>
-            </button>
-          </Modal.Footer>
-        </Modal>
       </div>
     </div>
   );

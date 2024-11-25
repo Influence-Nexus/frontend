@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { Modal, Button, Form } from "react-bootstrap";
 import { FaCog, FaInfoCircle } from "react-icons/fa"; // Импортируем иконки FaCog и FaInfoCircle из react-icons/fa
 import KeyIcon from "@mui/icons-material/Key";
 import GraphComponent from "../GraphComp/GraphComp";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../GraphComp/Graph.css"; // Импортируем файл CSS для стилизации
+import { cardcreds } from "../SoralSystem/cards";
+
+
+
 
 const MatrixDetails = () => {
   const { matrix_id } = useParams();
   const [matrixInfo, setMatrixInfo] = useState({});
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState("#FFFFFF"); // Состояние для цвета фона
   const [nodeColor, setNodeColor] = useState("#FF5733"); // Состояние для цвета узлов
@@ -18,10 +22,10 @@ const MatrixDetails = () => {
   const [negativeEdgeColor, setNegativeEdgeColor] = useState("#FF0000"); // Состояние для цвета отрицательных ребер
   const [physicsEnabled, setPhysicsEnabled] = useState(false);
   const [nodeSize, setNodeSize] = useState(40);
-  const [edgeRoundness, setEdgeRoundness] = useState(0.1);
+  const [edgeRoundness, setEdgeRoundness] = useState(0.3);
 
-  const handleOpenModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  // const handleOpenModal = () => setShowModal(true);
+  // const handleCloseModal = () => setShowModal(false);
 
   const handleOpenSettingsModal = () => setShowSettingsModal(true);
   const handleCloseSettingsModal = () => setShowSettingsModal(false);
@@ -34,6 +38,13 @@ const MatrixDetails = () => {
   const handleNodeSizeChange = (size) => setNodeSize(size);
   const handleEdgeRoundnessChange = (roundness) => setEdgeRoundness(roundness);
 
+
+
+
+  const location = useLocation();
+  const selectedPlanet = location.state?.selectedPlanet;
+  console.log("Planet: ", selectedPlanet)
+
   useEffect(() => {
     // Получение подробной информации о выбранной матрице
     fetch(`http://localhost:5000/matrix/${matrix_id}`)
@@ -43,8 +54,8 @@ const MatrixDetails = () => {
         console.error("Ошибка при получении информации о матрице:", error)
       );
   }, [matrix_id]);
-  console.log("Matrix: ", matrixInfo.matrix_info);
   const matrix_info = matrixInfo.matrix_info;
+  console.log('matrix_info', matrix_info)
   return (
     <div className="container mt-4">
       <h1
@@ -58,28 +69,34 @@ const MatrixDetails = () => {
       </h1>
       {matrix_info && (
         <div>
-          <h1 className="matrix-name">{matrix_info.matrix_name}</h1>
+          <div className="Graph-Planet-Card-Info">
+            <img
+              className="planet-image"
+              src={`../${cardcreds[selectedPlanet.name].src}`}
+            />
+            <h1 className="matrix-name" style={{ color: cardcreds[selectedPlanet.name].color }}>{matrix_info.matrix_name}</h1>
+          </div>
           <div className="local-header" style={{ zIndex: 12 }}>
             <div>
-              <Button
+              {/* <Button
                 className="game-button"
                 variant="primary"
                 onClick={handleOpenModal}
                 style={{ zIndex: 1000 }}
               >
                 <FaInfoCircle /> Preview
-                {/* Иконка FaInfoCircle внутри кнопки */}
+            
               </Button>
 
               <Button
                 className="game-button"
-                // id="pills-graph-tab"
-                // data-bs-toggle="pill"
-                // data-bs-target="#pills-graph"
-                // type="button"
-                // role="tab"
-                // aria-controls="pills-graph"
-                // aria-selected="true"
+              // id="pills-graph-tab"
+              // data-bs-toggle="pill"
+              // data-bs-target="#pills-graph"
+              // type="button"
+              // role="tab"
+              // aria-controls="pills-graph"
+              // aria-selected="true"
               >
                 {" "}
                 <Link style={{ color: "white" }} to={"/science"}>
@@ -87,8 +104,8 @@ const MatrixDetails = () => {
                 </Link>
                 <KeyIcon key={0} />
                 <KeyIcon key={1} />
-                {/* <KeyIcon key={2} /> */}
-              </Button>
+            
+              </Button> */}
             </div>
           </div>
           <div>
@@ -102,16 +119,12 @@ const MatrixDetails = () => {
                 physicsEnabled={physicsEnabled}
                 nodeSize={nodeSize}
                 edgeRoundness={edgeRoundness}
+                selectedPlanet={selectedPlanet}
                 style={{ zIndex: -1 }}
               />
             )}
           </div>
-          <Modal show={showModal} onHide={handleCloseModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>{matrixInfo.matrix_name}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>{matrixInfo.description}</Modal.Body>
-          </Modal>
+
           {/* Конец окна "Исследуйте граф" чтоб не искать границы хД */}
           <Modal show={showSettingsModal} onHide={handleCloseSettingsModal}>
             <Modal.Header closeButton>

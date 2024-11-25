@@ -23,7 +23,7 @@ const MatrixList = () => {
         const response = await fetch('http://localhost:5000/matrices');
         const data = await response.json();
 
-        console.log('API response:', data);
+        // console.log('API response:', data);
         setMatrices(data.matrices);
         setLoading(false);
       } catch (error) {

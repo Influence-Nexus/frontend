@@ -83,6 +83,12 @@
   gap: 20px;
 }
 
+.btn-CLOSE {
+  position: absolute;
+  top: -9%;
+  left: 90%;
+}
+
 .btn-CHECK {
   background-color: black;
   border: 3px solid;
@@ -91,8 +97,8 @@
   padding-left: 15px;
   padding-right: 15px;
   position: absolute;
-  display: flex;
-  left: calc(34% + 1px);
+  /* left: calc(34% + 1px); */
+  left: 4.7em;
   top: 85%;
   align-self: last baseline;
 }
@@ -110,7 +116,7 @@
   padding: 0;
 }
 
-.GraphReviewModalBody {
+.GraphPreviewModalBody {
   display: flex;
   justify-content: center;
   color: rgb(255, 218, 150);
@@ -119,9 +125,10 @@
 #graph-preview-title {
   font-size: 2em;
   font-family: "Montserrat";
+  text-align: center;
 }
 
-.GraphReviewModalFooter {
+.GraphPreviewModalFooter {
   display: flex;
   justify-content: center !important;
   gap: 2em;
@@ -130,11 +137,10 @@
   border: none;
 }
 
-#buttonOkGraphReview {
+#buttonOkGraphPreview {
   color: #342b41;
   display: flex;
-  background-color: #56b077;
-  border: 0px solid transparent;
+  border: none;
   border-radius: 15px;
   width: 120px;
   height: 50px;
@@ -142,23 +148,28 @@
   justify-content: center;
 }
 
-#buttonOkGraphReview p {
+
+#buttonPlayZoommedCard p{
+margin: 0;
+}
+
+#buttonOkGraphPreview p {
   margin: 0;
 }
 
-#buttonNoGraphReview {
-  /* background-color: #342B41; */
+#buttonNoGraphPreview {
+  
   background: transparent;
-  /* border: 0px solid transparent; */
+  
   border: 3px solid #56b077;
-  color: #56b077;
+  
   font-weight: 800;
   border-radius: 15px;
   width: 120px;
   height: 50px;
 }
 
-#buttonNoGraphReview p {
+#buttonNoGraphPreview p {
   margin: 0;
   font-size: 24px
 }
@@ -250,8 +261,39 @@
   margin-top: 20px;
   height: 150px;
   margin-bottom: 10px;
-  overflow: scroll;
+  overflow-y: auto;
   font-size: 18px;
   text-align: center;
   color: rgb(255, 218, 150);
+  overflow-x: hidden;
+}
+
+
+.Button-Group-Modal {
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+
+.card-footer {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+  height: 45px;
+  align-items: center;
+}
+
+
+#buttonPlayZoommedCard {
+  color: #342b41;
+  display: flex;
+  align-content: center;
+  border: none;
+  border-radius: 15px;
+  width: 80px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
 }
