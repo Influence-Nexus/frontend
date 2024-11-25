@@ -43,7 +43,7 @@ const MatrixDetails = () => {
 
   const location = useLocation();
   const selectedPlanet = location.state?.selectedPlanet;
-  console.log("Planet: ", selectedPlanet)
+  // console.log("Planet: ", selectedPlanet)
 
   useEffect(() => {
     // Получение подробной информации о выбранной матрице
@@ -55,7 +55,8 @@ const MatrixDetails = () => {
       );
   }, [matrix_id]);
   const matrix_info = matrixInfo.matrix_info;
-  console.log('matrix_info', matrix_info)
+
+
   return (
     <div className="container mt-4">
       <h1
