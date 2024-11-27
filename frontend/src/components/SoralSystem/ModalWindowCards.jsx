@@ -129,7 +129,7 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
                       <Link
                         id="buttonPlayZoommedCard"
                         style={{ backgroundColor: cardcreds[selectedPlanet.name].color }}
-                        to={`/matrix/${selectedCardIndex + 1}`} state={{ selectedPlanet }}
+                        to={`/matrix/${selectedCardIndex + 1}`} state={{ selectedPlanet, selectedCardIndex }}
                       >
                         <p>Play</p>
                       </Link>

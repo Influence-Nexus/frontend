@@ -16,6 +16,7 @@ import "../Science/SciencePageComponents/Buttons/SciencePageButtons.css";
 import { FaInfoCircle, FaMedal, FaStar, FaStopwatch } from "react-icons/fa";
 import VerticalProgressBar from "./VerticalProgress";
 import { InfoModalWindow } from "./InfoModalWindow";
+import { cardcreds, cards } from "../SoralSystem/cards";
 
 const GraphComponent = ({
   matrixInfo,
@@ -27,6 +28,7 @@ const GraphComponent = ({
   nodeSize,
   edgeRoundness,
   selectedPlanet,
+  selectedCardIndex,
 }) => {
   const [graphData, setGraphData] = useState(null);
   const [highlightedNode, setHighlightedNode] = useState(null);
@@ -43,7 +45,6 @@ const GraphComponent = ({
   const [hoveredNode, setHoveredNode] = useState(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [activeTab, setActiveTab] = useState("graph");
   const [showModal, setShowModal] = useState(false);
   const [serverResponseData, setServerResponseData] = useState(null);
 
@@ -68,6 +69,8 @@ const GraphComponent = ({
   const handleShowHistoryModal = () => setShowHistoryModal(true);
   const handleCloseHistoryModal = () => setShowHistoryModal(false);
 
+  console.log('selectedCardIndex', selectedCardIndex)
+
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
@@ -85,7 +88,6 @@ const GraphComponent = ({
       // console.log(matrixInfo);
       const edges = matrixInfo.edges;
       const oldnodes = matrixInfo.nodes;
-      const matrixName = matrixInfo.matrixName;
       const nodes = new Map();
       const nodesDataSet = new DataSet();
       const edgesDataSet = new DataSet();
@@ -460,6 +462,7 @@ const GraphComponent = ({
                 justifyContent: "center",
                 gap: "10px",
               }}
+              onClick={handleOpenModal}
             >
               <InfoIcon /> Description
             </button>
@@ -471,7 +474,7 @@ const GraphComponent = ({
           </li>
           <li class="nav-item" role="presentation">
             <button
-              className="game-button"
+              className="game-button active"
               id="pills-graph-tab"
               data-bs-toggle="pill"
               data-bs-target="#pills-graph"
@@ -499,6 +502,13 @@ const GraphComponent = ({
             </button>
           </li>
         </ul>
+
+        <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>{cards[selectedPlanet.name][selectedCardIndex].title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{cards[selectedPlanet.name][selectedCardIndex].description}</Modal.Body>
+          </Modal>
 
         <Modal
           show={showHistoryModal}

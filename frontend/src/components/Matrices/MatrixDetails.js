@@ -6,7 +6,7 @@ import KeyIcon from "@mui/icons-material/Key";
 import GraphComponent from "../GraphComp/GraphComp";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../GraphComp/Graph.css"; // Импортируем файл CSS для стилизации
-import { cardcreds } from "../SoralSystem/cards";
+import { cardcreds, cards } from "../SoralSystem/cards";
 
 
 
@@ -43,6 +43,7 @@ const MatrixDetails = () => {
 
   const location = useLocation();
   const selectedPlanet = location.state?.selectedPlanet;
+  const selectedCardIndex = location.state?.selectedCardIndex
   // console.log("Planet: ", selectedPlanet)
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const MatrixDetails = () => {
   }, [matrix_id]);
   const matrix_info = matrixInfo.matrix_info;
 
+console.log('matrix_info', matrixInfo)
 
   return (
     <div className="container mt-4">
@@ -75,7 +77,7 @@ const MatrixDetails = () => {
               className="planet-image"
               src={`../${cardcreds[selectedPlanet.name].src}`}
             />
-            <h1 className="matrix-name" style={{ color: cardcreds[selectedPlanet.name].color }}>{matrix_info.matrix_name}</h1>
+            <h1 className="matrix-name" style={{ color: cardcreds[selectedPlanet.name].color }}>{cards[selectedPlanet.name][selectedCardIndex].title}</h1>
           </div>
           <div className="local-header" style={{ zIndex: 12 }}>
             <div>
@@ -121,6 +123,7 @@ const MatrixDetails = () => {
                 nodeSize={nodeSize}
                 edgeRoundness={edgeRoundness}
                 selectedPlanet={selectedPlanet}
+                selectedCardIndex={selectedCardIndex}
                 style={{ zIndex: -1 }}
               />
             )}

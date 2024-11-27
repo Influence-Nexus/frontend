@@ -3,6 +3,7 @@
     height: 100vh;
     background-color: #0b001a;
     position: relative;
+    overflow: -moz-hidden-unscrollable;
   }
   
   .label {
@@ -11,5 +12,6 @@
     border-radius: 5px;
     color: white;
     pointer-events: none;
+    overflow: -moz-hidden-unscrollable;
   }
   
