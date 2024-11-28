@@ -69,7 +69,18 @@ const GraphComponent = ({
   const handleShowHistoryModal = () => setShowHistoryModal(true);
   const handleCloseHistoryModal = () => setShowHistoryModal(false);
 
-  console.log('selectedCardIndex', selectedCardIndex)
+  // Функция для вывода координат узлов
+  const logNodeCoordinates = () => {
+    if (networkRef.current) {
+      const nodePositions = networkRef.current.body.nodes;
+      Object.keys(nodePositions).forEach((nodeId) => {
+        const node = nodePositions[nodeId];
+        console.log(`Node ${nodeId}: x=${node.x}, y=${node.y}`);
+      });
+    } else {
+      console.log("Граф ещё не инициализирован.");
+    }
+  };
 
   useEffect(() => {
     if (isRunning) {
@@ -151,9 +162,8 @@ const GraphComponent = ({
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${from.name} ${
-                value > 0 ? "увеличивается" : "уменьшается"
-              } ${to.ru_name} на ${value}`,
+              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"
+                } ${to.ru_name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
             });
@@ -248,12 +258,9 @@ const GraphComponent = ({
     if (graphData) {
       const container = document.getElementById("graph-container");
 
-      // console.log(lockedNodes);
-
       const options = {
         edges: {
           smooth: {
-            // type: 'cubicBezier',
             type: "curvedCW",
             roundness: edgeRoundness,
           },
@@ -290,7 +297,6 @@ const GraphComponent = ({
             updateInterval: 25,
           },
         },
-
         nodes: {
           shape: "circle",
           size: 40,
@@ -326,8 +332,8 @@ const GraphComponent = ({
                 selectedNodes.includes(node.id) || lockedNodes[node.id]
                   ? "gray"
                   : node.target
-                  ? "gold"
-                  : "#0b001a",
+                    ? "gold"
+                    : "#0b001a",
             },
             fixed: lockedNodes[node.id]
               ? { x: true, y: true }
@@ -343,13 +349,14 @@ const GraphComponent = ({
               color: selectedEdges.includes(edge.id)
                 ? "red"
                 : edge.value > 0
-                ? "white"
-                : "gold",
+                  ? "white"
+                  : "gold",
             },
           }))
         );
       } else {
         const newNetwork = new Network(container, graphData, options);
+
         newNetwork.on("click", handleNodeClick);
         newNetwork.on("hoverNode", (event) => {
           setHighlightedNode(event.node);
@@ -371,10 +378,20 @@ const GraphComponent = ({
             edges: params.edges,
           });
         });
+
+        // Добавляем обработчик для отслеживания координат узлов
+        newNetwork.on("dragEnd", () => {
+          const nodePositions = newNetwork.body.nodes;
+          Object.keys(nodePositions).forEach((nodeId) => {
+            const node = nodePositions[nodeId];
+          });
+        });
+
         networkRef.current = newNetwork;
       }
     }
   }, [graphData, selectedNodes, selectedEdges, lockedNodes]);
+
 
   // Inside the makeMove function
   const makeMove = async () => {
@@ -440,7 +457,7 @@ const GraphComponent = ({
   };
 
   return (
-    <div style={{ display: "flex", zIndex: -1 }}>
+    <div style={{ display: "flex", zIndex: -1, flexDirection: "column" }}>
       <div style={{ position: "relative", flex: "1", paddingRight: "20px" }}>
         {/* Stopwatch */}
 
@@ -469,7 +486,7 @@ const GraphComponent = ({
           </li>
           <li>
             <Link to={"/science"}>
-              <button className="game-button">Science</button>
+              <button className="game-button" disabled={isRunning} title={isRunning ? "Недоступно в процессе игры" : ""}>Science</button>
             </Link>
           </li>
           <li class="nav-item" role="presentation">
@@ -497,18 +514,23 @@ const GraphComponent = ({
               role="tab"
               aria-controls="profile"
               aria-selected="false"
+              disabled={isRunning}
+              title={isRunning ? "Недоступно в процессе игры" : ""}
             >
               Profile
             </button>
           </li>
+          <li>
+            <button className="game-button" onClick={logNodeCoordinates}>Вывести координаты узлов</button>
+          </li>
         </ul>
 
         <Modal show={showModal} onHide={handleCloseModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>{cards[selectedPlanet.name][selectedCardIndex].title}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>{cards[selectedPlanet.name][selectedCardIndex].description}</Modal.Body>
-          </Modal>
+          <Modal.Header closeButton>
+            <Modal.Title>{cards[selectedPlanet.name][selectedCardIndex].title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{cards[selectedPlanet.name][selectedCardIndex].description}</Modal.Body>
+        </Modal>
 
         <Modal
           show={showHistoryModal}
@@ -555,21 +577,21 @@ const GraphComponent = ({
           aria-labelledby="pills-graph-tab"
         >
           <div>
-      </div>
+          </div>
 
-        <div
-        className="VerticalProgressBar-container"
-        style={{
-          top: 430,
-          left: "13%",
-          position: "absolute",
-          zIndex: 1,
-          color: "white",
-        }}
-      >
-      <VerticalProgressBar currentTime={elapsedTime} maxTime={600} />
+          <div
+            className="VerticalProgressBar-container"
+            style={{
+              top: 430,
+              left: "13%",
+              position: "absolute",
+              zIndex: 1,
+              color: "white",
+            }}
+          >
+            <VerticalProgressBar currentTime={elapsedTime} maxTime={600} />
 
-      </div>
+          </div>
           <div
             className="stopwatch-container"
             style={{
@@ -647,19 +669,18 @@ const GraphComponent = ({
                       <ListGroup.Item
                         key={node.id}
                         action
-                        className={`list-group-item ${
-                          highlightedNode === node.id ? "active" : ""
-                        }`}
+                        className={`list-group-item ${highlightedNode === node.id ? "active" : ""
+                          }`}
                         onMouseEnter={() => setHighlightedNode(node.id)}
                         onMouseLeave={() => setHighlightedNode(null)}
                         ref={
                           highlightedNode === node.id
                             ? (element) =>
-                                element &&
-                                element.scrollIntoView({
-                                  behavior: "smooth",
-                                  block: "nearest",
-                                })
+                              element &&
+                              element.scrollIntoView({
+                                behavior: "smooth",
+                                block: "nearest",
+                              })
                             : null
                         }
                       >
@@ -685,9 +706,8 @@ const GraphComponent = ({
               <h2>Выбранные факторы:</h2>
               <ListGroup>
                 {selectedNodes.map((nodeId, index) => (
-                  <ListGroup.Item key={index + lastIndex}>{`${
-                    index + lastIndex + 1
-                  }| Node ID: ${nodeId}`}</ListGroup.Item>
+                  <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1
+                    }| Node ID: ${nodeId}`}</ListGroup.Item>
                 ))}
               </ListGroup>
               <Button variant="outline-danger" onClick={handleClearSelection}>
@@ -750,8 +770,8 @@ const GraphComponent = ({
           <div className="csv-table-container">
             <h2>CSV Data</h2>
             {matrixInfo &&
-            matrixInfo.csv_data &&
-            matrixInfo.csv_data.length > 0 ? (
+              matrixInfo.csv_data &&
+              matrixInfo.csv_data.length > 0 ? (
               <Table striped bordered hover>
                 <thead>
                   <tr>

@@ -50,6 +50,13 @@
     color: white;
   }
 
+  .game-button:disabled {
+  background-color: #ccc; /* Серый фон для disabled кнопки */
+  color: #999; /* Бледный цвет текста */
+  cursor: not-allowed; /* Указатель для disabled состояния */
+  opacity: 0.6; /* Полупрозрачность */
+}
+
   .matrix-name{
     text-align: center;
     font-family: "Montserrat";

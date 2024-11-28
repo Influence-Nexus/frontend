@@ -123,3 +123,13 @@
   display: flex;
   align-items: center;
 }
+
+
+
+.csv-table-container {
+  color: white;
+  position: relative;
+  top: 10em;
+  align-self: center;
+  text-align: center;
+}
