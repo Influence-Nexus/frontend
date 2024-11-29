@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./ChallengeComponent.module.css";
 
 const ChallengeComponent = () => {
@@ -78,7 +78,7 @@ const ChallengeComponent = () => {
           </h1>
           <h1 className={styles.comabla}>Coma Berenices</h1>
 
-          {showText && <h2 className={styles.letsGoText}>Let's go!</h2>}
+          {showText && <Link to="/solar" className={styles.letsGoText}>Let's go!</Link>}
         </div>
       </section>
 

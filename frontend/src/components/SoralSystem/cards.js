@@ -226,7 +226,6 @@ export const cardcreds = {
   Orange: {
     name: "Orange",
     desc: "Совершенное общественное устройство / Баланс социальных факторов / Настройка институционального комплекса.",
-    // src: "/imgs/orange.jpg",
     src: "imgs/craiyon_113907_Create_a_Vibrant_Fantasy_orange_marine_blue_gray_Planet_Enveloped_in_a_glowing_Lumino.png",
     color: "#ff8b2b",
   },

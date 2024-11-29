@@ -100,25 +100,22 @@ const Scene = ({
           selectedPlanet={selectedPlanet}
         />
       </Orbit>
-      <Orbit radius={16} speed={-0.05}>
+      <Orbit radius={18} speed={-0.05}>
         <Planet
           name="Orange"
           description="Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей."
-          // textureUrl="/imgs/orange.jpg"
           textureUrl="/textures/img/Orange/craiyon_202952_Create_a_topographic_map_featuring_images_of_the.png"
-          
           size={1.1}
           setHoveredPlanet={setHoveredPlanet}
           setSelectedPlanet={setSelectedPlanet}
           selectedPlanet={selectedPlanet}
         />
       </Orbit>
-      <Orbit radius={19} speed={0.05}>
+      <Orbit radius={28} speed={0.05}>
         <Planet
           name="Violet"
           description="Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей."
           textureUrl="/textures/img/Violet/41421.jpg"
-          
           size={1.3}
           setHoveredPlanet={setHoveredPlanet}
           setSelectedPlanet={setSelectedPlanet}

@@ -277,7 +277,7 @@ const GraphComponent = ({
           },
           arrows: { to: true },
           color: {
-            highlight: "red",
+            highlight: "white",
           },
           chosen: true,
         },
@@ -347,10 +347,10 @@ const GraphComponent = ({
             id: edge.id,
             color: {
               color: selectedEdges.includes(edge.id)
-                ? "red"
+                ? "white"
                 : edge.value > 0
-                  ? "white"
-                  : "gold",
+                  ? "green"
+                  : "red",
             },
           }))
         );
