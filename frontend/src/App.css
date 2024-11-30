@@ -12,17 +12,12 @@
 
 body {
   background-color: #0b001a !important;
-
 }
 
 .challengeText {
-  
   color: rgba(255, 255, 255, 1);
   font-size: 81px;
   font-family: 'Cursive', sans-serif;
-
   margin-top: 50px;
   margin-bottom: 15%;
-
-
 }

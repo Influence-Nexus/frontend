@@ -21,3 +21,14 @@
     margin-left: 5em;
 }
 
+.blue-text {
+    color: blue;
+}
+
+.blue-background {
+    background-color: blue;;
+}
+
+.italic {
+    font-style: italic;
+  }

@@ -5,13 +5,13 @@ export const AlgoPage = () => {
   return (
     <div className="AlgoPage-main-div">
       <h1>
-        Научный базис <span id="Algorithm-span">Algorithm</span>
+      <span class="blue-text">НАУЧНЫЙ БАЗИС</span> <span id="Algorithm-span" class="blue-background italic">Algorithm</span>
       </h1>
       <div className="Description-text">
         <p>
           <strong>Решаемая проблема</strong> – разработка системы искусственного
           интеллекта, воспроизводящей процесс{" "}
-          <span>принятия человеком стратегических решений</span> при управлении
+          <span class="blue-text">принятия человеком стратегических решений</span> при управлении
           сложными социо-гуманитарными системами (политическими, социальными).
         </p>
         <p>
@@ -56,14 +56,14 @@ export const AlgoPage = () => {
         </ul>
         <p>
           <strong>Исследуемая система</strong> представляется в виде{" "}
-          <span>когнитивной причинной модели</span>, представляющей собой
+          <span class="blue-text">когнитивной причинной модели</span>, представляющей собой
           ориентированный взвешенный знаковый граф с детерминированной
           причинностью на дугах. Узлы графа представляют собой институциональные
           сложные факторы реальной системы. Дуги графа выражают каузальную связь
           между узлами графа и имеют вес от (-1) до (+1).
         </p>
         <p>
-          <strong>Пример: </strong>Когнитивная причинная модель «Преступление и
+          <strong><span class="italic">Пример: </span></strong>Когнитивная причинная модель «Преступление и
           наказание».
         </p>
         <p>
@@ -72,19 +72,23 @@ export const AlgoPage = () => {
           причинной связи.
         </p>
         <img src="imgs/Crime_punishment _1.png" />
+        <br />
         <p>
           <strong>Основная идея: </strong>система установок и убеждений человека
           предопределяет его стратегическую реакцию на изменения ситуации/среды.
         </p>
         <p>
           <strong>Стратегическое решение </strong> – это{" "}
-          <span>набор управляющих воздействий</span>на систему, приводящие к
+          <span class="blue-text">набор управляющих воздействий</span>на систему, приводящие к
           желаемому изменению состояния этой системы (заданного
-          <span>отклика (реакции)</span>)
+          <span class="blue-text">отклика (реакции)</span>)
         </p>
-        <span id="Algorithm-span" style={{ alignSelf: "center" }}>
+        <br />
+        <h1 style={{ alignSelf: "center" }}>
+        <span id="Algorithm-span" class="blue-background italic" >
           Algorithm
         </span>
+        </h1>
         <h2 style={{ letterSpacing: "5px", fontWeight: "bold" }}>HIGHLIGHTS</h2>
 
         <ul>
@@ -109,11 +113,11 @@ export const AlgoPage = () => {
         </ul>
 
         <h1>
-          Научный базис <span id="Algorithm-span">Algorithm</span>
+          <span>ОСНОВНЫЕ ХАРАКТЕРИСТИКИ</span> <span id="Algorithm-span" class="blue-background italic">Algorithm</span>
         </h1>
         <p>
           Алгоритм реализует модель управления, выражающую{" "}
-          <span>направление развития </span>(роста) системы.
+          <span class="blue-text">направление развития </span>(роста) системы.
         </p>
         <p>
           Алгоритм основан на спектральных свойствах матрицы смежности графа,
@@ -150,9 +154,9 @@ export const AlgoPage = () => {
         </ol>
         <h1>МАТЕМАТИЧЕСКИЙ БАЗИС</h1>
         <p>
-          <strong>Главные научные труды (журналы Q1),</strong>в которых изложены
+          <strong>Главные научные труды (журналы Q1),</strong> в которых изложены
           математические и алгоритмические основы используемого в игре{" "}
-          <span>алгоритма</span>
+          <span class="blue-background">алгоритма</span>
         </p>
         <ol>
           <li>
