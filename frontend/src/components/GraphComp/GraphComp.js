@@ -214,9 +214,8 @@ const GraphComponent = ({
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${from.name} ${
-                value > 0 ? "увеличивается" : "уменьшается"
-              } ${to.ru_name} на ${value}`,
+              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"
+                } ${to.ru_name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
             });
@@ -385,8 +384,8 @@ const GraphComponent = ({
                 selectedNodes.includes(node.id) || lockedNodes[node.id]
                   ? "gray"
                   : node.target
-                  ? "gold"
-                  : "#0b001a",
+                    ? "gold"
+                    : "#0b001a",
             },
             fixed: lockedNodes[node.id]
               ? { x: true, y: true }
@@ -402,8 +401,8 @@ const GraphComponent = ({
               color: selectedEdges.includes(edge.id)
                 ? "white"
                 : edge.value > 0
-                ? "green"
-                : "red",
+                  ? "green"
+                  : "red",
             },
           }))
         );
@@ -610,6 +609,7 @@ const GraphComponent = ({
             {cards[selectedPlanet.name][selectedCardIndex].description}
           </Modal.Body>
         </Modal>
+        <InfoModalWindow selectedPlanet={selectedPlanet} />
 
         <Modal
           show={showHistoryModal}
@@ -647,7 +647,6 @@ const GraphComponent = ({
         </Modal>
       </div>
 
-      <InfoModalWindow selectedPlanet={selectedPlanet} />
 
       <div class="tab-content" id="pills-tabContent">
         <div
@@ -747,19 +746,18 @@ const GraphComponent = ({
                       <ListGroup.Item
                         key={node.id}
                         action
-                        className={`list-group-item ${
-                          highlightedNode === node.id ? "active" : ""
-                        }`}
+                        className={`list-group-item ${highlightedNode === node.id ? "active" : ""
+                          }`}
                         onMouseEnter={() => setHighlightedNode(node.id)}
                         onMouseLeave={() => setHighlightedNode(null)}
                         ref={
                           highlightedNode === node.id
                             ? (element) =>
-                                element &&
-                                element.scrollIntoView({
-                                  behavior: "smooth",
-                                  block: "nearest",
-                                })
+                              element &&
+                              element.scrollIntoView({
+                                behavior: "smooth",
+                                block: "nearest",
+                              })
                             : null
                         }
                       >
@@ -785,9 +783,8 @@ const GraphComponent = ({
               <h2>Выбранные факторы:</h2>
               <ListGroup>
                 {selectedNodes.map((nodeId, index) => (
-                  <ListGroup.Item key={index + lastIndex}>{`${
-                    index + lastIndex + 1
-                  }| Node ID: ${nodeId}`}</ListGroup.Item>
+                  <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1
+                    }| Node ID: ${nodeId}`}</ListGroup.Item>
                 ))}
               </ListGroup>
               <Button variant="outline-danger" onClick={handleClearSelection}>
@@ -849,8 +846,8 @@ const GraphComponent = ({
           <div className="csv-table-container">
             <h2>CSV Data</h2>
             {matrixInfo &&
-            matrixInfo.csv_data &&
-            matrixInfo.csv_data.length > 0 ? (
+              matrixInfo.csv_data &&
+              matrixInfo.csv_data.length > 0 ? (
               <Table striped bordered hover>
                 <thead>
                   <tr>
