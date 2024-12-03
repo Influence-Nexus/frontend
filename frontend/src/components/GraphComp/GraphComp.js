@@ -69,18 +69,70 @@ const GraphComponent = ({
   const handleShowHistoryModal = () => setShowHistoryModal(true);
   const handleCloseHistoryModal = () => setShowHistoryModal(false);
 
-  // Функция для вывода координат узлов
-  const logNodeCoordinates = () => {
+  const saveNodeCoordinates = () => {
     if (networkRef.current) {
       const nodePositions = networkRef.current.body.nodes;
+      const coordinates = {};
+
       Object.keys(nodePositions).forEach((nodeId) => {
         const node = nodePositions[nodeId];
-        console.log(`Node ${nodeId}: x=${node.x}, y=${node.y}`);
+        coordinates[nodeId] = { x: node.x, y: node.y };
       });
+
+      // Генерация файла с координатами
+      const file = new Blob([JSON.stringify(coordinates, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(file);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${matrixInfo.matrix_info.matrix_name}_coordinates.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      console.log('Координаты узлов сохранены в файл node_coordinates.json');
     } else {
-      console.log("Граф ещё не инициализирован.");
+      console.log('Граф ещё не инициализирован.');
     }
   };
+
+
+  const resetNodeCoordinates = () => {
+    const fileName = `/models_coords/${matrixInfo.matrix_info.matrix_name}_coordinates.json`;
+
+    fetch(fileName)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Файл ${fileName} не найден или недоступен.`);
+        }
+        return response.json();
+      })
+      .then((coordinates) => {
+        // Привязываем координаты к узлам графа
+        if (coordinates && typeof coordinates === 'object') {
+          Object.keys(coordinates).forEach((nodeId) => {
+            const node = coordinates[nodeId];
+            if (node && node.x !== undefined && node.y !== undefined) {
+              const existingNode = networkRef.current.body.nodes[nodeId];
+              if (existingNode) {
+                existingNode.x = node.x;
+                existingNode.y = node.y;
+              }
+            }
+          });
+
+          networkRef.current.redraw(); // Перерисовываем граф
+          alert('Координаты узлов успешно сброшены.');
+        } else {
+          alert('Неверный формат данных в файле.');
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка при сбросе координат:', error);
+        alert(`Ошибка: ${error.message}`);
+      });
+  };
+
 
   useEffect(() => {
     if (isRunning) {
@@ -527,10 +579,25 @@ const GraphComponent = ({
             </button>
           </li>
           <li>
-            <button className="game-button" onClick={logNodeCoordinates}>
-              Вывести координаты узлов
+            <button
+              className="game-button"
+              onClick={saveNodeCoordinates}
+            >
+              Сохранить координаты
             </button>
           </li>
+
+          <li>
+            <button
+              className="game-button"
+              onClick={resetNodeCoordinates}
+            >
+              Reset
+            </button>
+
+
+          </li>
+
         </ul>
 
         <Modal show={showModal} onHide={handleCloseModal}>

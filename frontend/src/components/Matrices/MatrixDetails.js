@@ -22,7 +22,7 @@ const MatrixDetails = () => {
   const [negativeEdgeColor, setNegativeEdgeColor] = useState("#FF0000"); // Состояние для цвета отрицательных ребер
   const [physicsEnabled, setPhysicsEnabled] = useState(false);
   const [nodeSize, setNodeSize] = useState(40);
-  const [edgeRoundness, setEdgeRoundness] = useState(0.3);
+  const [edgeRoundness, setEdgeRoundness] = useState(0.15); // Степерь искривления рёбер
 
   // const handleOpenModal = () => setShowModal(true);
   // const handleCloseModal = () => setShowModal(false);
