@@ -475,7 +475,7 @@ const GraphComponent = ({
         }
         setMoveHistory([
           ...moveHistory,
-          { selectedNodes, score: responseData.score },
+          { selectedNodes, score: responseData.turn_score },
         ]);
         setScore(score + responseData.score);
         if (responseData.score > maxScorePerMove) {
