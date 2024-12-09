@@ -11,12 +11,12 @@ const ChallengeComponent = () => {
   useEffect(() => {
     const textTimer = setTimeout(() => {
       setShowText(true);
-    }, 3000);
+    }, 1500);
 
     const videoTimer = setTimeout(() => {
       setShowVideo(true);
       setShowText(false);
-    }, 10000);
+    }, 4500);
 
     return () => {
       clearTimeout(textTimer);

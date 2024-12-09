@@ -11,7 +11,7 @@ import SpaceshipView from './components/SpaceShip/SpaceshipView';
 import ChallengeComponent from './components/AlDafiraWelcome/ChallengeComponent'
 import CodeChallenge from './components/ChallengeYour/CodeChallenge';
 
-import { SciencePage } from './components/Science/Page/SciencePage';
+import { SciencePage } from './components/Science/SciencePage';
 import { AlgoPage } from './components/Science/AlgoPAge/AlgoPage';
 
 

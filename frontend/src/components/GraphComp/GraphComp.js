@@ -148,20 +148,19 @@ const GraphComponent = ({
 
   useEffect(() => {
     if (matrixInfo) {
-      // console.log(matrixInfo);
       const edges = matrixInfo.edges;
       const oldnodes = matrixInfo.nodes;
       const nodes = new Map();
       const nodesDataSet = new DataSet();
       const edgesDataSet = new DataSet();
-
+  
       // Шаг 1: Собираем все существующие индексы
       const indexes = new Set();
       edges.forEach(({ from, to }) => {
         indexes.add(from.id);
         indexes.add(to.id);
       });
-
+  
       // Шаг 2: Создаем отображение старых индексов на новые
       const indexMap = new Map();
       let newIndex = 1;
@@ -169,74 +168,68 @@ const GraphComponent = ({
         indexMap.set(index, newIndex);
         newIndex++;
       });
-
+  
       edges.forEach(({ from, to, value }) => {
-        // console.log(from, to, value)
         if (value !== 0) {
           const fromId = from;
           const toId = to;
-
-          if (!nodes.has(fromId)) {
-            nodes.set(fromId, {
-              id: fromId,
-              label: `${fromId}`,
-              title: oldnodes[fromId].name,
-              description: from.description,
-            });
-            nodesDataSet.add(nodes.get(fromId));
-          }
-
-          if (!nodes.has(toId)) {
-            nodes.set(toId, {
-              id: toId,
-              label: `${toId}`,
-              title: oldnodes[fromId].name,
-              target: to.target,
-              description: to.description,
-            });
-
-            // Проверяем, является ли вершина целевой (target) и устанавливаем соответствующий цвет
-            if (to.target === 1) {
-              nodes.get(toId).color = "gold";
-              nodes.get(toId).font = {
-                size: 25,
-              };
+  
+          // Проверяем, существует ли узел в oldnodes
+          if (oldnodes[fromId - 1]) {  // Исправляем индекс с 1 (или любой другой вариант, в зависимости от структуры)
+            if (!nodes.has(fromId)) {
+              nodes.set(fromId, {
+                id: fromId,
+                label: `${fromId}`,
+                title: oldnodes[fromId - 1].name,  // Исправление индекса
+                description: from.description,
+              });
+              nodesDataSet.add(nodes.get(fromId));
             }
-
-            nodesDataSet.add(nodes.get(toId));
           }
-
-          // console.log({ id: `${fromId}${toId}`, from: fromId, to: toId, value, title: `При увеличении ${from.name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${to.ru_name} на ${value}`, label: value.toString(), smooth: { type: "curvedCW", roundness: edgeRoundness } })
-
+  
+          if (oldnodes[toId - 1]) {  // Проверяем существование для целевого узла
+            if (!nodes.has(toId)) {
+              nodes.set(toId, {
+                id: toId,
+                label: `${toId}`,
+                title: oldnodes[toId - 1].name,  // Исправление индекса
+                target: to.target,
+                description: to.description,
+              });
+  
+              // Проверяем, является ли вершина целевой (target) и устанавливаем соответствующий цвет
+              if (to.target === 1) {
+                nodes.get(toId).color = "gold";
+                nodes.get(toId).font = {
+                  size: 25,
+                };
+              }
+  
+              nodesDataSet.add(nodes.get(toId));
+            }
+          }
+  
           try {
             edgesDataSet.add({
               id: `${fromId}${toId}`,
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"
-                } ${to.ru_name} на ${value}`,
+              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"} ${to.ru_name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
             });
           } catch (e) {
-            // инструкции для обработки ошибок
-            // console.log(e);
+            // Обработка ошибок
+            console.log(e);
           }
         }
       });
-      // Установка начальных позиций узлов по шаблону
-      // const nodesWithPositions = nodesDataSet.get().map((node, index) => ({
-      //   ...node,
-      //   x: templatePositions[index] ? templatePositions[index].x : 0,
-      //   y: templatePositions[index] ? templatePositions[index].y : 0,
-      //   fixed: true, // Фиксируем начальные позиции узлов
-      // }));
-      // nodesDataSet.update(nodesWithPositions);
-
+  
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
   }, [matrixInfo]);
+  
 
   const handleNodeClick = (event) => {
     const clickedNodeIds = event.nodes;
