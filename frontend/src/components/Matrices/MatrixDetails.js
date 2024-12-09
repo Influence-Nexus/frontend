@@ -16,8 +16,8 @@ const MatrixDetails = () => {
   const [matrixInfo, setMatrixInfo] = useState({});
   // const [showModal, setShowModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF"); // Состояние для цвета фона
-  const [nodeColor, setNodeColor] = useState("#FF5733"); // Состояние для цвета узлов
+  const [backgroundColor, setBackgroundColor] = useState("#0b001a"); // Состояние для цвета фона
+  const [nodeColor, setNodeColor] = useState("#0b001a"); // Состояние для цвета узлов
   const [positiveEdgeColor, setPositiveEdgeColor] = useState("#00FF00"); // Состояние для цвета положительных ребер
   const [negativeEdgeColor, setNegativeEdgeColor] = useState("#FF0000"); // Состояние для цвета отрицательных ребер
   const [physicsEnabled, setPhysicsEnabled] = useState(false);

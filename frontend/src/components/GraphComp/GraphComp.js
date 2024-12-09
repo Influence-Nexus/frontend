@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { DataSet, Network } from "vis-network/standalone/esm/vis-network";
-import "./Graph.css"; // Import the CSS file for styling
-import "bootstrap/dist/css/bootstrap.min.css"; // Подключаем файл стилей Bootstrap
+import "./Graph.css"; 
+import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -20,13 +20,13 @@ import { cardcreds, cards } from "../SoralSystem/cards";
 
 const GraphComponent = ({
   matrixInfo,
-  backgroundColor,
-  positiveEdgeColor,
-  negativeEdgeColor,
-  nodeColor,
-  physicsEnabled,
-  nodeSize,
-  edgeRoundness,
+  backgroundColor = "#0b001a",
+  positiveEdgeColor = "#00FF00",
+  negativeEdgeColor = "#FF0000",
+  nodeColor = "#97C2FC", // Добавлено значение по умолчанию
+  physicsEnabled = false,
+  nodeSize = 40,
+  edgeRoundness = 0.15,
   selectedPlanet,
   selectedCardIndex,
 }) => {
@@ -38,7 +38,7 @@ const GraphComponent = ({
   const [elapsedTime, setElapsedTime] = useState(0);
   const [stopwatchHistory, setStopwatchHistory] = useState([]);
   const [showNodeList, setShowNodeList] = useState(false);
-  const [lockedNodes, setLockedNodes] = useState({}); // State to track locked nodes
+  const [lockedNodes, setLockedNodes] = useState({});
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [moveHistory, setMoveHistory] = useState([]);
   const [lastIndex, setLastIndex] = useState(0);
@@ -47,7 +47,18 @@ const GraphComponent = ({
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [serverResponseData, setServerResponseData] = useState(null);
+  const [score, setScore] = useState(0);
+  const [maxScorePerMove, setMaxScorePerMove] = useState(0);
 
+  const intervalRef = useRef();
+  const networkRef = useRef(null);
+
+  const location = useLocation();
+  const selectedPlanetLocal = location.state?.selectedPlanet;
+  const selectedCardIndexLocal = location.state?.selectedCardIndex;
+
+  const planet = selectedPlanet || selectedPlanetLocal;
+  const cardIndex = selectedCardIndex !== undefined ? selectedCardIndex : selectedCardIndexLocal;
   const createSelectedNodesDictionary = (selectedNodes, startIndex) => {
     return selectedNodes.reduce((acc, nodeId, index) => {
       // console.log(startIndex);
@@ -57,83 +68,7 @@ const GraphComponent = ({
     }, {});
   };
 
-  const [score, setScore] = useState(0); // Состояние для набранных очков
-  const [maxScorePerMove, setMaxScorePerMove] = useState(0); // Состояние для максимального количества очков за ход
-
-  const handleOpenModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
-  const intervalRef = useRef();
-  const networkRef = useRef(null);
-
-  const handleShowHistoryModal = () => setShowHistoryModal(true);
-  const handleCloseHistoryModal = () => setShowHistoryModal(false);
-
-  const saveNodeCoordinates = () => {
-    if (networkRef.current) {
-      const nodePositions = networkRef.current.body.nodes;
-      const coordinates = {};
-
-      Object.keys(nodePositions).forEach((nodeId) => {
-        const node = nodePositions[nodeId];
-        coordinates[nodeId] = { x: node.x, y: node.y };
-      });
-
-      // Генерация файла с координатами
-      const file = new Blob([JSON.stringify(coordinates, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(file);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${matrixInfo.matrix_info.matrix_name}_coordinates.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      console.log('Координаты узлов сохранены в файл node_coordinates.json');
-    } else {
-      console.log('Граф ещё не инициализирован.');
-    }
-  };
-
-
-  const resetNodeCoordinates = () => {
-    const fileName = `/models_coords/${matrixInfo.matrix_info.matrix_name}_coordinates.json`;
-
-    fetch(fileName)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Файл ${fileName} не найден или недоступен.`);
-        }
-        return response.json();
-      })
-      .then((coordinates) => {
-        // Привязываем координаты к узлам графа
-        if (coordinates && typeof coordinates === 'object') {
-          Object.keys(coordinates).forEach((nodeId) => {
-            const node = coordinates[nodeId];
-            if (node && node.x !== undefined && node.y !== undefined) {
-              const existingNode = networkRef.current.body.nodes[nodeId];
-              if (existingNode) {
-                existingNode.x = node.x;
-                existingNode.y = node.y;
-              }
-            }
-          });
-
-          networkRef.current.redraw(); // Перерисовываем граф
-          alert('Координаты узлов успешно сброшены.');
-        } else {
-          alert('Неверный формат данных в файле.');
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка при сбросе координат:', error);
-        alert(`Ошибка: ${error.message}`);
-      });
-  };
-
-
+  
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
@@ -153,100 +88,258 @@ const GraphComponent = ({
       const nodes = new Map();
       const nodesDataSet = new DataSet();
       const edgesDataSet = new DataSet();
-  
-      // Шаг 1: Собираем все существующие индексы
-      const indexes = new Set();
-      edges.forEach(({ from, to }) => {
-        indexes.add(from.id);
-        indexes.add(to.id);
-      });
-  
-      // Шаг 2: Создаем отображение старых индексов на новые
-      const indexMap = new Map();
-      let newIndex = 1;
-      indexes.forEach((index) => {
-        indexMap.set(index, newIndex);
-        newIndex++;
-      });
-  
+
       edges.forEach(({ from, to, value }) => {
         if (value !== 0) {
           const fromId = from;
           const toId = to;
-  
-          // Проверяем, существует ли узел в oldnodes
-          if (oldnodes[fromId - 1]) {  // Исправляем индекс с 1 (или любой другой вариант, в зависимости от структуры)
+
+          // Узел-источник
+          if (oldnodes[fromId - 1]) {
             if (!nodes.has(fromId)) {
               nodes.set(fromId, {
                 id: fromId,
                 label: `${fromId}`,
-                title: oldnodes[fromId - 1].name,  // Исправление индекса
+                title: oldnodes[fromId - 1].name,
                 description: from.description,
+                color: { background: nodeColor }
               });
               nodesDataSet.add(nodes.get(fromId));
             }
           }
-  
-          if (oldnodes[toId - 1]) {  // Проверяем существование для целевого узла
+
+          // Узел-приёмник
+          if (oldnodes[toId - 1]) {
             if (!nodes.has(toId)) {
-              nodes.set(toId, {
+              const nodeObj = {
                 id: toId,
                 label: `${toId}`,
-                title: oldnodes[toId - 1].name,  // Исправление индекса
+                title: oldnodes[toId - 1].name,
                 target: to.target,
                 description: to.description,
-              });
-  
-              // Проверяем, является ли вершина целевой (target) и устанавливаем соответствующий цвет
+                color: { background: nodeColor }
+              };
+
               if (to.target === 1) {
-                nodes.get(toId).color = "gold";
-                nodes.get(toId).font = {
-                  size: 25,
-                };
+                nodeObj.color = { background: "gold" };
+                nodeObj.font = { size: 25 };
               }
-  
-              nodesDataSet.add(nodes.get(toId));
+              nodes.set(toId, nodeObj);
+              nodesDataSet.add(nodeObj);
             }
           }
-  
+
+          // Рёбра
           try {
             edgesDataSet.add({
               id: `${fromId}${toId}`,
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"} ${to.ru_name} на ${value}`,
+              title: `При увеличении ${from.name} ${
+                value > 0 ? "увеличивается" : "уменьшается"
+              } ${to.ru_name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
+              color: { color: value > 0 ? positiveEdgeColor : negativeEdgeColor }
             });
           } catch (e) {
-            // Обработка ошибок
             console.log(e);
           }
         }
       });
-  
+
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
-  }, [matrixInfo]);
+  }, [matrixInfo, nodeColor, positiveEdgeColor, negativeEdgeColor, edgeRoundness]);
+
+  // Функция для загрузки и применения координат
+  const loadCoordinates = () => {
+    const matrixName = matrixInfo.matrix_info.matrix_name;
+    const fileName = `/models_coords/${matrixName}_coordinates.json`;
+
+    fetch(fileName)
+      .then((response) => {
+        if (!response.ok) {
+          console.warn(`Файл с координатами ${fileName} не найден или недоступен.`);
+          return null;
+        }
+        return response.json();
+      })
+      .then((coordinates) => {
+        if (!coordinates) return;
+        if (networkRef.current && typeof coordinates === "object") {
+          Object.keys(coordinates).forEach((nodeId) => {
+            const node = networkRef.current.body.nodes[nodeId];
+            if (node && coordinates[nodeId]) {
+              node.x = coordinates[nodeId].x;
+              node.y = coordinates[nodeId].y;
+            }
+          });
+          networkRef.current.redraw();
+        }
+      })
+      .catch((error) => {
+        console.error("Ошибка при загрузке координат:", error);
+      });
+  };
+
+  // Функция для сохранения текущих координат узлов
+  const saveNodeCoordinates = () => {
+    if (networkRef.current) {
+      const nodePositions = networkRef.current.body.nodes;
+      const coordinates = {};
+
+      Object.keys(nodePositions).forEach((nodeId) => {
+        const node = nodePositions[nodeId];
+        coordinates[nodeId] = { x: node.x, y: node.y };
+      });
+
+      const file = new Blob([JSON.stringify(coordinates, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(file);
+
+      const a = document.createElement("a");
+      a.href = url;
+      const matrixName = matrixInfo.matrix_info.matrix_name;
+      a.download = `${matrixName}_coordinates.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      console.log("Координаты узлов сохранены в файл node_coordinates.json");
+    } else {
+      console.log("Граф ещё не инициализирован.");
+    }
+  };
+
+  // Функция для ресета координат (загрузка из json)
+  const resetNodeCoordinates = () => {
+    loadCoordinates();
+    alert("Координаты узлов успешно сброшены.");
+  };
+
+  useEffect(() => {
+    if (graphData) {
+      const container = document.getElementById("graph-container");
   
+      const options = {
+        edges: {
+          smooth: {
+            type: "curvedCW",
+            roundness: edgeRoundness,
+          },
+          scaling: {
+            min: 1,
+            max: 1,
+            label: {
+              enabled: true,
+              min: 11,
+              max: 11,
+              maxVisible: 55,
+              drawThreshold: 5,
+            },
+          },
+          arrows: { to: true },
+          font: {
+            size: 24, // Установите глобальный размер шрифта для рёбер
+            align: 'horizontal',
+          },
+          color: {
+            highlight: "white",
+          },
+          chosen: true,
+        },
+        physics: {
+          enabled: physicsEnabled,
+          barnesHut: {
+            gravitationalConstant: -50000,
+            centralGravity: 0.3,
+            springLength: 95,
+            springConstant: 0.04,
+            damping: 0.09,
+            avoidOverlap: 3.4,
+          },
+          stabilization: {
+            enabled: true,
+            iterations: 1000,
+            updateInterval: 25,
+          },
+        },
+        nodes: {
+          shape: "circle",
+          size: nodeSize,
+          font: {
+            size: 14,
+            color: "white",
+            align: "center",
+          },
+          borderWidth: 2,
+          borderWidthSelected: 4
+        },
+        interaction: {
+          hover: true,
+          tooltipDelay: 300,
+          multiselect: true,
+        },
+      };
+  
+      if (networkRef.current) {
+        networkRef.current.destroy();
+      }
+  
+      const newNetwork = new Network(container, graphData, options);
+  
+      // Настройка начальной позиции и масштаба для обрезки
+      newNetwork.moveTo({
+        position: { x: -100, y: -350 }, // Настройте координаты по необходимости
+        scale: 0.85, // Настройте масштаб по необходимости
+        animation: {
+          duration: 1000,
+          easingFunction: 'easeInOutQuad',
+        },
+      });
+  
+      newNetwork.on("click", handleNodeClick);
+      newNetwork.on("hoverNode", (event) => {
+        setHighlightedNode(event.node);
+        setShowNodeList(true);
+        setHoveredNode(event.node);
+        setCursorPosition({ x: event.pointer.DOM.x, y: event.pointer.DOM.y });
+      });
+      newNetwork.on("blurNode", () => {
+        setHighlightedNode(null);
+        setShowNodeList(false);
+        setHoveredNode(null);
+      });
+      newNetwork.on("selectNode", (params) => {
+        const selectableNodes = params.nodes.filter(
+          (id) => !Object.keys(lockedNodes).includes(id)
+        );
+        newNetwork.setSelection({
+          nodes: selectableNodes,
+          edges: params.edges,
+        });
+      });
+  
+      networkRef.current = newNetwork;
+  
+      // После создания сети загрузим координаты
+      loadCoordinates();
+    }
+  }, [graphData, lockedNodes, edgeRoundness, physicsEnabled, nodeSize]);
 
   const handleNodeClick = (event) => {
     const clickedNodeIds = event.nodes;
     const clickedEdgeIds = event.edges;
     if (clickedNodeIds.length === 1) {
       const clickedNodeId = clickedNodeIds[0];
-      // Проверяем, находится ли выделенный узел в массиве заблокированных узлов
       if (!lockedNodes[clickedNodeId]) {
-        // Toggle the selected state of the clicked node
         setSelectedNodes((prevSelectedNodes) => {
           if (prevSelectedNodes.includes(clickedNodeId)) {
-            // Deselect the node
-            return prevSelectedNodes.filter(
-              (nodeId) => nodeId !== clickedNodeId
-            );
+            return prevSelectedNodes.filter((nodeId) => nodeId !== clickedNodeId);
           } else {
-            // Select the node
             return [...prevSelectedNodes, clickedNodeId];
           }
         });
@@ -271,6 +364,7 @@ const GraphComponent = ({
     setSelectedNodes([]);
     setSelectedEdges([]);
   };
+
 
   const handleStart = () => {
     setIsRunning(true);
@@ -299,143 +393,13 @@ const GraphComponent = ({
     setElapsedTime(0);
   };
 
-  useEffect(() => {
-    if (graphData) {
-      const container = document.getElementById("graph-container");
 
-      const options = {
-        edges: {
-          smooth: {
-            type: "curvedCW",
-            roundness: edgeRoundness,
-          },
-          scaling: {
-            min: 1,
-            max: 1,
-            label: {
-              enabled: true,
-              min: 11,
-              max: 11,
-              maxVisible: 55,
-              drawThreshold: 5,
-            },
-          },
-          arrows: { to: true },
-          color: {
-            highlight: "white",
-          },
-          chosen: true,
-        },
-        physics: {
-          enabled: physicsEnabled,
-          barnesHut: {
-            gravitationalConstant: -50000,
-            centralGravity: 0.3,
-            springLength: 95,
-            springConstant: 0.04,
-            damping: 0.09,
-            avoidOverlap: 3.4,
-          },
-          stabilization: {
-            enabled: true,
-            iterations: 1000,
-            updateInterval: 25,
-          },
-        },
-        nodes: {
-          shape: "circle",
-          size: 40,
-          font: {
-            size: 14,
-            color: "white",
-            align: "center",
-          },
-          borderWidth: 2,
-          borderWidthSelected: 4,
-          color: {
-            background: "#0b001a",
-          },
-        },
-        interaction: {
-          hover: true,
-          tooltipDelay: 300,
-          multiselect: true,
-        },
-      };
+  const handleOpenModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
-      const existingNetwork = networkRef.current;
+  const handleShowHistoryModal = () => setShowHistoryModal(true);
+  const handleCloseHistoryModal = () => setShowHistoryModal(false);
 
-      if (existingNetwork) {
-        const allNodes = existingNetwork.body.data.nodes;
-        const allEdges = existingNetwork.body.data.edges;
-
-        allNodes.update(
-          allNodes.get().map((node) => ({
-            id: node.id,
-            color: {
-              background:
-                selectedNodes.includes(node.id) || lockedNodes[node.id]
-                  ? "gray"
-                  : node.target
-                    ? "gold"
-                    : "#0b001a",
-            },
-            fixed: lockedNodes[node.id]
-              ? { x: true, y: true }
-              : { x: false, y: false },
-            interaction: lockedNodes[node.id] ? false : true,
-          }))
-        );
-
-        allEdges.update(
-          allEdges.get().map((edge) => ({
-            id: edge.id,
-            color: {
-              color: selectedEdges.includes(edge.id)
-                ? "white"
-                : edge.value > 0
-                  ? "green"
-                  : "red",
-            },
-          }))
-        );
-      } else {
-        const newNetwork = new Network(container, graphData, options);
-
-        newNetwork.on("click", handleNodeClick);
-        newNetwork.on("hoverNode", (event) => {
-          setHighlightedNode(event.node);
-          setShowNodeList(true);
-          setHoveredNode(event.node);
-          setCursorPosition({ x: event.pointer.DOM.x, y: event.pointer.DOM.y });
-        });
-        newNetwork.on("blurNode", () => {
-          setHighlightedNode(null);
-          setShowNodeList(false);
-          setHoveredNode(null);
-        });
-        newNetwork.on("selectNode", (params) => {
-          const selectableNodes = params.nodes.filter(
-            (id) => !Object.keys(lockedNodes).includes(id)
-          );
-          newNetwork.setSelection({
-            nodes: selectableNodes,
-            edges: params.edges,
-          });
-        });
-
-        // Добавляем обработчик для отслеживания координат узлов
-        newNetwork.on("dragEnd", () => {
-          const nodePositions = newNetwork.body.nodes;
-          Object.keys(nodePositions).forEach((nodeId) => {
-            const node = nodePositions[nodeId];
-          });
-        });
-
-        networkRef.current = newNetwork;
-      }
-    }
-  }, [graphData, selectedNodes, selectedEdges, lockedNodes]);
 
   // Inside the makeMove function
   const makeMove = async () => {
@@ -503,8 +467,6 @@ const GraphComponent = ({
   return (
     <div style={{ display: "flex", zIndex: -1, flexDirection: "column" }}>
       <div style={{ position: "relative", flex: "1", paddingRight: "20px" }}>
-        {/* Stopwatch */}
-
         <ul
           className="Button-Group"
           id="pills-tab"
@@ -529,7 +491,7 @@ const GraphComponent = ({
             </button>
           </li>
           <li>
-            <Link to={"/science"}>
+            <Link to={"/science"} state={{ selectedPlanet, selectedCardIndex }}>
               <button
                 className="game-button"
                 disabled={isRunning}
@@ -539,7 +501,7 @@ const GraphComponent = ({
               </button>
             </Link>
           </li>
-          <li class="nav-item" role="presentation">
+          <li className="nav-item" role="presentation">
             <button
               className="game-button active"
               id="pills-graph-tab"
@@ -554,7 +516,7 @@ const GraphComponent = ({
             </button>
           </li>
 
-          <li class="nav-item" role="presentation">
+          <li className="nav-item" role="presentation">
             <button
               className="game-button"
               id="profile-tab"
@@ -570,6 +532,7 @@ const GraphComponent = ({
               Profile
             </button>
           </li>
+
           <li>
             <button
               className="game-button"
@@ -578,7 +541,6 @@ const GraphComponent = ({
               Сохранить координаты
             </button>
           </li>
-
           <li>
             <button
               className="game-button"
@@ -586,23 +548,20 @@ const GraphComponent = ({
             >
               Reset
             </button>
-
-
           </li>
-
         </ul>
 
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>
-              {cards[selectedPlanet.name][selectedCardIndex].title}
+              {cards[planet.name][cardIndex].title}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {cards[selectedPlanet.name][selectedCardIndex].description}
+            {cards[planet.name][cardIndex].description}
           </Modal.Body>
         </Modal>
-        <InfoModalWindow selectedPlanet={selectedPlanet} />
+        <InfoModalWindow selectedPlanet={planet} />
 
         <Modal
           show={showHistoryModal}
@@ -640,16 +599,13 @@ const GraphComponent = ({
         </Modal>
       </div>
 
-
-      <div class="tab-content" id="pills-tabContent">
+      <div className="tab-content" id="pills-tabContent">
         <div
-          class="tab-pane fade show active"
+          className="tab-pane fade show active"
           id="pills-graph"
           role="tabpanel"
           aria-labelledby="pills-graph-tab"
         >
-          <div></div>
-
           <div
             className="VerticalProgressBar-container"
             style={{
@@ -685,8 +641,7 @@ const GraphComponent = ({
             <div className="stopwatch-container-score">
               <h3>Score</h3>
               <p>
-                <FaMedal /> {`${score}`}{" "}
-                {/* Иконка рядом с полем "Набранные очки" */}
+                <FaMedal /> {`${score}`}
               </p>
             </div>
             <div className="stopwatch-container-table">
@@ -695,22 +650,21 @@ const GraphComponent = ({
             <div className="stopwatch-container-buttons">
               <Button
                 variant="success"
-                onClick={handleStart}
                 disabled={isRunning}
+                onClick={() => setIsRunning(true)}
               >
                 Start
               </Button>{" "}
               <Button
                 variant="danger"
-                onClick={handleStop}
                 disabled={!isRunning}
+                onClick={() => setIsRunning(false)}
               >
                 Stop
               </Button>
             </div>
           </div>
 
-          {/* Graph container */}
           {graphData && (
             <div
               id="graph-container"
@@ -720,8 +674,9 @@ const GraphComponent = ({
                 position: "absolute",
                 left: 0,
                 zIndex: -1,
-                backgroundColor: "#0b001a",
+                backgroundColor: backgroundColor,
                 color: "white",
+                overflow: "hidden", // Добавлено для обрезки содержимого
               }}
             ></div>
           )}
@@ -734,30 +689,33 @@ const GraphComponent = ({
                   <Card.Title>Список вершин:</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                  <ListGroup>
-                    {graphData.nodes.get().map((node) => (
-                      <ListGroup.Item
-                        key={node.id}
-                        action
-                        className={`list-group-item ${highlightedNode === node.id ? "active" : ""
+                  {graphData && (
+                    <ListGroup>
+                      {graphData.nodes.get().map((node) => (
+                        <ListGroup.Item
+                          key={node.id}
+                          action
+                          className={`list-group-item ${
+                            highlightedNode === node.id ? "active" : ""
                           }`}
-                        onMouseEnter={() => setHighlightedNode(node.id)}
-                        onMouseLeave={() => setHighlightedNode(null)}
-                        ref={
-                          highlightedNode === node.id
-                            ? (element) =>
-                              element &&
-                              element.scrollIntoView({
-                                behavior: "smooth",
-                                block: "nearest",
-                              })
-                            : null
-                        }
-                      >
-                        {`${node.id} - ${node.title}`}
-                      </ListGroup.Item>
-                    ))}
-                  </ListGroup>
+                          onMouseEnter={() => setHighlightedNode(node.id)}
+                          onMouseLeave={() => setHighlightedNode(null)}
+                          ref={
+                            highlightedNode === node.id
+                              ? (element) =>
+                                  element &&
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "nearest",
+                                  })
+                              : null
+                          }
+                        >
+                          {`${node.id} - ${node.title}`}
+                        </ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  )}
                 </Card.Body>
               </Card>
             </div>
@@ -776,8 +734,9 @@ const GraphComponent = ({
               <h2>Выбранные факторы:</h2>
               <ListGroup>
                 {selectedNodes.map((nodeId, index) => (
-                  <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1
-                    }| Node ID: ${nodeId}`}</ListGroup.Item>
+                  <ListGroup.Item key={index + lastIndex}>{`${
+                    index + lastIndex + 1
+                  }| Node ID: ${nodeId}`}</ListGroup.Item>
                 ))}
               </ListGroup>
               <Button variant="outline-danger" onClick={handleClearSelection}>
@@ -795,12 +754,11 @@ const GraphComponent = ({
         </div>
 
         <div
-          class="tab-pane fade"
+          className="tab-pane fade"
           id="pills-history"
           role="tabpanel"
           aria-labelledby="pills-history-tab"
         >
-          {/* Stopwatch History Table */}
           <div className="stopwatch-history-container">
             <h2>Games History</h2>
             <table className="table">
@@ -830,12 +788,11 @@ const GraphComponent = ({
           </div>
         </div>
         <div
-          class="tab-pane fade"
+          className="tab-pane fade"
           id="profile"
           role="tabpanel"
           aria-labelledby="profile-tab"
         >
-          {/* Render CSV Table */}
           <div className="csv-table-container">
             <h2>CSV Data</h2>
             {matrixInfo &&
@@ -844,7 +801,6 @@ const GraphComponent = ({
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    {/* Assuming the CSV file has headers, use them as table headers */}
                     {Object.keys(matrixInfo.csv_data[0]).map((header) => (
                       <th key={header}>{header}</th>
                     ))}
@@ -871,84 +827,3 @@ const GraphComponent = ({
 };
 
 export default GraphComponent;
-
-{
-  /* <div>
-Чтобы отслеживать положение вершин графа в библиотеке **vis.js**, вы можете использовать метод `getPositions()` для получения текущих координат узлов. Затем вы можете сохранить эти позиции и обновить их, когда это необходимо. Вот как это можно сделать:
-
-## Шаги для отслеживания положения узлов
-
-1. **Создание графа**: Инициализируйте граф с узлами и ребрами.
-2. **Отслеживание изменений**: Используйте метод `getPositions()` для получения текущих координат узлов после их перемещения.
-3. **Сохранение позиций**: Сохраните полученные координаты в массив или объект для дальнейшего использования.
-4. **Обновление позиций**: При необходимости обновите позиции узлов, используя метод `update()`.
-
-## Пример кода
-
-Вот пример, который демонстрирует, как отслеживать и сохранять положение узлов:
-
-```javascript
-// Создание набора узлов
-var nodes = new vis.DataSet([
-    { id: 1, label: 'Узел 1' },
-    { id: 2, label: 'Узел 2' },
-    { id: 3, label: 'Узел 3' }
-]);
-
-// Создание набора ребер
-var edges = new vis.DataSet([
-    { from: 1, to: 2 },
-    { from: 2, to: 3 }
-]);
-
-// Инициализация контейнера
-var container = document.getElementById('mynetwork');
-var data = {
-    nodes: nodes,
-    edges: edges
-};
-
-// Опции графа
-var options = {
-    physics: true // Включение физики для динамического перемещения узлов
-};
-
-// Создание сети
-var network = new vis.Network(container, data, options);
-
-// Функция сохранения позиций узлов
-function saveNodePositions() {
-    var positions = network.getPositions();
-    var savedPositions = [];
-
-    for (const [id, pos] of Object.entries(positions)) {
-        savedPositions.push({
-            id: parseInt(id),
-            x: pos.x,
-            y: pos.y
-        });
-    }
-
-    console.log(savedPositions); // Сохраненные позиции узлов
-}
-
-// Пример вызова функции сохранения позиций через определенный интервал времени
-setInterval(saveNodePositions, 5000); // Сохраняем позиции каждые 5 секунд
-
-// Обработчик события перетаскивания узлов (если необходимо)
-network.on("dragEnd", function (params) {
-    saveNodePositions(); // Сохраняем позиции после перетаскивания
-});
-```
-
-### Объяснение кода
-
-- **getPositions()**: Этот метод возвращает объект с текущими позициями всех узлов в графе.
-- **Сохранение позиций**: Позиции сохраняются в массив `savedPositions`, который можно использовать для восстановления состояния графа позже.
-- **Интервал**: Позиции сохраняются каждые 5 секунд с помощью функции `setInterval`, но вы также можете сохранять их по событию (например, после перетаскивания).
-- **dragEnd**: Событие `dragEnd` позволяет вам сохранить позиции сразу после того, как пользователь закончил перемещение узла.
-
-Эти шаги позволят вам эффективно отслеживать и сохранять положение вершин в графе на основе vis.js.
-
-</div> */
-}

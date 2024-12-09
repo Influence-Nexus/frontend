@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// TableSmall.jsx
+import React from "react";
 import "./TableSmall.css";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -31,27 +32,60 @@ const TableHeader = [
   },
 ];
 
-const generateRandomData = () => {
-  const data = [];
-  for (let i = 0; i < 6; i++) {
-    data.push({
-      ID: Math.floor(Math.random() * 100),
-      Response: Math.floor(Math.random() * 10),
-      Impact: Math.floor(Math.random() * 50),
-      Eff_in: Math.floor(Math.random() * 20),
-      Control_in: Math.floor(Math.random() * 30),
-    });
-  }
-  return data;
-};
+export const TableSmall = ({ data }) => {
+  // Define default data when backend data is not available
+  const defaultData = [
+    {
+      ID: "None",
+      Response: "None",
+      Impact: "None",
+      Eff_in: "None",
+      Control_in: "None",
+    },
+    {
+      ID: "None",
+      Response: "None",
+      Impact: "None",
+      Eff_in: "None",
+      Control_in: "None",
+    },
+    {
+      ID: "None",
+      Response: "None",
+      Impact: "None",
+      Eff_in: "None",
+      Control_in: "None",
+    },
+    {
+      ID: "None",
+      Response: "None",
+      Impact: "None",
+      Eff_in: "None",
+      Control_in: "None",
+    },
+    {
+      ID: "None",
+      Response: "None",
+      Impact: "None",
+      Eff_in: "None",
+      Control_in: "None",
+    },
+    {
+      ID: "None",
+      Response: "None",
+      Impact: "None",
+      Eff_in: "None",
+      Control_in: "None",
+    },
+  ];
 
-export const TableSmall = () => {
-  const [data, setData] = useState(generateRandomData());
-  const [sortConfig, setSortConfig] = useState({
+  const tableData = data || defaultData;
+
+  const [sortConfig, setSortConfig] = React.useState({
     key: null,
     direction: "ascending",
   });
-  const [hoveredSortButton, setHoveredSortButton] = useState(null);
+  const [hoveredSortButton, setHoveredSortButton] = React.useState(null);
 
   const onSort = (key) => {
     let direction = "ascending";
@@ -61,7 +95,7 @@ export const TableSmall = () => {
     setSortConfig({ key, direction });
   };
 
-  const sortedData = [...data].sort((a, b) => {
+  const sortedData = [...tableData].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "ascending" ? -1 : 1;
     }
@@ -73,17 +107,13 @@ export const TableSmall = () => {
 
   return (
     <div id="small-table-alignment-div">
+      <h5 style={{ color: "#ffd700", height: "48px" }}>
+        Step 1: Находим силу воздействия каждого узла по алгоритму из [Science]
+      </h5>
 
-      <h5 style={{ color: "#ffd700", height: '48px' }}>Step 1: Находим силу воздействия каждого узла по алгоритму из [Science]</h5>
-
-      {/* <h2 id="small-table-name">
-        Отклики и воздействия, рассчитанные алгоритмом [
-        <a href="https://arxiv.org">1</a>]
-      </h2> */}
-      
       <h2 id="small-table-name">
-        Отклики и воздействия, рассчитанные   
-        <a href="https://arxiv.org"> алгоритмом</a>
+        Отклики и воздействия, рассчитанные{" "}
+        <a href="https://arxiv.org">алгоритмом</a>
       </h2>
 
       <div className="small-table-container">
@@ -124,7 +154,7 @@ export const TableSmall = () => {
                     key={columnIndex}
                     style={{
                       width: header.width,
-                      fontSize: "18px"
+                      fontSize: "18px",
                     }}
                   >
                     {row[header.key]}
