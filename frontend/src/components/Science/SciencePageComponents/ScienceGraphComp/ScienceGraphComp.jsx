@@ -349,8 +349,10 @@ export const ScienceGraphComp = ({
       <div
         id="simple-graph-container"
         style={{
+          marginLeft: "3rem",
+          marginRight: "7.5rem",
           height: "600px",
-          width: "70%",
+          width: "50%",
           backgroundColor,
           color: "white",
           position: "relative",

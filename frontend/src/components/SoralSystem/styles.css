@@ -297,3 +297,34 @@ margin: 0;
   align-items: center;
   justify-content: center;
 }
+
+.GameOverModalBody {
+  display: flex;
+  justify-content: center;
+  color: rgb(255, 218, 150);
+  background-color: #342b41;
+}
+
+#game-over-title {
+  font-size: 2em;
+  font-family: "Montserrat";
+  text-align: center;
+  background-color: #342b41;
+}
+
+.GameOverModalFooter {
+  display: flex;
+  justify-content: center !important;
+  gap: 2em;
+  text-align: center;
+  align-content: center;
+  border: none;
+  background-color: #342b41;
+
+}
+
+.GameOverModalHeader {
+  background-color: #342b41;
+  border-bottom: none;
+}
+

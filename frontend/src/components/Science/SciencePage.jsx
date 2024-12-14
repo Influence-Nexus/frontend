@@ -9,6 +9,7 @@ import { ScienceGraphComp } from "./SciencePageComponents/ScienceGraphComp/Scien
 import "./SciencePage.css";
 import { cards } from "../SoralSystem/cards";
 import { SyntheticTable } from "./SciencePageComponents/ScienceGraphComp/Table";
+import { StopWatchContainer } from "./SciencePageComponents/ScienceGraphComp/StopWatchContainer";
 
 export const SciencePage = () => {
   const location = useLocation();
@@ -94,6 +95,7 @@ export const SciencePage = () => {
       {matrixInfo && matrixInfo.edges && (
         <div style={{ marginTop: "2em", display: "flex" }}>
           <ScienceGraphComp matrixInfo={matrixInfo} />
+          <StopWatchContainer />
           <SyntheticTable data={syntheticData} />
         </div>
       )}

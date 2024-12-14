@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { DataSet, Network } from "vis-network/standalone/esm/vis-network";
-import "./Graph.css"; 
+import "./Graph.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Button from "react-bootstrap/Button";
@@ -23,7 +23,7 @@ const GraphComponent = ({
   backgroundColor = "#0b001a",
   positiveEdgeColor = "#00FF00",
   negativeEdgeColor = "#FF0000",
-  nodeColor = "#97C2FC", // Добавлено значение по умолчанию
+  nodeColor = "#97C2FC",
   physicsEnabled = false,
   nodeSize = 40,
   edgeRoundness = 0.15,
@@ -44,11 +44,14 @@ const GraphComponent = ({
   const [lastIndex, setLastIndex] = useState(0);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  // const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [serverResponseData, setServerResponseData] = useState(null);
   const [score, setScore] = useState(0);
   const [maxScorePerMove, setMaxScorePerMove] = useState(0);
+  const [isClosing, setIsClosing] = useState(false); // Для работы анимации
+  // Новое состояние для модального окна "Game Over"
+  const [showGameOverModal, setShowGameOverModal] = useState(false);
 
   const intervalRef = useRef();
   const networkRef = useRef(null);
@@ -59,16 +62,14 @@ const GraphComponent = ({
 
   const planet = selectedPlanet || selectedPlanetLocal;
   const cardIndex = selectedCardIndex !== undefined ? selectedCardIndex : selectedCardIndexLocal;
+
   const createSelectedNodesDictionary = (selectedNodes, startIndex) => {
     return selectedNodes.reduce((acc, nodeId, index) => {
-      // console.log(startIndex);
-      // Используем индекс плюс startIndex как ключ
       acc[index + startIndex] = nodeId;
       return acc;
     }, {});
   };
 
-  
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
@@ -80,6 +81,14 @@ const GraphComponent = ({
 
     return () => clearInterval(intervalRef.current);
   }, [isRunning]);
+
+  // Отслеживаем истечение времени (600 секунд)
+  useEffect(() => {
+    if (elapsedTime >= 5 && isRunning) {
+      setIsRunning(false);
+      setShowGameOverModal(true);
+    }
+  }, [elapsedTime, isRunning]);
 
   useEffect(() => {
     if (matrixInfo) {
@@ -136,9 +145,8 @@ const GraphComponent = ({
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${from.name} ${
-                value > 0 ? "увеличивается" : "уменьшается"
-              } ${to.ru_name} на ${value}`,
+              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"
+                } ${to.ru_name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
               color: { color: value > 0 ? positiveEdgeColor : negativeEdgeColor }
@@ -223,7 +231,7 @@ const GraphComponent = ({
   useEffect(() => {
     if (graphData) {
       const container = document.getElementById("graph-container");
-  
+
       const options = {
         edges: {
           smooth: {
@@ -243,7 +251,7 @@ const GraphComponent = ({
           },
           arrows: { to: true },
           font: {
-            size: 24, // Установите глобальный размер шрифта для рёбер
+            size: 24,
             align: 'horizontal',
           },
           color: {
@@ -284,23 +292,22 @@ const GraphComponent = ({
           multiselect: true,
         },
       };
-  
+
       if (networkRef.current) {
         networkRef.current.destroy();
       }
-  
+
       const newNetwork = new Network(container, graphData, options);
-  
-      // Настройка начальной позиции и масштаба для обрезки
+
       newNetwork.moveTo({
-        position: { x: -100, y: -350 }, // Настройте координаты по необходимости
-        scale: 0.85, // Настройте масштаб по необходимости
+        position: { x: -100, y: -350 },
+        scale: 0.85,
         animation: {
           duration: 1000,
           easingFunction: 'easeInOutQuad',
         },
       });
-  
+
       newNetwork.on("click", handleNodeClick);
       newNetwork.on("hoverNode", (event) => {
         setHighlightedNode(event.node);
@@ -322,10 +329,9 @@ const GraphComponent = ({
           edges: params.edges,
         });
       });
-  
+
       networkRef.current = newNetwork;
-  
-      // После создания сети загрузим координаты
+
       loadCoordinates();
     }
   }, [graphData, lockedNodes, edgeRoundness, physicsEnabled, nodeSize]);
@@ -372,13 +378,12 @@ const GraphComponent = ({
     setScore(0);
     setLastIndex(0);
     setMoveHistory([]);
-    setLockedNodes({}); // Разблокировать все вершины
+    setLockedNodes({});
   };
 
   const handleStop = () => {
     setIsRunning(false);
 
-    // Save stopwatch event to history
     setStopwatchHistory([
       ...stopwatchHistory,
       {
@@ -389,26 +394,29 @@ const GraphComponent = ({
       },
     ]);
 
-    // Reset elapsed time
     setElapsedTime(0);
   };
-
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
   const handleShowHistoryModal = () => setShowHistoryModal(true);
-  const handleCloseHistoryModal = () => setShowHistoryModal(false);
 
 
-  // Inside the makeMove function
+  const handleCloseHistoryModal = () => {
+    setIsClosing(true); // Устанавливаем состояние для анимации закрытия
+    setTimeout(() => {
+      setShowHistoryModal(false); // Закрываем модальное окно после завершения анимации
+      setIsClosing(false); // Сбрасываем состояние
+    }, 300); // Укажите длительность вашей анимации в миллисекундах (например, 300 мс)
+  };
+
   const makeMove = async () => {
     try {
       let selectedNodesDictionary = createSelectedNodesDictionary(
         selectedNodes,
         lastIndex
       );
-      // console.log(lastIndex);
       const response = await fetch("http://localhost:5000/calculate_score", {
         method: "POST",
         headers: {
@@ -440,17 +448,12 @@ const GraphComponent = ({
         }
         setLastIndex((prevLastIndex) => {
           const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
-          // console.log("Max index:", maxIndex);
-          // console.log("Previous last index:", prevLastIndex);
-          const newIndex = maxIndex + 1;
-          // console.log("New index:", newIndex);
-          return newIndex;
+          return maxIndex + 1;
         });
         setServerResponseData(responseData);
         setShowHistoryModal(true);
         handleClearSelection();
 
-        // Блокировать выбранные вершины
         const newLockedNodes = {};
         selectedNodes.forEach((nodeId) => {
           newLockedNodes[nodeId] = true;
@@ -462,6 +465,14 @@ const GraphComponent = ({
     } catch (error) {
       console.error("Error making move:", error);
     }
+  };
+
+  const handleCloseGameOverModal = () => {
+    setIsClosing(true); // Устанавливаем состояние анимации закрытия
+    setTimeout(() => {
+      setIsClosing(false); // Сбрасываем состояние анимации
+      setShowGameOverModal(false); // Закрываем модальное окно
+    }, 700); // Длительность анимации 700 мс (настраивается)
   };
 
   return (
@@ -561,6 +572,7 @@ const GraphComponent = ({
             {cards[planet.name][cardIndex].description}
           </Modal.Body>
         </Modal>
+
         <InfoModalWindow selectedPlanet={planet} />
 
         <Modal
@@ -597,6 +609,54 @@ const GraphComponent = ({
             </Button>
           </Modal.Footer>
         </Modal>
+
+
+
+
+
+
+
+
+
+        {/* Модальное окно "Game Over" */}
+        <Modal
+          show={showGameOverModal}
+          centered
+          animation={false} // Отключаем стандартную анимацию Bootstrap
+          className={`modal-window ${isClosing ? "out" : "in"}`} // Добавляем классы для анимации
+          dialogClassName="custom-modal"
+          contentClassName="custom-modal-content"
+        >
+          <Modal.Body className="GraphPreviewModalBody">
+            <Modal.Title id="graph-preview-title">Game Over</Modal.Title>
+          </Modal.Body>
+          <Modal.Footer className="GraphPreviewModalFooter">
+            <button
+              id="buttonNoGraphPreview"
+              style={{
+                color: cardcreds[selectedPlanet.name].color,
+                borderColor: cardcreds[selectedPlanet.name].color,
+              }}
+              onClick={handleCloseGameOverModal}
+            >
+              <p>Ok</p>
+            </button>
+          </Modal.Footer>
+        </Modal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       </div>
 
       <div className="tab-content" id="pills-tabContent">
@@ -676,7 +736,7 @@ const GraphComponent = ({
                 zIndex: -1,
                 backgroundColor: backgroundColor,
                 color: "white",
-                overflow: "hidden", // Добавлено для обрезки содержимого
+                overflow: "hidden",
               }}
             ></div>
           )}
@@ -695,19 +755,18 @@ const GraphComponent = ({
                         <ListGroup.Item
                           key={node.id}
                           action
-                          className={`list-group-item ${
-                            highlightedNode === node.id ? "active" : ""
-                          }`}
+                          className={`list-group-item ${highlightedNode === node.id ? "active" : ""
+                            }`}
                           onMouseEnter={() => setHighlightedNode(node.id)}
                           onMouseLeave={() => setHighlightedNode(null)}
                           ref={
                             highlightedNode === node.id
                               ? (element) =>
-                                  element &&
-                                  element.scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "nearest",
-                                  })
+                                element &&
+                                element.scrollIntoView({
+                                  behavior: "smooth",
+                                  block: "nearest",
+                                })
                               : null
                           }
                         >
@@ -734,9 +793,8 @@ const GraphComponent = ({
               <h2>Выбранные факторы:</h2>
               <ListGroup>
                 {selectedNodes.map((nodeId, index) => (
-                  <ListGroup.Item key={index + lastIndex}>{`${
-                    index + lastIndex + 1
-                  }| Node ID: ${nodeId}`}</ListGroup.Item>
+                  <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1
+                    }| Node ID: ${nodeId}`}</ListGroup.Item>
                 ))}
               </ListGroup>
               <Button variant="outline-danger" onClick={handleClearSelection}>

@@ -31,7 +31,7 @@ const ButtonGroup = () => {
         </button>
       </Link>
       <Link style={{ color: "rgba(255, 232, 28, 1)" }} to={"./rules"}>
-        <button className={styles.aboutButton}>About</button>
+        <button className={styles.aboutButton}>Info</button>
       </Link>
     </div>
   );
