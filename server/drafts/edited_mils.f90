@@ -259,8 +259,9 @@ CLOSE(UNIT=1)
 d=0.0
 CALL df(n,a,w,r)
 DO WHILE(d.LE.0.0.OR.d.GE.r)
- WRITE(*,*)'Damping-Factor:'
- READ(*,*)d
+ d=0.3
+ !!WRITE(*,*)'Damping-Factor:'
+ !!READ(*,*)d
 ENDDO
 a=-a*d
 DO j=1,n
