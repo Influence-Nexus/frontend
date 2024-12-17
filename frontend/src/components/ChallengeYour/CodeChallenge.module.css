@@ -86,9 +86,7 @@
 
 
 .navItem {
-
   flex-basis: auto;
-
 }
 
 
@@ -96,24 +94,17 @@
 
   color: rgba(255, 255, 255, 1);
   font-size: 81px;
-  font-family: 'Cursive', sans-serif;
-
+  font-family: 'Invitation', sans-serif;
+  font-style: italic;
   margin-top: 50px;
-
-
 }
 
 
 @media (max-width: 991px) {
-
   .challengeText {
-
     max-width: 100%;
-
     margin-top: 40px;
-
     font-size: 40px;
-
   }
 
 }
@@ -124,8 +115,6 @@
   margin-top: 5px;
   color: rgba(255, 232, 28, 0);
   -webkit-text-stroke: 7px rgba(255, 232, 28, 1);; /* Толщина и цвет обводки */
-
-
   font: 400 180px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica, sans-serif;
 
 }
