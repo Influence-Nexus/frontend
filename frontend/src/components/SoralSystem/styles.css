@@ -111,6 +111,7 @@
   font-family: "Montserrat";
   font-size: 15px;
 }
+
 .card-header p {
   margin: 0;
   padding: 0;
@@ -149,8 +150,8 @@
 }
 
 
-#buttonPlayZoommedCard p{
-margin: 0;
+#buttonPlayZoommedCard p {
+  margin: 0;
 }
 
 #buttonOkGraphPreview p {
@@ -158,11 +159,11 @@ margin: 0;
 }
 
 #buttonNoGraphPreview {
-  
+
   background: transparent;
-  
+
   border: 3px solid #56b077;
-  
+
   font-weight: 800;
   border-radius: 15px;
   width: 120px;
@@ -187,6 +188,7 @@ margin: 0;
     transform: translateX(-100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -198,6 +200,7 @@ margin: 0;
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(100%);
     opacity: 0;
@@ -298,33 +301,83 @@ margin: 0;
   justify-content: center;
 }
 
-.GameOverModalBody {
+.game-over-body {
   display: flex;
   justify-content: center;
-  color: rgb(255, 218, 150);
-  background-color: #342b41;
+  color: white;
 }
 
 #game-over-title {
   font-size: 2em;
   font-family: "Montserrat";
   text-align: center;
-  background-color: #342b41;
+  color: white;
 }
 
-.GameOverModalFooter {
+#modal-header {
+  text-align: center;
+  justify-content: center;
+}
+
+.game-over-header {
+  text-align: center;
+  justify-content: center;
+}
+
+
+.game-over-footer {
   display: flex;
   justify-content: center !important;
   gap: 2em;
   text-align: center;
   align-content: center;
   border: none;
-  background-color: #342b41;
-
 }
 
-.GameOverModalHeader {
-  background-color: #342b41;
-  border-bottom: none;
+#game-over-ok-button {
+  display: flex;
+  border-radius: 15px;
+  width: 120px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
 }
 
+#game-over-ok-button p {
+  margin: 0;
+}
+
+@keyframes gameOverSlideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes gameOverSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.game-over-modal.slide-in {
+  animation: gameOverSlideIn 0.9s ease-in-out;
+}
+
+.game-over-modal.slide-out {
+  animation: gameOverSlideOut 0.9s ease-in-out;
+}

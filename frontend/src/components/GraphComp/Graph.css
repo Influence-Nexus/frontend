@@ -80,8 +80,9 @@
 }
 
 .stopwatch-container-buttons{
-  align-self: flex-end !important;
-  justify-self: end !important;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .stopwatch-container-time{

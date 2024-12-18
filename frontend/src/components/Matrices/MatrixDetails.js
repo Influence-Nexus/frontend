@@ -57,7 +57,7 @@ const MatrixDetails = () => {
   }, [matrix_id]);
   const matrix_info = matrixInfo.matrix_info;
 
-console.log('matrix_info', matrixInfo)
+// console.log('matrix_info', matrixInfo)
 
   return (
     <div className="container mt-4">

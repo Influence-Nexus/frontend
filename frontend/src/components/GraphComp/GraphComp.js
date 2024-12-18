@@ -52,6 +52,8 @@ const GraphComponent = ({
   const [isClosing, setIsClosing] = useState(false); // Для работы анимации
   // Новое состояние для модального окна "Game Over"
   const [showGameOverModal, setShowGameOverModal] = useState(false);
+  const [movesHistory, setMovesHistory] = useState([]);
+  const [disabledNodes, setDisabledNodes] = useState([]); // Список заблокированных вершин
 
   const intervalRef = useRef();
   const networkRef = useRef(null);
@@ -84,7 +86,7 @@ const GraphComponent = ({
 
   // Отслеживаем истечение времени (600 секунд)
   useEffect(() => {
-    if (elapsedTime >= 5 && isRunning) {
+    if (elapsedTime >= 600 && isRunning) {
       setIsRunning(false);
       setShowGameOverModal(true);
     }
@@ -106,12 +108,14 @@ const GraphComponent = ({
           // Узел-источник
           if (oldnodes[fromId - 1]) {
             if (!nodes.has(fromId)) {
+              const isDisabled = disabledNodes.includes(fromId);
               nodes.set(fromId, {
                 id: fromId,
                 label: `${fromId}`,
                 title: oldnodes[fromId - 1].name,
-                description: from.description,
-                color: { background: nodeColor }
+                description: oldnodes[fromId - 1].description,
+                color: { background: isDisabled ? "gray" : nodeColor },
+                font: { size: isDisabled ? 14 : 16 },
               });
               nodesDataSet.add(nodes.get(fromId));
             }
@@ -120,16 +124,17 @@ const GraphComponent = ({
           // Узел-приёмник
           if (oldnodes[toId - 1]) {
             if (!nodes.has(toId)) {
+              const isDisabled = disabledNodes.includes(toId);
               const nodeObj = {
                 id: toId,
                 label: `${toId}`,
                 title: oldnodes[toId - 1].name,
-                target: to.target,
-                description: to.description,
-                color: { background: nodeColor }
+                description: oldnodes[toId - 1].description,
+                color: { background: isDisabled ? "gray" : nodeColor },
+                font: { size: isDisabled ? 14 : 16 },
               };
 
-              if (to.target === 1) {
+              if (oldnodes[toId - 1].target === 1) {
                 nodeObj.color = { background: "gold" };
                 nodeObj.font = { size: 25 };
               }
@@ -145,11 +150,10 @@ const GraphComponent = ({
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"
-                } ${to.ru_name} на ${value}`,
+              title: `При увеличении ${oldnodes[fromId - 1].name} ${value > 0 ? "увеличивается" : "уменьшается"} ${oldnodes[toId - 1].name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
-              color: { color: value > 0 ? positiveEdgeColor : negativeEdgeColor }
+              color: { color: value > 0 ? positiveEdgeColor : negativeEdgeColor },
             });
           } catch (e) {
             console.log(e);
@@ -159,7 +163,9 @@ const GraphComponent = ({
 
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
-  }, [matrixInfo, nodeColor, positiveEdgeColor, negativeEdgeColor, edgeRoundness]);
+  }, [matrixInfo, nodeColor, positiveEdgeColor, negativeEdgeColor, edgeRoundness, disabledNodes]);
+
+
 
   // Функция для загрузки и применения координат
   const loadCoordinates = () => {
@@ -339,18 +345,28 @@ const GraphComponent = ({
   const handleNodeClick = (event) => {
     const clickedNodeIds = event.nodes;
     const clickedEdgeIds = event.edges;
+    // console.log("Clicked Node IDs:", clickedNodeIds);
+    // console.log("Selected Nodes After Click:", selectedNodes);
     if (clickedNodeIds.length === 1) {
       const clickedNodeId = clickedNodeIds[0];
-      if (!lockedNodes[clickedNodeId]) {
+
+      // Проверяем, является ли вершина заблокированной
+      if (!lockedNodes[clickedNodeId] && !disabledNodes.includes(clickedNodeId)) {
         setSelectedNodes((prevSelectedNodes) => {
+          // console.log("Previous Selected Nodes:", prevSelectedNodes);
           if (prevSelectedNodes.includes(clickedNodeId)) {
-            return prevSelectedNodes.filter((nodeId) => nodeId !== clickedNodeId);
+            const updatedNodes = prevSelectedNodes.filter((nodeId) => nodeId !== clickedNodeId);
+            // console.log("Updated Nodes (after removal):", updatedNodes);
+            return updatedNodes;
           } else {
-            return [...prevSelectedNodes, clickedNodeId];
+            const updatedNodes = [...prevSelectedNodes, clickedNodeId];
+            // console.log("Updated Nodes (after addition):", updatedNodes);
+            return updatedNodes;
           }
         });
       }
     }
+
     if (clickedEdgeIds.length > 0) {
       setSelectedEdges((prevSelectedEdges) => {
         const newSelectedEdges = new Set(prevSelectedEdges);
@@ -365,6 +381,8 @@ const GraphComponent = ({
       });
     }
   };
+
+
 
   const handleClearSelection = () => {
     setSelectedNodes([]);
@@ -411,12 +429,15 @@ const GraphComponent = ({
     }, 300); // Укажите длительность вашей анимации в миллисекундах (например, 300 мс)
   };
 
+
+
+
+
+
   const makeMove = async () => {
     try {
-      let selectedNodesDictionary = createSelectedNodesDictionary(
-        selectedNodes,
-        lastIndex
-      );
+      let selectedNodesDictionary = createSelectedNodesDictionary(selectedNodes, lastIndex);
+      // console.log("Selected Nodes Dictionary:", selectedNodesDictionary);
       const response = await fetch("http://localhost:5000/calculate_score", {
         method: "POST",
         headers: {
@@ -434,31 +455,46 @@ const GraphComponent = ({
 
       const responseData = await response.json();
 
+      if (!isRunning) {
+        handleStart();
+      }
+
       if (responseData && typeof responseData === "object") {
-        if (!isRunning) {
-          handleStart();
-        }
-        setMoveHistory([
-          ...moveHistory,
-          { selectedNodes, score: responseData.turn_score },
+        const { turn_score, total_score } = responseData;
+
+        // Обновляем историю ходов
+        setMoveHistory((prevHistory) => [
+          ...prevHistory,
+          { selectedNodes: [...selectedNodes], score: turn_score },
         ]);
-        setScore(score + responseData.score);
-        if (responseData.score > maxScorePerMove) {
-          setMaxScorePerMove(responseData.score);
-        }
+
+        setMovesHistory((prevMoves) => [
+          ...prevMoves,
+          { moveNumber: prevMoves.length + 1, nodes: [...selectedNodes] },
+        ]);
+
+        // Обновляем общий счёт
+        setScore((prevScore) =>
+          typeof total_score === "number" && !isNaN(total_score)
+            ? total_score
+            : prevScore
+        );
+
+        // Обновляем список заблокированных вершин
+        setDisabledNodes((prev) => [...new Set([...prev, ...selectedNodes])]);
+
+        // Очищаем текущий выбор
+        handleClearSelection();
+
+        // Обновляем индекс для следующих ходов
         setLastIndex((prevLastIndex) => {
           const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
           return maxIndex + 1;
         });
-        setServerResponseData(responseData);
-        setShowHistoryModal(true);
-        handleClearSelection();
 
-        const newLockedNodes = {};
-        selectedNodes.forEach((nodeId) => {
-          newLockedNodes[nodeId] = true;
-        });
-        setLockedNodes({ ...lockedNodes, ...newLockedNodes });
+
+        // Открываем окно с историей ходов
+        setShowHistoryModal(true);
       } else {
         console.error("Error: Invalid or missing server response data");
       }
@@ -467,12 +503,28 @@ const GraphComponent = ({
     }
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const handleCloseGameOverModal = () => {
     setIsClosing(true); // Устанавливаем состояние анимации закрытия
     setTimeout(() => {
-      setIsClosing(false); // Сбрасываем состояние анимации
-      setShowGameOverModal(false); // Закрываем модальное окно
-    }, 700); // Длительность анимации 700 мс (настраивается)
+      setShowGameOverModal(false); // Закрываем модальное окно после анимации
+      setIsClosing(false); // Сбрасываем состояние
+    }, 700); // Убедитесь, что длительность совпадает с анимацией
   };
 
   return (
@@ -622,28 +674,28 @@ const GraphComponent = ({
         <Modal
           show={showGameOverModal}
           centered
-          animation={false} // Отключаем стандартную анимацию Bootstrap
-          className={`modal-window ${isClosing ? "out" : "in"}`} // Добавляем классы для анимации
+          animation={false}
           dialogClassName="custom-modal"
           contentClassName="custom-modal-content"
+          className={`game-over-modal ${isClosing ? "slide-out" : "slide-in"}`}
         >
-          <Modal.Body className="GraphPreviewModalBody">
-            <Modal.Title id="graph-preview-title">Game Over</Modal.Title>
+          <Modal.Header className="game-over-header">
+            <Modal.Title id="game-over-title">Game Over</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="game-over-body">
+            <h3>Your Score: {Math.max(0, score)}</h3>
           </Modal.Body>
-          <Modal.Footer className="GraphPreviewModalFooter">
+          <Modal.Footer className="game-over-footer">
             <button
-              id="buttonNoGraphPreview"
-              style={{
-                color: cardcreds[selectedPlanet.name].color,
-                borderColor: cardcreds[selectedPlanet.name].color,
-              }}
+              id="game-over-ok-button"
               onClick={handleCloseGameOverModal}
+              className="game-over-button"
+              style={{ color: cardcreds[selectedPlanet.name].color, border: `3px solid ${cardcreds[selectedPlanet.name].color}` }}
             >
-              <p>Ok</p>
+              OK
             </button>
           </Modal.Footer>
         </Modal>
-
 
 
 
@@ -704,9 +756,27 @@ const GraphComponent = ({
                 <FaMedal /> {`${score}`}
               </p>
             </div>
+
+
+
+
             <div className="stopwatch-container-table">
-              <h3> Vertices</h3>
+              <h1>Vertices</h1>
+              {movesHistory.length > 0 ? (
+                <ul style={{ padding: 0, listStyle: "none" }}>
+                  {movesHistory.map((move) => (
+                    <li key={move.moveNumber} style={{ marginBottom: "10px" }}>
+                      <strong>Move {move.moveNumber}:</strong> {move.nodes.join(", ")}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No moves made yet</p>
+              )}
             </div>
+
+
+
             <div className="stopwatch-container-buttons">
               <Button
                 variant="success"
@@ -724,6 +794,9 @@ const GraphComponent = ({
               </Button>
             </div>
           </div>
+
+
+
 
           {graphData && (
             <div
