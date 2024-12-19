@@ -203,7 +203,7 @@ export const ScienceGraphComp = ({
   const loadAndApplyCoordinates = () => {
     const matrixName = matrixInfo.matrix_info.matrix_name;
     const fileName = `/models_coords/${matrixName}_coordinates.json`;
-
+  
     fetch(fileName)
       .then((response) => {
         if (!response.ok) {
@@ -214,24 +214,52 @@ export const ScienceGraphComp = ({
         }
         return response.json();
       })
-      .then((coordinates) => {
-        if (!coordinates) return;
+      .then((data) => {
+        if (!data) return;
+  
+        // Проверяем наличие данных о графе
+        const { graph_settings, node_coordinates } = data;
+  
         // Применяем координаты к узлам
-        if (networkRef.current && typeof coordinates === "object") {
-          Object.keys(coordinates).forEach((nodeId) => {
-            const node = networkRef.current.body.nodes[nodeId];
-            if (node && coordinates[nodeId]) {
-              node.x = coordinates[nodeId].x;
-              node.y = coordinates[nodeId].y;
-            }
-          });
+        if (node_coordinates && typeof node_coordinates === "object") {
+          if (networkRef.current) {
+            Object.keys(node_coordinates).forEach((nodeId) => {
+              const node = networkRef.current.body.nodes[nodeId];
+              if (node && node_coordinates[nodeId]) {
+                node.x = node_coordinates[nodeId].x;
+                node.y = node_coordinates[nodeId].y;
+              }
+            });
+            console.log("Координаты узлов применены.");
+          }
+        }
+  
+        // Применяем настройки графа: позицию и масштаб
+        if (graph_settings) {
+          const { position, scale } = graph_settings;
+          if (networkRef.current) {
+            networkRef.current.moveTo({
+              position: position || { x: 0, y: 0 },
+              scale: scale || 1,
+              animation: {
+                duration: 1000,
+                easingFunction: "easeInOutQuad",
+              },
+            });
+            console.log("Позиция и масштаб графа применены.");
+          }
+        }
+  
+        // Обновляем граф
+        if (networkRef.current) {
           networkRef.current.redraw();
         }
       })
       .catch((error) => {
-        console.error("Ошибка при загрузке координат:", error);
+        console.error("Ошибка при загрузке данных для графа:", error);
       });
   };
+  
 
   const handleNodeClick = (event) => {
     const clickedNodeIds = event.nodes;

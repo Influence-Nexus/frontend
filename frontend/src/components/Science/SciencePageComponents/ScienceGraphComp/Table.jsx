@@ -27,7 +27,13 @@ export const SyntheticTable = ({ data }) => {
     { Moves: "Ход 7", PerMove: 5 },
   ];
 
-  const tableData = data || defaultData;
+  // Пример адаптации, если данные из бэкенда имеют другую структуру
+  const tableData = data
+    ? data.map((item, index) => ({
+      Moves: `Ход ${index + 1}`,
+      PerMove: item.points, // Пример: если из бэкенда приходит поле `points`
+    }))
+    : defaultData;
 
   // Calculate cumulative scores
   let cumulativeScore = 0;
@@ -117,8 +123,8 @@ export const SyntheticTable = ({ data }) => {
                   padding: "8px",
                   fontWeight:
                     index === calculatedData.length - 1 ? "bold" : "normal",
-                  fontSize: 
-                  index === calculatedData.length - 1 ? "1.2rem" : ""
+                  fontSize:
+                    index === calculatedData.length - 1 ? "1.2rem" : ""
                 }}
               >
                 {row.Cumulative}

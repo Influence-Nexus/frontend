@@ -34,16 +34,18 @@ export const SciencePage = () => {
     }
   }, [matrix_id]);
 
-  // Simulate fetching synthetic data
   useEffect(() => {
-    // Replace this with actual fetch when backend is ready
-    const fetchSyntheticData = () => {
-      // Simulating a network request with setTimeout
-      setTimeout(() => {
-        // If backend is ready, replace the below with actual fetch
-        const dataFromBackend = null; // Replace with fetched data
-        setSyntheticData(dataFromBackend);
-      }, 1000);
+    const fetchSyntheticData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/synthetic_data"); // Замените URL на ваш эндпоинт
+        if (!response.ok) {
+          throw new Error(`Ошибка: ${response.status}`);
+        }
+        const dataFromBackend = await response.json();
+        setSyntheticData(dataFromBackend); // Сохраняем данные в состояние
+      } catch (error) {
+        console.error("Ошибка при получении синтетических данных:", error);
+      }
     };
 
     fetchSyntheticData();
