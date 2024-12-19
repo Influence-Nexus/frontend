@@ -167,11 +167,10 @@ const GraphComponent = ({
 
 
 
-  // Функция для загрузки и применения координат
   const loadCoordinates = () => {
     const matrixName = matrixInfo.matrix_info.matrix_name;
     const fileName = `/models_coords/${matrixName}_coordinates.json`;
-
+  
     fetch(fileName)
       .then((response) => {
         if (!response.ok) {
@@ -180,59 +179,92 @@ const GraphComponent = ({
         }
         return response.json();
       })
-      .then((coordinates) => {
-        if (!coordinates) return;
-        if (networkRef.current && typeof coordinates === "object") {
-          Object.keys(coordinates).forEach((nodeId) => {
-            const node = networkRef.current.body.nodes[nodeId];
-            if (node && coordinates[nodeId]) {
-              node.x = coordinates[nodeId].x;
-              node.y = coordinates[nodeId].y;
-            }
-          });
+      .then((data) => {
+        if (!data) return;
+  
+        const { graph_settings, node_coordinates } = data;
+  
+        if (networkRef.current) {
+          // Устанавливаем координаты узлов
+          if (node_coordinates && typeof node_coordinates === "object") {
+            Object.keys(node_coordinates).forEach((nodeId) => {
+              const node = networkRef.current.body.nodes[nodeId];
+              if (node && node_coordinates[nodeId]) {
+                node.x = node_coordinates[nodeId].x;
+                node.y = node_coordinates[nodeId].y;
+              }
+            });
+          }
+  
+          // Устанавливаем позицию и масштаб
+          if (graph_settings) {
+            const { position, scale } = graph_settings;
+            networkRef.current.moveTo({
+              position: position || { x: 0, y: 0 },
+              scale: scale || 1,
+              animation: {
+                duration: 1000,
+                easingFunction: "easeInOutQuad",
+              },
+            });
+          }
+  
           networkRef.current.redraw();
         }
       })
       .catch((error) => {
-        console.error("Ошибка при загрузке координат:", error);
+        console.error("Ошибка при загрузке координат и настроек графа:", error);
       });
   };
-
-  // Функция для сохранения текущих координат узлов
-  const saveNodeCoordinates = () => {
-    if (networkRef.current) {
-      const nodePositions = networkRef.current.body.nodes;
-      const coordinates = {};
-
-      Object.keys(nodePositions).forEach((nodeId) => {
-        const node = nodePositions[nodeId];
-        coordinates[nodeId] = { x: node.x, y: node.y };
-      });
-
-      const file = new Blob([JSON.stringify(coordinates, null, 2)], {
-        type: "application/json",
-      });
-      const url = URL.createObjectURL(file);
-
-      const a = document.createElement("a");
-      a.href = url;
-      const matrixName = matrixInfo.matrix_info.matrix_name;
-      a.download = `${matrixName}_coordinates.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      console.log("Координаты узлов сохранены в файл node_coordinates.json");
-    } else {
-      console.log("Граф ещё не инициализирован.");
-    }
-  };
-
-  // Функция для ресета координат (загрузка из json)
+  
   const resetNodeCoordinates = () => {
     loadCoordinates();
-    alert("Координаты узлов успешно сброшены.");
+    alert("Координаты узлов и настройки графа успешно сброшены.");
   };
+  
+// Функция для сохранения текущих координат узлов, позиции и масштаба
+const saveGraphSettings = () => {
+  if (networkRef.current) {
+    const nodePositions = networkRef.current.body.nodes;
+    const coordinates = {};
+
+    // Сохраняем координаты узлов
+    Object.keys(nodePositions).forEach((nodeId) => {
+      const node = nodePositions[nodeId];
+      coordinates[nodeId] = { x: node.x, y: node.y };
+    });
+
+    // Сохраняем текущую позицию и масштаб графа
+    const { position, scale } = networkRef.current.getViewPosition();
+    const dataToSave = {
+      graph_settings: {
+        position,
+        scale,
+      },
+      node_coordinates: coordinates,
+    };
+
+    // Создаём файл
+    const file = new Blob([JSON.stringify(dataToSave, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(file);
+
+    // Загружаем файл
+    const a = document.createElement("a");
+    a.href = url;
+    const matrixName = matrixInfo.matrix_info.matrix_name;
+    a.download = `${matrixName}_graph_settings.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    console.log(`Настройки графа сохранены в файл ${matrixName}_graph_settings.json`);
+  } else {
+    console.log("Граф ещё не инициализирован.");
+  }
+};
+
 
   useEffect(() => {
     if (graphData) {
@@ -599,9 +631,9 @@ const GraphComponent = ({
           <li>
             <button
               className="game-button"
-              onClick={saveNodeCoordinates}
+              onClick={saveGraphSettings}
             >
-              Сохранить координаты
+              Сохранить граф
             </button>
           </li>
           <li>
