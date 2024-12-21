@@ -10,6 +10,7 @@ import SolarSystem from './components/SoralSystem/SolarSystem';
 import SpaceshipView from './components/SpaceShip/SpaceshipView';
 import ChallengeComponent from './components/AlDafiraWelcome/ChallengeComponent'
 import CodeChallenge from './components/ChallengeYour/CodeChallenge';
+import CatAnimation from './components/GraphComp/CatAnimation'
 
 import { SciencePage } from './components/Science/SciencePage';
 import { AlgoPage } from './components/Science/AlgoPAge/AlgoPage';
@@ -30,6 +31,9 @@ const App = () => {
         <Route path="/science" element={<SciencePage />} />
         <Route path="/ChallengeComponent" element={<ChallengeComponent />} />
         <Route path="/algorithm" element={<AlgoPage />} />
+
+
+        <Route path="/test_animation" element={<CatAnimation />} />
       </Routes>
     </Router>
   );

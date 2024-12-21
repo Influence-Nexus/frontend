@@ -18,6 +18,9 @@ import VerticalProgressBar from "./VerticalProgress";
 import { InfoModalWindow } from "./InfoModalWindow";
 import { cardcreds, cards } from "../SoralSystem/cards";
 
+// [CAT LOGIC] - Импортируем CatAnimation
+import CatAnimation from "./CatAnimation"; // <-- скорректируйте путь
+
 const GraphComponent = ({
   matrixInfo,
   backgroundColor = "#0b001a",
@@ -44,16 +47,14 @@ const GraphComponent = ({
   const [lastIndex, setLastIndex] = useState(0);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  // const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [serverResponseData, setServerResponseData] = useState(null);
   const [score, setScore] = useState(0);
   const [maxScorePerMove, setMaxScorePerMove] = useState(0);
-  const [isClosing, setIsClosing] = useState(false); // Для работы анимации
-  // Новое состояние для модального окна "Game Over"
+  const [isClosing, setIsClosing] = useState(false);
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [movesHistory, setMovesHistory] = useState([]);
-  const [disabledNodes, setDisabledNodes] = useState([]); // Список заблокированных вершин
+  const [disabledNodes, setDisabledNodes] = useState([]);
 
   const intervalRef = useRef();
   const networkRef = useRef(null);
@@ -63,7 +64,12 @@ const GraphComponent = ({
   const selectedCardIndexLocal = location.state?.selectedCardIndex;
 
   const planet = selectedPlanet || selectedPlanetLocal;
-  const cardIndex = selectedCardIndex !== undefined ? selectedCardIndex : selectedCardIndexLocal;
+  const cardIndex =
+    selectedCardIndex !== undefined ? selectedCardIndex : selectedCardIndexLocal;
+
+  // [CAT LOGIC] - состояния для "показать кота" и "уже запустили кота"
+  const [showCat, setShowCat] = useState(false);
+  const [catAnimationLaunched, setCatAnimationLaunched] = useState(false);
 
   const createSelectedNodesDictionary = (selectedNodes, startIndex) => {
     return selectedNodes.reduce((acc, nodeId, index) => {
@@ -72,6 +78,7 @@ const GraphComponent = ({
     }, {});
   };
 
+  // --- Логика запуска/остановки таймера ---
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
@@ -84,14 +91,21 @@ const GraphComponent = ({
     return () => clearInterval(intervalRef.current);
   }, [isRunning]);
 
-  // Отслеживаем истечение времени (600 секунд)
+  // --- Если время превысило 600 секунд, заканчиваем игру (Game Over) ---
   useEffect(() => {
     if (elapsedTime >= 600 && isRunning) {
       setIsRunning(false);
       setShowGameOverModal(true);
     }
-  }, [elapsedTime, isRunning]);
 
+    // [CAT LOGIC] - Если достигли 300 секунд и ещё не запускали кота, запускаем
+    if (elapsedTime >= 300 && !catAnimationLaunched) {
+      setShowCat(true);               // показать кота на экране
+      setCatAnimationLaunched(true);  // больше не запускать
+    }
+  }, [elapsedTime, isRunning, catAnimationLaunched]);
+
+  // --- Инициализация графа ---
   useEffect(() => {
     if (matrixInfo) {
       const edges = matrixInfo.edges;
@@ -150,10 +164,14 @@ const GraphComponent = ({
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${oldnodes[fromId - 1].name} ${value > 0 ? "увеличивается" : "уменьшается"} ${oldnodes[toId - 1].name} на ${value}`,
+              title: `При увеличении ${oldnodes[fromId - 1].name
+                } ${value > 0 ? "увеличивается" : "уменьшается"} ${oldnodes[toId - 1].name
+                } на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
-              color: { color: value > 0 ? positiveEdgeColor : negativeEdgeColor },
+              color: {
+                color: value > 0 ? positiveEdgeColor : negativeEdgeColor,
+              },
             });
           } catch (e) {
             console.log(e);
@@ -163,27 +181,32 @@ const GraphComponent = ({
 
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
-  }, [matrixInfo, nodeColor, positiveEdgeColor, negativeEdgeColor, edgeRoundness, disabledNodes]);
+  }, [
+    matrixInfo,
+    nodeColor,
+    positiveEdgeColor,
+    negativeEdgeColor,
+    edgeRoundness,
+    disabledNodes,
+  ]);
 
-
-
+  // --- Загружаем координаты из JSON (если есть) ---
   const loadCoordinates = () => {
     const matrixName = matrixInfo.matrix_info.matrix_name;
     const fileName = `/models_coords/${matrixName}_coordinates.json`;
-  
+
     fetch(fileName)
       .then((response) => {
         if (!response.ok) {
-          console.warn(`Файл с координатами ${fileName} не найден или недоступен.`);
+          console.warn(`Файл ${fileName} не найден или недоступен.`);
           return null;
         }
         return response.json();
       })
       .then((data) => {
         if (!data) return;
-  
         const { graph_settings, node_coordinates } = data;
-  
+
         if (networkRef.current) {
           // Устанавливаем координаты узлов
           if (node_coordinates && typeof node_coordinates === "object") {
@@ -195,7 +218,6 @@ const GraphComponent = ({
               }
             });
           }
-  
           // Устанавливаем позицию и масштаб
           if (graph_settings) {
             const { position, scale } = graph_settings;
@@ -208,64 +230,66 @@ const GraphComponent = ({
               },
             });
           }
-  
           networkRef.current.redraw();
         }
       })
       .catch((error) => {
-        console.error("Ошибка при загрузке координат и настроек графа:", error);
+        console.error("Ошибка при загрузке координат:", error);
       });
   };
-  
+
+  // --- Сброс координат ---
   const resetNodeCoordinates = () => {
     loadCoordinates();
     alert("Координаты узлов и настройки графа успешно сброшены.");
   };
-  
-// Функция для сохранения текущих координат узлов, позиции и масштаба
-const saveGraphSettings = () => {
-  if (networkRef.current) {
-    const nodePositions = networkRef.current.body.nodes;
-    const coordinates = {};
 
-    // Сохраняем координаты узлов
-    Object.keys(nodePositions).forEach((nodeId) => {
-      const node = nodePositions[nodeId];
-      coordinates[nodeId] = { x: node.x, y: node.y };
-    });
+  // --- Сохраняем настройки графа в JSON ---
+  const saveGraphSettings = () => {
+    if (networkRef.current) {
+      const nodePositions = networkRef.current.body.nodes;
+      const coordinates = {};
 
-    // Сохраняем текущую позицию и масштаб графа
-    const { position, scale } = networkRef.current.getViewPosition();
-    const dataToSave = {
-      graph_settings: {
-        position,
-        scale,
-      },
-      node_coordinates: coordinates,
-    };
+      // Сохраняем координаты узлов
+      Object.keys(nodePositions).forEach((nodeId) => {
+        const node = nodePositions[nodeId];
+        coordinates[nodeId] = { x: node.x, y: node.y };
+      });
 
-    // Создаём файл
-    const file = new Blob([JSON.stringify(dataToSave, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(file);
+      // Сохраняем текущую позицию и масштаб
+      const { position, scale } = networkRef.current.getViewPosition();
+      const dataToSave = {
+        graph_settings: {
+          position,
+          scale,
+        },
+        node_coordinates: coordinates,
+      };
 
-    // Загружаем файл
-    const a = document.createElement("a");
-    a.href = url;
-    const matrixName = matrixInfo.matrix_info.matrix_name;
-    a.download = `${matrixName}_graph_settings.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+      // Создаём Blob-файл
+      const file = new Blob([JSON.stringify(dataToSave, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(file);
 
-    console.log(`Настройки графа сохранены в файл ${matrixName}_graph_settings.json`);
-  } else {
-    console.log("Граф ещё не инициализирован.");
-  }
-};
+      // Автоматическая загрузка
+      const a = document.createElement("a");
+      a.href = url;
+      const matrixName = matrixInfo.matrix_info.matrix_name;
+      a.download = `${matrixName}_graph_settings.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
 
+      console.log(
+        `Настройки графа сохранены в файл ${matrixName}_graph_settings.json`
+      );
+    } else {
+      console.log("Граф ещё не инициализирован.");
+    }
+  };
 
+  // --- После появления graphData рисуем сеть ---
   useEffect(() => {
     if (graphData) {
       const container = document.getElementById("graph-container");
@@ -290,7 +314,7 @@ const saveGraphSettings = () => {
           arrows: { to: true },
           font: {
             size: 24,
-            align: 'horizontal',
+            align: "horizontal",
           },
           color: {
             highlight: "white",
@@ -322,7 +346,7 @@ const saveGraphSettings = () => {
             align: "center",
           },
           borderWidth: 2,
-          borderWidthSelected: 4
+          borderWidthSelected: 4,
         },
         interaction: {
           hover: true,
@@ -342,7 +366,7 @@ const saveGraphSettings = () => {
         scale: 0.85,
         animation: {
           duration: 1000,
-          easingFunction: 'easeInOutQuad',
+          easingFunction: "easeInOutQuad",
         },
       });
 
@@ -369,36 +393,31 @@ const saveGraphSettings = () => {
       });
 
       networkRef.current = newNetwork;
-
       loadCoordinates();
     }
   }, [graphData, lockedNodes, edgeRoundness, physicsEnabled, nodeSize]);
 
+  // --- Клики по вершинам/рёбрам ---
   const handleNodeClick = (event) => {
     const clickedNodeIds = event.nodes;
     const clickedEdgeIds = event.edges;
-    // console.log("Clicked Node IDs:", clickedNodeIds);
-    // console.log("Selected Nodes After Click:", selectedNodes);
+
+    // Выбор узла
     if (clickedNodeIds.length === 1) {
       const clickedNodeId = clickedNodeIds[0];
-
-      // Проверяем, является ли вершина заблокированной
+      // Проверяем, не заблокирована ли эта вершина
       if (!lockedNodes[clickedNodeId] && !disabledNodes.includes(clickedNodeId)) {
         setSelectedNodes((prevSelectedNodes) => {
-          // console.log("Previous Selected Nodes:", prevSelectedNodes);
           if (prevSelectedNodes.includes(clickedNodeId)) {
-            const updatedNodes = prevSelectedNodes.filter((nodeId) => nodeId !== clickedNodeId);
-            // console.log("Updated Nodes (after removal):", updatedNodes);
-            return updatedNodes;
+            return prevSelectedNodes.filter((id) => id !== clickedNodeId);
           } else {
-            const updatedNodes = [...prevSelectedNodes, clickedNodeId];
-            // console.log("Updated Nodes (after addition):", updatedNodes);
-            return updatedNodes;
+            return [...prevSelectedNodes, clickedNodeId];
           }
         });
       }
     }
 
+    // Выбор рёбер
     if (clickedEdgeIds.length > 0) {
       setSelectedEdges((prevSelectedEdges) => {
         const newSelectedEdges = new Set(prevSelectedEdges);
@@ -414,14 +433,13 @@ const saveGraphSettings = () => {
     }
   };
 
-
-
+  // --- Очистить выбор ---
   const handleClearSelection = () => {
     setSelectedNodes([]);
     setSelectedEdges([]);
   };
 
-
+  // --- Старт ---
   const handleStart = () => {
     setIsRunning(true);
     setElapsedTime(0);
@@ -431,6 +449,7 @@ const saveGraphSettings = () => {
     setLockedNodes({});
   };
 
+  // --- Стоп ---
   const handleStop = () => {
     setIsRunning(false);
 
@@ -451,25 +470,22 @@ const saveGraphSettings = () => {
   const handleCloseModal = () => setShowModal(false);
 
   const handleShowHistoryModal = () => setShowHistoryModal(true);
-
-
   const handleCloseHistoryModal = () => {
-    setIsClosing(true); // Устанавливаем состояние для анимации закрытия
+    setIsClosing(true);
     setTimeout(() => {
-      setShowHistoryModal(false); // Закрываем модальное окно после завершения анимации
-      setIsClosing(false); // Сбрасываем состояние
-    }, 300); // Укажите длительность вашей анимации в миллисекундах (например, 300 мс)
+      setShowHistoryModal(false);
+      setIsClosing(false);
+    }, 300);
   };
 
-
-
-
-
-
+  // --- При нажатии "Make Move" ---
   const makeMove = async () => {
     try {
-      let selectedNodesDictionary = createSelectedNodesDictionary(selectedNodes, lastIndex);
-      // console.log("Selected Nodes Dictionary:", selectedNodesDictionary);
+      let selectedNodesDictionary = createSelectedNodesDictionary(
+        selectedNodes,
+        lastIndex
+      );
+
       const response = await fetch("http://localhost:5000/calculate_score", {
         method: "POST",
         headers: {
@@ -494,7 +510,6 @@ const saveGraphSettings = () => {
       if (responseData && typeof responseData === "object") {
         const { turn_score, total_score } = responseData;
 
-        // Обновляем историю ходов
         setMoveHistory((prevHistory) => [
           ...prevHistory,
           { selectedNodes: [...selectedNodes], score: turn_score },
@@ -505,27 +520,23 @@ const saveGraphSettings = () => {
           { moveNumber: prevMoves.length + 1, nodes: [...selectedNodes] },
         ]);
 
-        // Обновляем общий счёт
         setScore((prevScore) =>
           typeof total_score === "number" && !isNaN(total_score)
             ? total_score
             : prevScore
         );
 
-        // Обновляем список заблокированных вершин
+        // Блокируем выбранные вершины
         setDisabledNodes((prev) => [...new Set([...prev, ...selectedNodes])]);
 
-        // Очищаем текущий выбор
         handleClearSelection();
 
-        // Обновляем индекс для следующих ходов
+        // Индекс для уникальных ключей
         setLastIndex((prevLastIndex) => {
           const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
           return maxIndex + 1;
         });
 
-
-        // Открываем окно с историей ходов
         setShowHistoryModal(true);
       } else {
         console.error("Error: Invalid or missing server response data");
@@ -535,32 +546,32 @@ const saveGraphSettings = () => {
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // --- Закрыть Game Over ---
   const handleCloseGameOverModal = () => {
-    setIsClosing(true); // Устанавливаем состояние анимации закрытия
+    setIsClosing(true);
     setTimeout(() => {
-      setShowGameOverModal(false); // Закрываем модальное окно после анимации
-      setIsClosing(false); // Сбрасываем состояние
-    }, 700); // Убедитесь, что длительность совпадает с анимацией
+      setShowGameOverModal(false);
+      setIsClosing(false);
+    }, 700);
+  };
+
+  // [CAT LOGIC] - колбэк, который вызывает CatAnimation, когда кот добегает до конца
+  const handleCatAnimationEnd = () => {
+    setShowCat(false); // убираем кота с экрана
   };
 
   return (
     <div style={{ display: "flex", zIndex: -1, flexDirection: "column" }}>
+      {/* [CAT LOGIC] - рендерим кота только если showCat === true */}
+      {showCat && (
+        <CatAnimation
+          triggerAnimation={true}
+          stopAtX={1100}
+          onAnimationEnd={() => console.log("Остановился на 600px!")}
+        />
+
+      )}
+
       <div style={{ position: "relative", flex: "1", paddingRight: "20px" }}>
         <ul
           className="Button-Group"
@@ -629,18 +640,12 @@ const saveGraphSettings = () => {
           </li>
 
           <li>
-            <button
-              className="game-button"
-              onClick={saveGraphSettings}
-            >
+            <button className="game-button" onClick={saveGraphSettings}>
               Сохранить граф
             </button>
           </li>
           <li>
-            <button
-              className="game-button"
-              onClick={resetNodeCoordinates}
-            >
+            <button className="game-button" onClick={resetNodeCoordinates}>
               Reset
             </button>
           </li>
@@ -648,13 +653,9 @@ const saveGraphSettings = () => {
 
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title>
-              {cards[planet.name][cardIndex].title}
-            </Modal.Title>
+            <Modal.Title>{cards[planet.name][cardIndex].title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            {cards[planet.name][cardIndex].description}
-          </Modal.Body>
+          <Modal.Body>{cards[planet.name][cardIndex].description}</Modal.Body>
         </Modal>
 
         <InfoModalWindow selectedPlanet={planet} />
@@ -694,14 +695,6 @@ const saveGraphSettings = () => {
           </Modal.Footer>
         </Modal>
 
-
-
-
-
-
-
-
-
         {/* Модальное окно "Game Over" */}
         <Modal
           show={showGameOverModal}
@@ -722,25 +715,15 @@ const saveGraphSettings = () => {
               id="game-over-ok-button"
               onClick={handleCloseGameOverModal}
               className="game-over-button"
-              style={{ color: cardcreds[selectedPlanet.name].color, border: `3px solid ${cardcreds[selectedPlanet.name].color}` }}
+              style={{
+                color: cardcreds[selectedPlanet.name].color,
+                border: `3px solid ${cardcreds[selectedPlanet.name].color}`,
+              }}
             >
               OK
             </button>
           </Modal.Footer>
         </Modal>
-
-
-
-
-
-
-
-
-
-
-
-
-
       </div>
 
       <div className="tab-content" id="pills-tabContent">
@@ -789,16 +772,14 @@ const saveGraphSettings = () => {
               </p>
             </div>
 
-
-
-
             <div className="stopwatch-container-table">
               <h1>Vertices</h1>
               {movesHistory.length > 0 ? (
                 <ul style={{ padding: 0, listStyle: "none" }}>
                   {movesHistory.map((move) => (
                     <li key={move.moveNumber} style={{ marginBottom: "10px" }}>
-                      <strong>Move {move.moveNumber}:</strong> {move.nodes.join(", ")}
+                      <strong>Move {move.moveNumber}:</strong>{" "}
+                      {move.nodes.join(", ")}
                     </li>
                   ))}
                 </ul>
@@ -806,8 +787,6 @@ const saveGraphSettings = () => {
                 <p>No moves made yet</p>
               )}
             </div>
-
-
 
             <div className="stopwatch-container-buttons">
               <Button
@@ -826,9 +805,6 @@ const saveGraphSettings = () => {
               </Button>
             </div>
           </div>
-
-
-
 
           {graphData && (
             <div
@@ -898,8 +874,9 @@ const saveGraphSettings = () => {
               <h2>Выбранные факторы:</h2>
               <ListGroup>
                 {selectedNodes.map((nodeId, index) => (
-                  <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1
-                    }| Node ID: ${nodeId}`}</ListGroup.Item>
+                  <ListGroup.Item key={index + lastIndex}>
+                    {`${index + lastIndex + 1}| Node ID: ${nodeId}`}
+                  </ListGroup.Item>
                 ))}
               </ListGroup>
               <Button variant="outline-danger" onClick={handleClearSelection}>
