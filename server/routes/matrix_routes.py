@@ -3,7 +3,9 @@ from services.matrix_service import get_all_matrices, get_matrix_data, get_respo
 from utils.score_counter import calculate_order_score
 import numpy as np
 import pathlib
+from drafts.testik import BASE_DIR, process_input_files
 
+CURRENT_BASE_DIR = pathlib.Path(__file__).parent.resolve()
 matrix_bp = Blueprint('matrix_bp', __name__)
 
 @matrix_bp.route('/matrices', methods=['GET'])
@@ -93,13 +95,26 @@ def calculate_score():
 
 @matrix_bp.route('/science_table', methods=['POST'])
 def get_science_table():
+    print(BASE_DIR)
     try:
-        # Определяем путь к файлу
-        report_file_path = pathlib.Path(__file__).parent.resolve() / "Vadimka" / "report.txt"
-        
-        # Читаем файл
-        with open(report_file_path, "r") as report:
-            lines = report.readlines()
+        # Получаем matrix_name из запроса
+        matrix_name = request.json.get('matrixName')
+        if not matrix_name:
+            return jsonify({"error": "Matrix name is required"}), 400
+        # Определяем путь к файлу report.txt
+        report_file_path = BASE_DIR / "Vadimka" / "report.txt"
+
+        # Проверяем, существует ли report.txt
+        if not report_file_path.exists():
+            print(f"[INFO] Файл {report_file_path} не найден. Запускаем процесс обработки Fortran.")
+            
+            # Если файл не существует, вызываем функцию для обработки файлов и запуска Fortran
+            process_input_files(str(BASE_DIR / "../static/models"), str(BASE_DIR / "processed_files"), BASE_DIR / "edited_mils.f90")
+
+        # Читаем report.txt после выполнения Fortran, если оно было выполнено
+        if report_file_path.exists():
+            with open(report_file_path, "r") as report:
+                lines = report.readlines()
         
         # Обрабатываем данные
         u = [float(line[12:-1]) for line in lines if len(line) <= 23]
@@ -107,8 +122,8 @@ def get_science_table():
         
         # Вычисляем квадраты и нормализацию
         sq_u = [num ** 2 for num in u]
-        sum_u = sum(sq_u)
-        normalized_u = [round(value / sum_u, 4) for value in sq_u] if sum_u != 0 else []
+        sum_sq_u = sum(sq_u)
+        normalized_u = [round(value / sum_sq_u, 4) for value in sq_u] if sum_sq_u != 0 else []
         normalized_x = [num ** 2 for num in x]
         
         # Формируем результат
@@ -116,7 +131,8 @@ def get_science_table():
             "x": x,
             "u": u,
             "normalized_x": normalized_x,
-            "normalized_u": normalized_u
+            "normalized_u": normalized_u,
+            "matrix_name": matrix_name
         }
         return jsonify(result), 200
 
