@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, session
 from services.matrix_service import get_all_matrices, get_matrix_data, get_response_strength
 from utils.score_counter import calculate_order_score
 import numpy as np
+import pathlib
 
 matrix_bp = Blueprint('matrix_bp', __name__)
 
@@ -89,3 +90,39 @@ def calculate_score():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+@matrix_bp.route('/science_table', methods=['POST'])
+def get_science_table():
+    try:
+        # Определяем путь к файлу
+        report_file_path = pathlib.Path(__file__).parent.resolve() / "Vadimka" / "report.txt"
+        
+        # Читаем файл
+        with open(report_file_path, "r") as report:
+            lines = report.readlines()
+        
+        # Обрабатываем данные
+        u = [float(line[12:-1]) for line in lines if len(line) <= 23]
+        x = [float(line[1:10]) for line in lines if len(line) <= 23]
+        
+        # Вычисляем квадраты и нормализацию
+        sq_u = [num ** 2 for num in u]
+        sum_u = sum(sq_u)
+        normalized_u = [round(value / sum_u, 4) for value in sq_u] if sum_u != 0 else []
+        normalized_x = [num ** 2 for num in x]
+        
+        # Формируем результат
+        result = {
+            "x": x,
+            "u": u,
+            "normalized_x": normalized_x,
+            "normalized_u": normalized_u
+        }
+        return jsonify(result), 200
+
+    except FileNotFoundError:
+        return jsonify({"error": "report.txt not found"}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
