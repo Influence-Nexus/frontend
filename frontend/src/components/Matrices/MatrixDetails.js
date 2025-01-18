@@ -66,12 +66,13 @@ const MatrixDetails = () => {
           color: "white",
           textAlign: "center",
           font: "400 72px Moon Dance, cursive",
+          marginTop: "-80px"
         }}
       >
         Challenge your mind!
       </h1>
       {matrix_info && (
-        <div>
+        <div style={{marginLeft: "-55px"}}>
           <div className="Graph-Planet-Card-Info">
             <img
               className="planet-image"

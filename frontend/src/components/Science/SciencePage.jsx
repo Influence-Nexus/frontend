@@ -63,16 +63,33 @@ export const SciencePage = () => {
     fetchHugeTableData();
   }, []);
 
+  // Запрос для получения данных матрицы
   useEffect(() => {
-    const fetchSmallTableData = () => {
-      setTimeout(() => {
-        const dataFromBackend = null; // Replace with fetched data
-        setSmallTableData(dataFromBackend);
-      }, 1000);
+    const fetchMatrixData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/science_table?matrixName=Crime & Punishment 28_12_2023`);
+        if (!response.ok) {
+          throw new Error(`Ошибка: ${response.status}`);
+        }
+        const dataFromBackend = await response.json();
+        setMatrixInfo(dataFromBackend); // Сохраняем данные о матрице
+
+        // Преобразуем данные в формат для маленькой таблицы
+        const tableData = dataFromBackend.u.map((value, index) => ({
+          ID: index + 1,
+          Response: dataFromBackend.u[index].toFixed(4), // Пример преобразования значения
+          Impact: dataFromBackend.x[index].toFixed(4),
+          Eff_in: dataFromBackend.normalized_u[index].toFixed(4),
+          Control_in: dataFromBackend.normalized_x[index].toFixed(4),
+        }));
+        setSmallTableData(tableData); // Обновляем данные для таблицы
+      } catch (error) {
+        console.error("Ошибка при получении данных:", error);
+      }
     };
 
-    fetchSmallTableData();
-  }, []);
+    fetchMatrixData();
+  }, [matrix_id]);
 
   return (
     <div>

@@ -86,7 +86,7 @@ const styles = {
     overflow: "hidden",
     backgroundColor: "transparent",
     position: "absolute",
-    top: "99%",
+    top: "83%",
   },
   image: {
     width: "450px",

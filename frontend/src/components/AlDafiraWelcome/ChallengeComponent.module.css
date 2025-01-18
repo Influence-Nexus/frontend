@@ -296,5 +296,9 @@
   position: absolute;
   left: 70%;
   top: 125%;
+  color: #ffd700;
+}
+
+.letsGoText:hover {
   color: white;
 }

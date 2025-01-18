@@ -577,7 +577,7 @@ const GraphComponent = ({
           className="Button-Group"
           id="pills-tab"
           role="tablist"
-          style={{ top: "20px", position: "absolute", zIndex: 1 }}
+          style={{ top: "-30px", position: "absolute", zIndex: 1, left: "10%" }}
         >
           <li>
             <button
@@ -641,7 +641,7 @@ const GraphComponent = ({
 
           <li>
             <button className="game-button" onClick={saveGraphSettings}>
-              Сохранить граф
+              Сохранить вид
             </button>
           </li>
           <li>
@@ -736,7 +736,7 @@ const GraphComponent = ({
           <div
             className="VerticalProgressBar-container"
             style={{
-              top: 430,
+              top: 280,
               left: "13%",
               position: "absolute",
               zIndex: 1,
@@ -748,7 +748,7 @@ const GraphComponent = ({
           <div
             className="stopwatch-container"
             style={{
-              top: 430,
+              top: 280,
               right: 75,
               position: "absolute",
               zIndex: 1,
@@ -810,7 +810,7 @@ const GraphComponent = ({
             <div
               id="graph-container"
               style={{
-                height: "755px",
+                height: "670px",
                 width: "100%",
                 position: "absolute",
                 left: 0,
