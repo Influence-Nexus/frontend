@@ -4,6 +4,8 @@ from utils.score_counter import calculate_order_score
 import numpy as np
 import pathlib
 from drafts.testik import BASE_DIR, process_input_files
+from collections import OrderedDict
+
 
 CURRENT_BASE_DIR = pathlib.Path(__file__).parent.resolve()
 matrix_bp = Blueprint('matrix_bp', __name__)
@@ -95,15 +97,13 @@ def calculate_score():
 
 @matrix_bp.route('/science_table', methods=['POST'])
 def get_science_table():
-    print(BASE_DIR)
     try:
         # Получаем matrix_name из запроса
         matrix_name = request.json.get('matrixName')
         if not matrix_name:
             return jsonify({"error": "Matrix name is required"}), 400
         # Определяем путь к файлу report.txt
-        report_file_path = BASE_DIR / "Vadimka" / "report.txt"
-
+        report_file_path = BASE_DIR / "Vadimka" / f"{matrix_name}_report.txt"
         # Проверяем, существует ли report.txt
         if not report_file_path.exists():
             print(f"[INFO] Файл {report_file_path} не найден. Запускаем процесс обработки Fortran.")
@@ -125,14 +125,19 @@ def get_science_table():
         sum_sq_u = sum(sq_u)
         normalized_u = [round(value / sum_sq_u, 4) for value in sq_u] if sum_sq_u != 0 else []
         normalized_x = [num ** 2 for num in x]
-        
+        true_seq = {i + 1: value for i, value in enumerate(normalized_u)}
+        # sorted_true_seq = dict(sorted(true_seq.items(), key=lambda x: x[1], reverse=True))
+        sorted_true_seq = sorted(true_seq.items(), key=lambda x: x[1], reverse=True)
+        print("\ntrue_seq:\t",true_seq,'\n')
+        print("sorted_true_seq:\t",sorted_true_seq,'\n')
         # Формируем результат
         result = {
             "x": x,
             "u": u,
             "normalized_x": normalized_x,
             "normalized_u": normalized_u,
-            "matrix_name": matrix_name
+            "matrix_name": matrix_name,
+            "sorted_true_seq": sorted_true_seq
         }
         return jsonify(result), 200
 
@@ -141,4 +146,3 @@ def get_science_table():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    

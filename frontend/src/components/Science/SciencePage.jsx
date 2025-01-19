@@ -1,4 +1,3 @@
-// SciencePage.jsx
 import React, { useEffect, useState } from "react";
 import { SciencePageButtons } from "./SciencePageComponents/Buttons/SciencePageButtons";
 import { TableSmall } from "./SciencePageComponents/TableSmall/TableSmall";
@@ -20,7 +19,7 @@ export const SciencePage = () => {
 
   // State for table data
   const [syntheticData, setSyntheticData] = useState(null);
-  const [hugeTableData, setHugeTableData] = useState(null);
+  const [hugeTableData, setHugeTableData] = useState(null); // Данные для большой таблицы
   const [smallTableData, setSmallTableData] = useState(null);
 
   useEffect(() => {
@@ -34,62 +33,56 @@ export const SciencePage = () => {
     }
   }, [matrix_id]);
 
-  // Similarly, simulate fetching for other tables
   useEffect(() => {
-    const fetchHugeTableData = () => {
-      setTimeout(() => {
-        const dataFromBackend = null; // Replace with fetched data
-        setHugeTableData(dataFromBackend);
-      }, 1000);
-    };
-
-    fetchHugeTableData();
-  }, []);
-
-
-
-  useEffect(() => {
-  const fetchMatrixData = async () => {
-    if (!matrixInfo || !matrixInfo.matrix_info || !matrixInfo.matrix_info.matrix_name) {
-      console.warn("MatrixInfo is not ready yet.");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:5000/science_table", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          matrixName: matrixInfo.matrix_info.matrix_name,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status}`);
+    const fetchMatrixData = async () => {
+      if (!matrixInfo || !matrixInfo.matrix_info || !matrixInfo.matrix_info.matrix_name) {
+        console.warn("MatrixInfo is not ready yet.");
+        return;
       }
-
-      const dataFromBackend = await response.json();
-
-      // Создание таблицы с правильным распределением значений
-      const tableData = dataFromBackend.x.map((value, index) => ({
-        ID: index + 1, // ID
-        Response: dataFromBackend.x[index].toFixed(4), // Реакция на отклик
-        Impact: dataFromBackend.u[index].toFixed(4), // Сила воздействия
-        Eff_in: dataFromBackend.normalized_x[index].toFixed(4), // Взвешенная реакция
-        Control_in: dataFromBackend.normalized_u[index].toFixed(4), // Взвешенное воздействие
-      }));
-
-      setSmallTableData(tableData); // Обновляем данные для таблицы
-    } catch (error) {
-      console.error("Ошибка при получении данных:", error);
-    }
-  };
-
-  fetchMatrixData();
-}, [matrixInfo]);
-
+  
+      try {
+        const response = await fetch("http://localhost:5000/science_table", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            matrixName: matrixInfo.matrix_info.matrix_name,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Ошибка: ${response.status}`);
+        }
+  
+        const dataFromBackend = await response.json();
+  
+        // Данные для малой таблицы
+        const smallTable = dataFromBackend.x.map((value, index) => ({
+          ID: index + 1, // ID
+          Response: dataFromBackend.x[index].toFixed(4), // Реакция на отклик
+          Impact: dataFromBackend.u[index].toFixed(4), // Сила воздействия
+          Eff_in: dataFromBackend.normalized_x[index].toFixed(4), // Взвешенная реакция
+          Control_in: dataFromBackend.normalized_u[index].toFixed(4), // Взвешенное воздействие
+        }));
+        setSmallTableData(smallTable);
+  
+        // Данные для большой таблицы
+        const hugeTable = dataFromBackend.sorted_true_seq.map(([id, value]) => ({
+          ID: id, // Вершина
+          Score1: value.toFixed(4), // Значение последовательности
+          S: "None", // Игровые данные отсутствуют
+          Score2: "None", // Игровые данные отсутствуют
+        }));
+        setHugeTableData(hugeTable);
+      } catch (error) {
+        console.error("Ошибка при получении данных:", error);
+      }
+    };
+  
+    fetchMatrixData();
+  }, [matrixInfo]);
+  
 
   return (
     <div>
@@ -104,8 +97,16 @@ export const SciencePage = () => {
       )}
       <Conditions />
       <div className="Tables-Comp-Div">
-        <TableSmall data={smallTableData} />
-        <TableHuge data={hugeTableData} />
+        {smallTableData ? (
+          <TableSmall data={smallTableData} />
+        ) : (
+          <p>Loading small table data...</p>
+        )}
+        {hugeTableData ? (
+          <TableHuge data={hugeTableData} />
+        ) : (
+          <p>Loading huge table data...</p>
+        )}
       </div>
       <h5 style={{ color: "#ffd700", marginLeft: "6em" }}>
         Step 3: Сыграем с нашими данными

@@ -49,7 +49,7 @@ export const StopWatchContainer = () => {
             <div className="science-stopwatch-container-table">
                 <h3> Vertices</h3>
             </div>
-            <div className="science-stopwatch-container-buttons">
+            <div className="science-stopwatch-container-buttons" style={{display: "flex"}}>
                 <Button
                     variant="success"
                     disabled={isRunning}

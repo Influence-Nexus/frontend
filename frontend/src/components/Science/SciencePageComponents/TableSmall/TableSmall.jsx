@@ -33,53 +33,8 @@ const TableHeader = [
 ];
 
 export const TableSmall = ({ data }) => {
-  // Define default data when backend data is not available
-  const defaultData = [
-    {
-      ID: "None",
-      Response: "None",
-      Impact: "None",
-      Eff_in: "None",
-      Control_in: "None",
-    },
-    {
-      ID: "None",
-      Response: "None",
-      Impact: "None",
-      Eff_in: "None",
-      Control_in: "None",
-    },
-    {
-      ID: "None",
-      Response: "None",
-      Impact: "None",
-      Eff_in: "None",
-      Control_in: "None",
-    },
-    {
-      ID: "None",
-      Response: "None",
-      Impact: "None",
-      Eff_in: "None",
-      Control_in: "None",
-    },
-    {
-      ID: "None",
-      Response: "None",
-      Impact: "None",
-      Eff_in: "None",
-      Control_in: "None",
-    },
-    {
-      ID: "None",
-      Response: "None",
-      Impact: "None",
-      Eff_in: "None",
-      Control_in: "None",
-    },
-  ];
 
-  const tableData = data || defaultData;
+  const tableData = data;
 
   const [sortConfig, setSortConfig] = React.useState({
     key: null,

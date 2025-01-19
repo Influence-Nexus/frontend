@@ -16,31 +16,30 @@ const SyntheticTableHeader = [
 ];
 
 export const SyntheticTable = ({ data }) => {
-  // Default data for demonstration
-  const defaultData = [
-    { Moves: "Ход 1", PerMove: 10 },
-    { Moves: "Ход 2", PerMove: 15 },
-    { Moves: "Ход 3", PerMove: 20 },
-    { Moves: "Ход 4", PerMove: 10 },
-    { Moves: "Ход 5", PerMove: 25 },
-    { Moves: "Ход 6", PerMove: 30 },
-    { Moves: "Ход 7", PerMove: 5 },
+   // Default data for demonstration
+   const defaultData = [
+    { Moves: "Ход 1", PerMove: "None" },
+    { Moves: "Ход 2", PerMove: "None" },
+    { Moves: "Ход 3", PerMove: "None" },
+    { Moves: "Ход 4", PerMove: "None" },
+    { Moves: "Ход 5", PerMove: "None" },
+    { Moves: "Ход 6", PerMove: "None" },
+    { Moves: "Ход 7", PerMove: "None" },
   ];
 
   // Пример адаптации, если данные из бэкенда имеют другую структуру
   const tableData = data
     ? data.map((item, index) => ({
-      Moves: `Ход ${index + 1}`,
-      PerMove: item.points, // Пример: если из бэкенда приходит поле `points`
-    }))
+        Moves: `Ход ${index + 1}`,
+        PerMove: "None", // Всегда "None" в "За 1 ход"
+      }))
     : defaultData;
 
-  // Calculate cumulative scores
-  let cumulativeScore = 0;
-  const calculatedData = tableData.map((row) => {
-    cumulativeScore += row.PerMove;
-    return { ...row, Cumulative: cumulativeScore };
-  });
+  // Создаём "накопительные" значения как строку "None"
+  const calculatedData = tableData.map((row, index) => ({
+    ...row,
+    Cumulative: "None",
+  }));
 
   return (
     <div id="synthetic-table-container">
@@ -124,7 +123,7 @@ export const SyntheticTable = ({ data }) => {
                   fontWeight:
                     index === calculatedData.length - 1 ? "bold" : "normal",
                   fontSize:
-                    index === calculatedData.length - 1 ? "1.2rem" : ""
+                    index === calculatedData.length - 1 ? "1.2rem" : "",
                 }}
               >
                 {row.Cumulative}

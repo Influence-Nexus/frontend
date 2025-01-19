@@ -55,11 +55,9 @@ export const TableHuge = ({ data }) => {
   // Calculate sums
   const sums = tableData.reduce(
     (acc, row) => {
-      acc.Score1 =
-        typeof row.Score1 === "number" ? acc.Score1 + row.Score1 : acc.Score1;
-      acc.S = typeof row.S === "number" ? acc.S + row.S : acc.S;
-      acc.Score2 =
-        typeof row.Score2 === "number" ? acc.Score2 + row.Score2 : acc.Score2;
+      acc.Score1 += parseFloat(row.Score1) || 0; // Преобразуем к числу или добавляем 0, если преобразование не удалось
+      acc.S += parseFloat(row.S) || 0;
+      acc.Score2 += parseFloat(row.Score2) || 0;
       return acc;
     },
     { Score1: 0, S: 0, Score2: 0 }
@@ -132,9 +130,9 @@ export const TableHuge = ({ data }) => {
             {/* Последняя строка с символом суммы */}
             <tr style={{ fontSize: "18px" }}>
               <td>Σ</td>
-              <td>{sums.Score1 || "None"}</td>
-              <td>{sums.S || "None"}</td>
-              <td>{sums.Score2 || "None"}</td>
+              <td>{sums.Score1.toFixed(4) || "None"}</td>
+              <td>{sums.S.toFixed(4) || "None"}</td>
+              <td>{sums.Score2.toFixed(4) || "None"}</td>
             </tr>
           </tbody>
         </table>
