@@ -34,23 +34,6 @@ export const SciencePage = () => {
     }
   }, [matrix_id]);
 
-  useEffect(() => {
-    const fetchSyntheticData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/synthetic_data"); // Замените URL на ваш эндпоинт
-        if (!response.ok) {
-          throw new Error(`Ошибка: ${response.status}`);
-        }
-        const dataFromBackend = await response.json();
-        setSyntheticData(dataFromBackend); // Сохраняем данные в состояние
-      } catch (error) {
-        console.error("Ошибка при получении синтетических данных:", error);
-      }
-    };
-
-    fetchSyntheticData();
-  }, []);
-
   // Similarly, simulate fetching for other tables
   useEffect(() => {
     const fetchHugeTableData = () => {
@@ -63,33 +46,50 @@ export const SciencePage = () => {
     fetchHugeTableData();
   }, []);
 
-  // Запрос для получения данных матрицы
+
+
   useEffect(() => {
-    const fetchMatrixData = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/science_table?matrixName=Crime & Punishment 28_12_2023`);
-        if (!response.ok) {
-          throw new Error(`Ошибка: ${response.status}`);
-        }
-        const dataFromBackend = await response.json();
-        setMatrixInfo(dataFromBackend); // Сохраняем данные о матрице
+  const fetchMatrixData = async () => {
+    if (!matrixInfo || !matrixInfo.matrix_info || !matrixInfo.matrix_info.matrix_name) {
+      console.warn("MatrixInfo is not ready yet.");
+      return;
+    }
 
-        // Преобразуем данные в формат для маленькой таблицы
-        const tableData = dataFromBackend.u.map((value, index) => ({
-          ID: index + 1,
-          Response: dataFromBackend.u[index].toFixed(4), // Пример преобразования значения
-          Impact: dataFromBackend.x[index].toFixed(4),
-          Eff_in: dataFromBackend.normalized_u[index].toFixed(4),
-          Control_in: dataFromBackend.normalized_x[index].toFixed(4),
-        }));
-        setSmallTableData(tableData); // Обновляем данные для таблицы
-      } catch (error) {
-        console.error("Ошибка при получении данных:", error);
+    try {
+      const response = await fetch("http://localhost:5000/science_table", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          matrixName: matrixInfo.matrix_info.matrix_name,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка: ${response.status}`);
       }
-    };
 
-    fetchMatrixData();
-  }, [matrix_id]);
+      const dataFromBackend = await response.json();
+
+      // Создание таблицы с правильным распределением значений
+      const tableData = dataFromBackend.x.map((value, index) => ({
+        ID: index + 1, // ID
+        Response: dataFromBackend.x[index].toFixed(4), // Реакция на отклик
+        Impact: dataFromBackend.u[index].toFixed(4), // Сила воздействия
+        Eff_in: dataFromBackend.normalized_x[index].toFixed(4), // Взвешенная реакция
+        Control_in: dataFromBackend.normalized_u[index].toFixed(4), // Взвешенное воздействие
+      }));
+
+      setSmallTableData(tableData); // Обновляем данные для таблицы
+    } catch (error) {
+      console.error("Ошибка при получении данных:", error);
+    }
+  };
+
+  fetchMatrixData();
+}, [matrixInfo]);
+
 
   return (
     <div>
