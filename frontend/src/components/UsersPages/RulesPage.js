@@ -116,7 +116,7 @@ const RulesPage = () => {
               </li>
             </ol>
             <div className="Example-crime-div">
-              <img src="imgs/Crime_punishment _1.png" id="crime-img" />
+              <img src="imgs/C&P.png" id="crime-img" />
               <ol id="num-list-uncolored">
                 <li>
                   <p>

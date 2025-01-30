@@ -57,7 +57,24 @@ const MatrixDetails = () => {
   }, [matrix_id]);
   const matrix_info = matrixInfo.matrix_info;
 
+
 // console.log('matrix_info', matrixInfo)
+useEffect(() => {
+  // Проверяем, была ли уже выполнена перезагрузка
+  const hasReloaded = localStorage.getItem('hasReloaded');
+
+  if (!hasReloaded) {
+    // Устанавливаем таймер на 5 секунд (5000 миллисекунд)
+    const timer = setTimeout(() => {
+      localStorage.setItem('hasReloaded', 'true'); // Сохраняем информацию о перезагрузке
+      window.location.reload(); // Перезагружаем страницу
+    }, 10);
+
+    // Очищаем таймер при размонтировании компонента
+    return () => clearTimeout(timer);
+  }
+}, []); // Пустой массив зависимостей гарантирует, что эффект выполнится только один раз
+
 
   return (
     <div className="container mt-4">
@@ -66,7 +83,7 @@ const MatrixDetails = () => {
           color: "white",
           textAlign: "center",
           font: "400 72px Moon Dance, cursive",
-          marginTop: "-80px"
+          marginTop: "-5%"
         }}
       >
         Challenge your mind!

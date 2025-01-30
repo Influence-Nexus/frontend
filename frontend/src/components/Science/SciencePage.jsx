@@ -6,14 +6,13 @@ import { Conditions } from "./SciencePageComponents/Conditions/Conditions";
 import { useLocation } from "react-router-dom";
 import { ScienceGraphComp } from "./SciencePageComponents/ScienceGraphComp/ScienceGraphComp";
 import "./SciencePage.css";
-import { cards } from "../SoralSystem/cards";
+import { cards, cardcreds } from "../SoralSystem/cards";
 import { SyntheticTable } from "./SciencePageComponents/ScienceGraphComp/Table";
 import { StopWatchContainer } from "./SciencePageComponents/ScienceGraphComp/StopWatchContainer";
 
 export const SciencePage = () => {
   const location = useLocation();
   const { selectedPlanet, selectedCardIndex } = location.state || {};
-
   const matrix_id = selectedCardIndex + 1; // или другая логика получения matrix_id
   const [matrixInfo, setMatrixInfo] = useState(null);
 
@@ -39,7 +38,7 @@ export const SciencePage = () => {
         console.warn("MatrixInfo is not ready yet.");
         return;
       }
-  
+
       try {
         const response = await fetch("http://localhost:5000/science_table", {
           method: "POST",
@@ -50,13 +49,13 @@ export const SciencePage = () => {
             matrixName: matrixInfo.matrix_info.matrix_name,
           }),
         });
-  
+
         if (!response.ok) {
           throw new Error(`Ошибка: ${response.status}`);
         }
-  
+
         const dataFromBackend = await response.json();
-  
+
         // Данные для малой таблицы
         const smallTable = dataFromBackend.x.map((value, index) => ({
           ID: index + 1, // ID
@@ -66,7 +65,7 @@ export const SciencePage = () => {
           Control_in: dataFromBackend.normalized_u[index].toFixed(4), // Взвешенное воздействие
         }));
         setSmallTableData(smallTable);
-  
+
         // Данные для большой таблицы
         const hugeTable = dataFromBackend.sorted_true_seq.map(([id, value]) => ({
           ID: id, // Вершина
@@ -79,17 +78,17 @@ export const SciencePage = () => {
         console.error("Ошибка при получении данных:", error);
       }
     };
-  
+
     fetchMatrixData();
   }, [matrixInfo]);
-  
+
 
   return (
     <div>
       <SciencePageButtons />
       {selectedPlanet && selectedCardIndex !== undefined && (
         <h1
-          style={{ textAlign: "center", marginTop: "1.5em", color: "#ffd700" }}
+          style={{ textAlign: "center", marginTop: "1.5em", color: `${cardcreds[selectedPlanet.name].color}` }} //color: "#ffd700"
           id="sp-h1"
         >
           Model: {cards[selectedPlanet.name][selectedCardIndex].title}
@@ -115,7 +114,7 @@ export const SciencePage = () => {
       {matrixInfo && matrixInfo.edges && (
         <div style={{ marginTop: "2em", display: "flex" }}>
           <ScienceGraphComp matrixInfo={matrixInfo} />
-          <StopWatchContainer />
+          <StopWatchContainer planetColor={cardcreds[selectedPlanet.name].color} />
           <SyntheticTable data={syntheticData} />
         </div>
       )}

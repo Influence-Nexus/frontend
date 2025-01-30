@@ -159,8 +159,10 @@ const GraphComponent = ({
 
           // Рёбра
           try {
+            const edgeId = `${fromId}${toId}`;
+
             edgesDataSet.add({
-              id: `${fromId}${toId}`,
+              id: edgeId,
               from: fromId,
               to: toId,
               value,
@@ -189,6 +191,24 @@ const GraphComponent = ({
     edgeRoundness,
     disabledNodes,
   ]);
+
+  useEffect(() => {
+    if (graphData?.edges) {
+      selectedEdges.forEach((edgeId) => {
+        graphData.edges.update({ id: edgeId, width: 4, color: { color: "white" } });
+      });
+
+      // Сбрасываем толщину у невыбранных рёбер
+      graphData.edges.forEach((edge) => {
+        if (!selectedEdges.includes(edge.id)) {
+          graphData.edges.update({ id: edge.id, width: 1, color: { color: edge.value > 0 ? positiveEdgeColor : negativeEdgeColor } });
+        }
+      });
+    }
+  }, [selectedEdges, graphData, positiveEdgeColor, negativeEdgeColor]);
+
+
+
 
   // --- Загружаем координаты из JSON (если есть) ---
   const loadCoordinates = () => {
@@ -417,17 +437,19 @@ const GraphComponent = ({
       }
     }
 
-    // Выбор рёбер
     if (clickedEdgeIds.length > 0) {
       setSelectedEdges((prevSelectedEdges) => {
         const newSelectedEdges = new Set(prevSelectedEdges);
         clickedEdgeIds.forEach((edgeId) => {
           if (newSelectedEdges.has(edgeId)) {
             newSelectedEdges.delete(edgeId);
+            graphData.edges.update({ id: edgeId, width: 1, color: { color: negativeEdgeColor } });
           } else {
             newSelectedEdges.add(edgeId);
+            graphData.edges.update({ id: edgeId, width: 5, color: { color: "white" } }); // Делаем жирнее
           }
         });
+
         return Array.from(newSelectedEdges);
       });
     }
@@ -558,6 +580,14 @@ const GraphComponent = ({
   // [CAT LOGIC] - колбэк, который вызывает CatAnimation, когда кот добегает до конца
   const handleCatAnimationEnd = () => {
     setShowCat(false); // убираем кота с экрана
+  };
+
+  const [isHovered, setIsHovered] = useState(false);
+  const buttonStyle = {
+    border: `1px solid ${cardcreds[selectedPlanet.name].color}`,
+    color: isHovered ? cardcreds[selectedPlanet.name].color : 'black',
+    backgroundColor: isHovered ? 'transparent' : cardcreds[selectedPlanet.name].color,
+    transition: 'background-color 0.3s, color 0.3s', // Плавный переход
   };
 
   return (
@@ -790,16 +820,20 @@ const GraphComponent = ({
 
             <div className="stopwatch-container-buttons">
               <Button
-                variant="success"
+                style={buttonStyle}
+                onMouseEnter={() => setIsHovered(true)} // Устанавливаем hover
+                onMouseLeave={() => setIsHovered(false)} // Сбрасываем hover
                 disabled={isRunning}
                 onClick={() => setIsRunning(true)}
               >
                 Start
-              </Button>{" "}
+              </Button>
               <Button
                 variant="danger"
                 disabled={!isRunning}
                 onClick={() => setIsRunning(false)}
+                title={isRunning ? "Остановить игру" : "Вы ещё не начали игру!"}
+
               >
                 Stop
               </Button>

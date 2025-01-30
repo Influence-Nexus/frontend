@@ -130,6 +130,7 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
                         id="buttonPlayZoommedCard"
                         style={{ backgroundColor: cardcreds[selectedPlanet.name].color }}
                         to={`/matrix/${selectedCardIndex + 1}`} state={{ selectedPlanet, selectedCardIndex }}
+                        onClick={localStorage.removeItem('hasReloaded')}
                       >
                         <p>Play</p>
                       </Link>

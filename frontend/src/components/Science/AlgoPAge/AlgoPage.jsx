@@ -72,7 +72,7 @@ export const AlgoPage = () => {
             связь между факторами модели. Число рядом с дугой – вес (сила)
             причинной связи.
           </p>
-          <img src="imgs/Crime_punishment _1.png" />
+          <img src="imgs/C&P.png" width={750} style={{alignSelf: "center"}}/>
           <br />
           <p>
             <strong>Основная идея: </strong>система установок и убеждений человека

@@ -31,6 +31,8 @@ export const ScienceGraphComp = ({
   const [maxScorePerMove, setMaxScorePerMove] = useState(0);
   const [serverResponseData, setServerResponseData] = useState(null);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [disabledNodes, setDisabledNodes] = useState([]);
+  const [movesHistory, setMovesHistory] = useState([]);
 
   useEffect(() => {
     if (matrixInfo && matrixInfo.edges && matrixInfo.nodes) {
@@ -81,9 +83,8 @@ export const ScienceGraphComp = ({
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${from.name} ${
-                value > 0 ? "увеличивается" : "уменьшается"
-              } ${to.ru_name} на ${value}`,
+              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"
+                } ${to.ru_name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
               color: value > 0 ? positiveEdgeColor : negativeEdgeColor,
@@ -114,6 +115,10 @@ export const ScienceGraphComp = ({
             roundness: edgeRoundness,
           },
           arrows: { to: true },
+          color: {
+            highlight: "white",
+            hover: "white",
+          },
           scaling: {
             min: 1,
             max: 1,
@@ -203,7 +208,7 @@ export const ScienceGraphComp = ({
   const loadAndApplyCoordinates = () => {
     const matrixName = matrixInfo.matrix_info.matrix_name;
     const fileName = `/models_coords/${matrixName}_coordinates.json`;
-  
+
     fetch(fileName)
       .then((response) => {
         if (!response.ok) {
@@ -216,10 +221,10 @@ export const ScienceGraphComp = ({
       })
       .then((data) => {
         if (!data) return;
-  
+
         // Проверяем наличие данных о графе
         const { graph_settings, node_coordinates } = data;
-  
+
         // Применяем координаты к узлам
         if (node_coordinates && typeof node_coordinates === "object") {
           if (networkRef.current) {
@@ -233,7 +238,7 @@ export const ScienceGraphComp = ({
             console.log("Координаты узлов применены.");
           }
         }
-  
+
         // Применяем настройки графа: позицию и масштаб
         if (graph_settings) {
           const { position, scale } = graph_settings;
@@ -249,7 +254,7 @@ export const ScienceGraphComp = ({
             console.log("Позиция и масштаб графа применены.");
           }
         }
-  
+
         // Обновляем граф
         if (networkRef.current) {
           networkRef.current.redraw();
@@ -259,24 +264,21 @@ export const ScienceGraphComp = ({
         console.error("Ошибка при загрузке данных для графа:", error);
       });
   };
-  
+
 
   const handleNodeClick = (event) => {
     const clickedNodeIds = event.nodes;
     const clickedEdgeIds = event.edges;
 
-    console.log("Нажаты узлы:", clickedNodeIds);
-    console.log("Нажаты ребра:", clickedEdgeIds);
-
+    // Выбор узла
     if (clickedNodeIds.length === 1) {
       const clickedNodeId = clickedNodeIds[0];
-      if (!lockedNodes[clickedNodeId]) {
+      // Проверяем, не заблокирована ли эта вершина и не отключена ли
+      if (!lockedNodes[clickedNodeId] && !disabledNodes.includes(clickedNodeId)) {
         setSelectedNodes((prevSelectedNodes) => {
           if (prevSelectedNodes.includes(clickedNodeId)) {
             console.log(`Удаление узла ${clickedNodeId} из выбора.`);
-            return prevSelectedNodes.filter(
-              (nodeId) => nodeId !== clickedNodeId
-            );
+            return prevSelectedNodes.filter((nodeId) => nodeId !== clickedNodeId);
           } else {
             console.log(`Добавление узла ${clickedNodeId} в выбор.`);
             return [...prevSelectedNodes, clickedNodeId];
@@ -291,19 +293,44 @@ export const ScienceGraphComp = ({
         clickedEdgeIds.forEach((edgeId) => {
           if (newSelectedEdges.has(edgeId)) {
             newSelectedEdges.delete(edgeId);
+            graphData.edges.update({ id: edgeId, width: 1, color: { color: negativeEdgeColor } });
           } else {
             newSelectedEdges.add(edgeId);
+            graphData.edges.update({ id: edgeId, width: 5, color: { color: "white" } }); // Делаем жирнее
           }
         });
+
         return Array.from(newSelectedEdges);
       });
     }
   };
 
+
+  useEffect(() => {
+    if (graphData?.edges) {
+      selectedEdges.forEach((edgeId) => {
+        graphData.edges.update({ id: edgeId, width: 4, color: { color: "white" } });
+      });
+
+      // Сбрасываем толщину у невыбранных рёбер
+      graphData.edges.forEach((edge) => {
+        if (!selectedEdges.includes(edge.id)) {
+          graphData.edges.update({ id: edge.id, width: 1, color: { color: edge.value > 0 ? positiveEdgeColor : negativeEdgeColor } });
+        }
+      });
+    }
+  }, [selectedEdges, graphData, positiveEdgeColor, negativeEdgeColor]);
+
+
+  // --- Очистить выбор ---
   const handleClearSelection = () => {
+    // Сбрасываем выбранные узлы
     setSelectedNodes([]);
     setSelectedEdges([]);
   };
+
+
+
 
   const createSelectedNodesDictionary = (selectedNodes, startIndex) => {
     return selectedNodes.reduce((acc, nodeId, index) => {
@@ -314,6 +341,7 @@ export const ScienceGraphComp = ({
   };
 
   // Inside the makeMove function
+  // --- При нажатии "Make Move" ---
   const makeMove = async () => {
     try {
       let selectedNodesDictionary = createSelectedNodesDictionary(
@@ -339,29 +367,36 @@ export const ScienceGraphComp = ({
       const responseData = await response.json();
 
       if (responseData && typeof responseData === "object") {
-        setMoveHistory([
-          ...moveHistory,
-          { selectedNodes, score: responseData.turn_score },
+        const { turn_score, total_score } = responseData;
+
+        setMoveHistory((prevHistory) => [
+          ...prevHistory,
+          { selectedNodes: [...selectedNodes], score: turn_score },
         ]);
-        setScore(score + responseData.score);
-        if (responseData.score > maxScorePerMove) {
-          setMaxScorePerMove(responseData.score);
-        }
-        setLastIndex((prevLastIndex) => {
-          const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
-          const newIndex = maxIndex + 1;
-          return newIndex;
-        });
-        setServerResponseData(responseData);
-        setShowHistoryModal(true);
+
+        setMovesHistory((prevMoves) => [
+          ...prevMoves,
+          { moveNumber: prevMoves.length + 1, nodes: [...selectedNodes] },
+        ]);
+
+        setScore((prevScore) =>
+          typeof total_score === "number" && !isNaN(total_score)
+            ? total_score
+            : prevScore
+        );
+
+        // Блокируем выбранные вершины
+        setDisabledNodes((prev) => [...new Set([...prev, ...selectedNodes])]);
+
         handleClearSelection();
 
-        // Блокировать выбранные вершины
-        const newLockedNodes = {};
-        selectedNodes.forEach((nodeId) => {
-          newLockedNodes[nodeId] = true;
+        // Индекс для уникальных ключей
+        setLastIndex((prevLastIndex) => {
+          const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
+          return maxIndex + 1;
         });
-        setLockedNodes({ ...lockedNodes, ...newLockedNodes });
+
+        setShowHistoryModal(true);
       } else {
         console.error("Error: Invalid or missing server response data");
       }
@@ -369,6 +404,7 @@ export const ScienceGraphComp = ({
       console.error("Error making move:", error);
     }
   };
+
 
   const handleCloseHistoryModal = () => setShowHistoryModal(false);
 
@@ -400,19 +436,18 @@ export const ScienceGraphComp = ({
                     <ListGroup.Item
                       key={node.id}
                       action
-                      className={`list-group-item ${
-                        highlightedNode === node.id ? "active" : ""
-                      }`}
+                      className={`list-group-item ${highlightedNode === node.id ? "active" : ""
+                        }`}
                       onMouseEnter={() => setHighlightedNode(node.id)}
                       onMouseLeave={() => setHighlightedNode(null)}
                       ref={
                         highlightedNode === node.id
                           ? (element) =>
-                              element &&
-                              element.scrollIntoView({
-                                behavior: "smooth",
-                                block: "nearest",
-                              })
+                            element &&
+                            element.scrollIntoView({
+                              behavior: "smooth",
+                              block: "nearest",
+                            })
                           : null
                       }
                     >
@@ -441,9 +476,8 @@ export const ScienceGraphComp = ({
           <h2>Выбранные факторы:</h2>
           <ListGroup>
             {selectedNodes.map((nodeId, index) => (
-              <ListGroup.Item key={index + lastIndex}>{`${
-                index + lastIndex + 1
-              }| Node ID: ${nodeId}`}</ListGroup.Item>
+              <ListGroup.Item key={index + lastIndex}>{`${index + lastIndex + 1
+                }| Node ID: ${nodeId}`}</ListGroup.Item>
             ))}
           </ListGroup>
           <Button variant="outline-danger" onClick={handleClearSelection}>

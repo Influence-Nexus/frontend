@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import { FaMedal, FaStopwatch } from "react-icons/fa";
 
 
-export const StopWatchContainer = () => {
+export const StopWatchContainer = ({planetColor}) => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [score, setScore] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
@@ -19,14 +19,14 @@ export const StopWatchContainer = () => {
         } else if (intervalRef.current) {
             clearInterval(intervalRef.current);
         }
-    
+
         return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
             }
         };
     }, [isRunning]);
-    
+
 
     return (
         <div className="science-stopwatch-container">
@@ -49,9 +49,9 @@ export const StopWatchContainer = () => {
             <div className="science-stopwatch-container-table">
                 <h3> Vertices</h3>
             </div>
-            <div className="science-stopwatch-container-buttons" style={{display: "flex"}}>
+            <div className="science-stopwatch-container-buttons" style={{ display: "flex" }}>
                 <Button
-                    variant="success"
+                    style={{ backgroundColor: planetColor, color: "black", border: `1px solid ${planetColor}` }}
                     disabled={isRunning}
                     onClick={() => setIsRunning(true)}
                 >

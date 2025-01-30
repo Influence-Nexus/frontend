@@ -30,7 +30,7 @@ export const InfoModalWindow = ({ selectedPlanet }) => {
             contentClassName="custom-modal-content"
         >
             <Modal.Body className="GraphPreviewModalBody">
-                <Modal.Title id="graph-preview-title">Прежде чем начать игру, вы можете произвести предпросмотр графа, чтобы понять логику игры.</Modal.Title>
+                <Modal.Title id="graph-preview-title">Прежде чем начать игру вы можете произвести предпросмотр графа, чтобы понять логику игры.</Modal.Title>
             </Modal.Body>
             <Modal.Footer className="GraphPreviewModalFooter">
                 <button id="buttonNoGraphPreview"
