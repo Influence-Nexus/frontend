@@ -5,10 +5,9 @@ import Button from "react-bootstrap/Button";
 import { FaMedal, FaStopwatch } from "react-icons/fa";
 
 
-export const StopWatchContainer = ({planetColor}) => {
+export const StopWatchContainer = ({ planetColor, movesHistory, isRunning, setIsRunning }) => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [score, setScore] = useState(0);
-    const [isRunning, setIsRunning] = useState(false);
     const intervalRef = useRef();
 
     useEffect(() => {
@@ -27,6 +26,7 @@ export const StopWatchContainer = ({planetColor}) => {
         };
     }, [isRunning]);
 
+    // console.log('movesHistory: ', movesHistory)
 
     return (
         <div className="science-stopwatch-container">
@@ -47,9 +47,29 @@ export const StopWatchContainer = ({planetColor}) => {
                 </p>
             </div>
             <div className="science-stopwatch-container-table">
-                <h3> Vertices</h3>
+                <h3>Vertices</h3>
+                {movesHistory && movesHistory.length > 0 ? (
+                    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", padding: 0 }}>
+                        {movesHistory.map((move, moveIndex) => (
+                            <li key={moveIndex} style={{ listStyle: "none", marginBottom: "10px" }}>
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                    <span>Move {move.moveNumber}:</span>
+                                    <ul style={{ display: "flex", listStyle: "none", margin: 0, padding: 0 }}>
+                                        {move.nodes.map((node, nodeIndex) => (
+                                            <li key={nodeIndex} style={{ marginLeft: "5px" }}>
+                                                {node}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No moves</p>
+                )}
             </div>
-            <div className="science-stopwatch-container-buttons" style={{ display: "flex" }}>
+            <div className="science-stopwatch-container-buttons" >
                 <Button
                     style={{ backgroundColor: planetColor, color: "black", border: `1px solid ${planetColor}` }}
                     disabled={isRunning}

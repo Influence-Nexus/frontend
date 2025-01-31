@@ -4,6 +4,10 @@
     text-align: center;
 }
 
+#synthetic-table-container{ 
+  margin-right: 2.5rem;
+}
+
 .science-stopwatch-container{
     position: relative;
     color: white;
@@ -15,13 +19,15 @@
     justify-content: space-between;
     /* background-color: rgba(169, 169, 169, 0.65); */
     background-color: rgba(255, 255, 255, 0.17);
-    margin-right: 5rem;
+    margin-right: 3rem;
     height: 600px;
   }
   
   .science-stopwatch-container-buttons{
-    align-self: flex-end !important;
-    justify-self: end !important;
+    display: flex;
+    align-self: center !important;
+    gap: 3rem;
+    margin-top: 10px
   }
   
   .science-stopwatch-container-time{
@@ -49,4 +55,5 @@
     border-bottom: 1px solid white  ;
     font-size: 28px;
     height: 380px;
+    min-width: 220px
   }

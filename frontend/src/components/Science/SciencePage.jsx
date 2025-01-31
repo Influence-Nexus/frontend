@@ -15,6 +15,9 @@ export const SciencePage = () => {
   const { selectedPlanet, selectedCardIndex } = location.state || {};
   const matrix_id = selectedCardIndex + 1; // или другая логика получения matrix_id
   const [matrixInfo, setMatrixInfo] = useState(null);
+  const [movesHistory, setMovesHistory] = useState([]); // Состояние movesHistory
+  const [moveHistory, setMoveHistory] = useState([]);
+  const [isRunning, setIsRunning] = useState(false);
 
   // State for table data
   const [syntheticData, setSyntheticData] = useState(null);
@@ -113,8 +116,12 @@ export const SciencePage = () => {
 
       {matrixInfo && matrixInfo.edges && (
         <div style={{ marginTop: "2em", display: "flex" }}>
-          <ScienceGraphComp matrixInfo={matrixInfo} />
-          <StopWatchContainer planetColor={cardcreds[selectedPlanet.name].color} />
+          <ScienceGraphComp
+            setIsRunning={setIsRunning}
+            matrixInfo={matrixInfo} setMovesHistory={setMovesHistory} moveHistory={moveHistory} setMoveHistory={setMoveHistory} />
+          <StopWatchContainer
+            isRunning={isRunning} setIsRunning={setIsRunning}
+            planetColor={cardcreds[selectedPlanet.name].color} moveHistory={moveHistory} movesHistory={movesHistory} />
           <SyntheticTable data={syntheticData} />
         </div>
       )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { DataSet, Network } from "vis-network/standalone/esm/vis-network";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Card from "react-bootstrap/Card";
@@ -15,6 +15,8 @@ export const ScienceGraphComp = ({
   physicsEnabled = false,
   nodeSize = 40,
   edgeRoundness = 0.15,
+  moveHistory, setMoveHistory, setMovesHistory, setIsRunning
+
 }) => {
   const networkRef = useRef(null);
   const [graphData, setGraphData] = useState(null);
@@ -25,14 +27,15 @@ export const ScienceGraphComp = ({
   const [hoveredNode, setHoveredNode] = useState(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [selectedEdges, setSelectedEdges] = useState([]);
-  const [moveHistory, setMoveHistory] = useState([]);
+  // const [moveHistory, setMoveHistory] = useState([]);
   const [lastIndex, setLastIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [maxScorePerMove, setMaxScorePerMove] = useState(0);
   const [serverResponseData, setServerResponseData] = useState(null);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [disabledNodes, setDisabledNodes] = useState([]);
-  const [movesHistory, setMovesHistory] = useState([]);
+  
+  // const [movesHistory, setMovesHistory] = useState([]);
 
   useEffect(() => {
     if (matrixInfo && matrixInfo.edges && matrixInfo.nodes) {
@@ -266,21 +269,24 @@ export const ScienceGraphComp = ({
   };
 
 
-  const handleNodeClick = (event) => {
+  // Добавляем useRef для disabledNodes
+  const disabledNodesRef = useRef(disabledNodes);
+  useEffect(() => {
+    disabledNodesRef.current = disabledNodes;
+  }, [disabledNodes]);
+
+  const handleNodeClick = useCallback((event) => {
     const clickedNodeIds = event.nodes;
     const clickedEdgeIds = event.edges;
 
-    // Выбор узла
     if (clickedNodeIds.length === 1) {
       const clickedNodeId = clickedNodeIds[0];
-      // Проверяем, не заблокирована ли эта вершина и не отключена ли
-      if (!lockedNodes[clickedNodeId] && !disabledNodes.includes(clickedNodeId)) {
+      // Используем актуальное состояние через ref
+      if (!lockedNodes[clickedNodeId] && !disabledNodesRef.current.includes(clickedNodeId)) {
         setSelectedNodes((prevSelectedNodes) => {
           if (prevSelectedNodes.includes(clickedNodeId)) {
-            console.log(`Удаление узла ${clickedNodeId} из выбора.`);
             return prevSelectedNodes.filter((nodeId) => nodeId !== clickedNodeId);
           } else {
-            console.log(`Добавление узла ${clickedNodeId} в выбор.`);
             return [...prevSelectedNodes, clickedNodeId];
           }
         });
@@ -296,14 +302,35 @@ export const ScienceGraphComp = ({
             graphData.edges.update({ id: edgeId, width: 1, color: { color: negativeEdgeColor } });
           } else {
             newSelectedEdges.add(edgeId);
-            graphData.edges.update({ id: edgeId, width: 5, color: { color: "white" } }); // Делаем жирнее
+            graphData.edges.update({ id: edgeId, width: 5, color: { color: "white" } });
           }
         });
-
         return Array.from(newSelectedEdges);
       });
     }
-  };
+  }, [lockedNodes, graphData, negativeEdgeColor]);
+
+
+
+  // useEffect для обновления стиля узлов при изменении disabledNodes
+  useEffect(() => {
+    if (graphData?.nodes) {
+      graphData.nodes.forEach(node => {
+        const isDisabled = disabledNodes.includes(node.id);
+        graphData.nodes.update({
+          id: node.id,
+          color: {
+            background: isDisabled ? "#555555" : backgroundColor,
+            border: isDisabled ? "#777777" : "#1b3b7d"
+          },
+          opacity: isDisabled ? 0.5 : 1,
+          font: {
+            color: isDisabled ? "#999999" : "white"
+          }
+        });
+      });
+    }
+  }, [disabledNodes, graphData, backgroundColor]);
 
 
   useEffect(() => {
@@ -386,8 +413,9 @@ export const ScienceGraphComp = ({
         );
 
         // Блокируем выбранные вершины
-        setDisabledNodes((prev) => [...new Set([...prev, ...selectedNodes])]);
-
+        setDisabledNodes((prev) => [
+          ...new Set([...prev, ...selectedNodes]) // Убираем дубликаты
+        ]);
         handleClearSelection();
 
         // Индекс для уникальных ключей
@@ -395,7 +423,7 @@ export const ScienceGraphComp = ({
           const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
           return maxIndex + 1;
         });
-
+        setIsRunning(true)
         setShowHistoryModal(true);
       } else {
         console.error("Error: Invalid or missing server response data");
