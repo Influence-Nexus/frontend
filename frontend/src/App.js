@@ -14,6 +14,8 @@ import CatAnimation from './components/GraphComp/CatAnimation'
 
 import { SciencePage } from './components/Science/SciencePage';
 import { AlgoPage } from './components/Science/AlgoPAge/AlgoPage';
+import { RegistrationPage } from './components/UserCreds/RegistrationPage';
+import { LoginPage } from './components/UserCreds/LoginPage';
 
 
 const App = () => {
@@ -31,8 +33,8 @@ const App = () => {
         <Route path="/science" element={<SciencePage />} />
         <Route path="/ChallengeComponent" element={<ChallengeComponent />} />
         <Route path="/algorithm" element={<AlgoPage />} />
-
-
+        <Route path="/registration" element={<RegistrationPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/test_animation" element={<CatAnimation />} />
       </Routes>
     </Router>
