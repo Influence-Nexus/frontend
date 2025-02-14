@@ -58,7 +58,7 @@ export const LoginPage = () => {
       {/* Текст и ссылка "Нет аккаунта? Зарегистрироваться" */}
       <div style={{ marginTop: '15px', fontSize: '14px', color: "white" }}>
         <span>Нет аккаунта? </span>
-        <a href="/register" style={{ textDecoration: 'underline', color: '#007BFF', cursor: 'pointer' }}>
+        <a href="/registration" style={{ textDecoration: 'underline', color: '#007BFF', cursor: 'pointer' }}>
           Зарегистрироваться
         </a>
       </div>

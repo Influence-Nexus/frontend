@@ -14,7 +14,7 @@ const Header = () => {
             <Link to="/">Main</Link>
           </li>
           {/* <li>Контакты</li> */}
-          <li>
+          <li className={location.pathname === "/registration" || location.pathname === "/login" ? "active" : ""}>
             <Link to="/registration">Registration</Link>
           </li>
         </ul>
