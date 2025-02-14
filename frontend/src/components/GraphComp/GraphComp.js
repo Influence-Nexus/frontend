@@ -65,7 +65,9 @@ const GraphComponent = ({
 
   const planet = selectedPlanet || selectedPlanetLocal;
   const cardIndex =
-    selectedCardIndex !== undefined ? selectedCardIndex : selectedCardIndexLocal;
+    selectedCardIndex !== undefined
+      ? selectedCardIndex
+      : selectedCardIndexLocal;
 
   // [CAT LOGIC] - состояния для "показать кота" и "уже запустили кота"
   const [showCat, setShowCat] = useState(false);
@@ -100,8 +102,8 @@ const GraphComponent = ({
 
     // [CAT LOGIC] - Если достигли 300 секунд и ещё не запускали кота, запускаем
     if (elapsedTime >= 300 && !catAnimationLaunched) {
-      setShowCat(true);               // показать кота на экране
-      setCatAnimationLaunched(true);  // больше не запускать
+      setShowCat(true); // показать кота на экране
+      setCatAnimationLaunched(true); // больше не запускать
     }
   }, [elapsedTime, isRunning, catAnimationLaunched]);
 
@@ -166,9 +168,9 @@ const GraphComponent = ({
               from: fromId,
               to: toId,
               value,
-              title: `При увеличении ${oldnodes[fromId - 1].name
-                } ${value > 0 ? "увеличивается" : "уменьшается"} ${oldnodes[toId - 1].name
-                } на ${value}`,
+              title: `При увеличении ${oldnodes[fromId - 1].name} ${
+                value > 0 ? "увеличивается" : "уменьшается"
+              } ${oldnodes[toId - 1].name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
               color: {
@@ -195,119 +197,115 @@ const GraphComponent = ({
   useEffect(() => {
     if (graphData?.edges) {
       selectedEdges.forEach((edgeId) => {
-        graphData.edges.update({ id: edgeId, width: 4, color: { color: "white" } });
+        graphData.edges.update({
+          id: edgeId,
+          width: 4,
+          color: { color: "white" },
+        });
       });
 
       // Сбрасываем толщину у невыбранных рёбер
       graphData.edges.forEach((edge) => {
         if (!selectedEdges.includes(edge.id)) {
-          graphData.edges.update({ id: edge.id, width: 1, color: { color: edge.value > 0 ? positiveEdgeColor : negativeEdgeColor } });
+          graphData.edges.update({
+            id: edge.id,
+            width: 1,
+            color: {
+              color: edge.value > 0 ? positiveEdgeColor : negativeEdgeColor,
+            },
+          });
         }
       });
     }
   }, [selectedEdges, graphData, positiveEdgeColor, negativeEdgeColor]);
 
-
-
-
-  // --- Загружаем координаты из JSON (если есть) ---
+  // Загружаем координаты при старте и нажатии reset
   const loadCoordinates = () => {
-    const matrixName = matrixInfo.matrix_info.matrix_name;
-    const fileName = `/models_coords/${matrixName}_coordinates.json`;
+    const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
+    const endpoint = `http://localhost:5000/load-graph-settings/${matrixName}`;
 
-    fetch(fileName)
-      .then((response) => {
-        if (!response.ok) {
-          console.warn(`Файл ${fileName} не найден или недоступен.`);
-          return null;
-        }
-        return response.json();
-      })
+    fetch(endpoint)
+      .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
-        if (!data) return;
-        const { graph_settings, node_coordinates } = data;
+        if (!data) {
+          console.warn(`Файл настроек ${matrixName} отсутствует.`);
+          return;
+        }
 
+        const { graph_settings, node_coordinates } = data;
         if (networkRef.current) {
-          // Устанавливаем координаты узлов
-          if (node_coordinates && typeof node_coordinates === "object") {
-            Object.keys(node_coordinates).forEach((nodeId) => {
-              const node = networkRef.current.body.nodes[nodeId];
-              if (node && node_coordinates[nodeId]) {
-                node.x = node_coordinates[nodeId].x;
-                node.y = node_coordinates[nodeId].y;
+          if (node_coordinates) {
+            Object.entries(node_coordinates).forEach(([nodeId, coords]) => {
+              if (networkRef.current.body.nodes[nodeId]) {
+                networkRef.current.body.nodes[nodeId].x = coords.x;
+                networkRef.current.body.nodes[nodeId].y = coords.y;
               }
             });
           }
-          // Устанавливаем позицию и масштаб
+
           if (graph_settings) {
-            const { position, scale } = graph_settings;
             networkRef.current.moveTo({
-              position: position || { x: 0, y: 0 },
-              scale: scale || 1,
-              animation: {
-                duration: 1000,
-                easingFunction: "easeInOutQuad",
-              },
+              position: graph_settings.position || { x: 0, y: 0 },
+              scale: graph_settings.scale || 1,
+              animation: { duration: 1000, easingFunction: "easeInOutQuad" },
             });
           }
+
           networkRef.current.redraw();
         }
       })
-      .catch((error) => {
-        console.error("Ошибка при загрузке координат:", error);
-      });
+      .catch((error) => console.error("Ошибка загрузки графа:", error));
   };
 
-  // --- Сброс координат ---
+  // Сбрасываем координаты
   const resetNodeCoordinates = () => {
     loadCoordinates();
-    alert("Координаты узлов и настройки графа успешно сброшены.");
+    alert("Настройки графа загружены.");
   };
 
-  // --- Сохраняем настройки графа в JSON ---
-  const saveGraphSettings = () => {
-    if (networkRef.current) {
-      const nodePositions = networkRef.current.body.nodes;
-      const coordinates = {};
+  // Сохраняем граф
+  const saveGraphSettings = async () => {
+    if (!networkRef.current) {
+      console.log("Граф не инициализирован.");
+      return;
+    }
 
-      // Сохраняем координаты узлов
-      Object.keys(nodePositions).forEach((nodeId) => {
-        const node = nodePositions[nodeId];
-        coordinates[nodeId] = { x: node.x, y: node.y };
-      });
+    const nodePositions = networkRef.current.body.nodes;
+    const coordinates = Object.fromEntries(
+      Object.entries(nodePositions).map(([nodeId, node]) => [
+        nodeId,
+        { x: node.x, y: node.y },
+      ])
+    );
 
-      // Сохраняем текущую позицию и масштаб
-      const { position, scale } = networkRef.current.getViewPosition();
-      const dataToSave = {
-        graph_settings: {
-          position,
-          scale,
-        },
-        node_coordinates: coordinates,
-      };
+    const { position, scale } = networkRef.current.getViewPosition();
+    const dataToSave = {
+      graph_settings: { position, scale },
+      node_coordinates: coordinates,
+    };
 
-      // Создаём Blob-файл
-      const file = new Blob([JSON.stringify(dataToSave, null, 2)], {
-        type: "application/json",
-      });
-      const url = URL.createObjectURL(file);
-
-      // Автоматическая загрузка
-      const a = document.createElement("a");
-      a.href = url;
+    try {
       const matrixName = matrixInfo.matrix_info.matrix_name;
-      a.download = `${matrixName}_graph_settings.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      const response = await fetch(`http://localhost:5000/save-graph-settings/${matrixName}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToSave),
+      });
 
-      console.log(
-        `Настройки графа сохранены в файл ${matrixName}_graph_settings.json`
-      );
-    } else {
-      console.log("Граф ещё не инициализирован.");
+      if (response.ok) {
+        console.log(`Настройки сохранены (${matrixName}_graph_settings.json)`);
+      } else {
+        console.error("Ошибка сохранения.");
+      }
+    } catch (error) {
+      console.error("Ошибка при отправке запроса:", error);
     }
   };
+
+  // Загружаем настройки при старте
+  useEffect(() => {
+    loadCoordinates();
+  }, []);
 
   // --- После появления graphData рисуем сеть ---
   useEffect(() => {
@@ -426,7 +424,10 @@ const GraphComponent = ({
     if (clickedNodeIds.length === 1) {
       const clickedNodeId = clickedNodeIds[0];
       // Проверяем, не заблокирована ли эта вершина
-      if (!lockedNodes[clickedNodeId] && !disabledNodes.includes(clickedNodeId)) {
+      if (
+        !lockedNodes[clickedNodeId] &&
+        !disabledNodes.includes(clickedNodeId)
+      ) {
         setSelectedNodes((prevSelectedNodes) => {
           if (prevSelectedNodes.includes(clickedNodeId)) {
             return prevSelectedNodes.filter((id) => id !== clickedNodeId);
@@ -443,10 +444,18 @@ const GraphComponent = ({
         clickedEdgeIds.forEach((edgeId) => {
           if (newSelectedEdges.has(edgeId)) {
             newSelectedEdges.delete(edgeId);
-            graphData.edges.update({ id: edgeId, width: 1, color: { color: negativeEdgeColor } });
+            graphData.edges.update({
+              id: edgeId,
+              width: 1,
+              color: { color: negativeEdgeColor },
+            });
           } else {
             newSelectedEdges.add(edgeId);
-            graphData.edges.update({ id: edgeId, width: 5, color: { color: "white" } }); // Делаем жирнее
+            graphData.edges.update({
+              id: edgeId,
+              width: 5,
+              color: { color: "white" },
+            }); // Делаем жирнее
           }
         });
 
@@ -585,9 +594,11 @@ const GraphComponent = ({
   const [isHovered, setIsHovered] = useState(false);
   const buttonStyle = {
     border: `1px solid ${cardcreds[selectedPlanet.name].color}`,
-    color: isHovered ? cardcreds[selectedPlanet.name].color : 'black',
-    backgroundColor: isHovered ? 'transparent' : cardcreds[selectedPlanet.name].color,
-    transition: 'background-color 0.3s, color 0.3s', // Плавный переход
+    color: isHovered ? cardcreds[selectedPlanet.name].color : "black",
+    backgroundColor: isHovered
+      ? "transparent"
+      : cardcreds[selectedPlanet.name].color,
+    transition: "background-color 0.3s, color 0.3s", // Плавный переход
   };
 
   return (
@@ -599,7 +610,6 @@ const GraphComponent = ({
           stopAtX={1100}
           onAnimationEnd={() => console.log("Остановился на 600px!")}
         />
-
       )}
 
       <div style={{ position: "relative", flex: "1", paddingRight: "20px" }}>
@@ -824,16 +834,15 @@ const GraphComponent = ({
                 onMouseEnter={() => setIsHovered(true)} // Устанавливаем hover
                 onMouseLeave={() => setIsHovered(false)} // Сбрасываем hover
                 disabled={isRunning}
-                onClick={() => setIsRunning(true)}
+                onClick={handleStart}
               >
                 Start
               </Button>
               <Button
                 variant="danger"
                 disabled={!isRunning}
-                onClick={() => setIsRunning(false)}
+                onClick={handleStop}
                 title={isRunning ? "Остановить игру" : "Вы ещё не начали игру!"}
-
               >
                 Stop
               </Button>
@@ -870,18 +879,19 @@ const GraphComponent = ({
                         <ListGroup.Item
                           key={node.id}
                           action
-                          className={`list-group-item ${highlightedNode === node.id ? "active" : ""
-                            }`}
+                          className={`list-group-item ${
+                            highlightedNode === node.id ? "active" : ""
+                          }`}
                           onMouseEnter={() => setHighlightedNode(node.id)}
                           onMouseLeave={() => setHighlightedNode(null)}
                           ref={
                             highlightedNode === node.id
                               ? (element) =>
-                                element &&
-                                element.scrollIntoView({
-                                  behavior: "smooth",
-                                  block: "nearest",
-                                })
+                                  element &&
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "nearest",
+                                  })
                               : null
                           }
                         >
@@ -970,8 +980,8 @@ const GraphComponent = ({
           <div className="csv-table-container">
             <h2>CSV Data</h2>
             {matrixInfo &&
-              matrixInfo.csv_data &&
-              matrixInfo.csv_data.length > 0 ? (
+            matrixInfo.csv_data &&
+            matrixInfo.csv_data.length > 0 ? (
               <Table striped bordered hover>
                 <thead>
                   <tr>
