@@ -209,63 +209,40 @@ export const ScienceGraphComp = ({
   }, [graphData]);
 
   const loadAndApplyCoordinates = () => {
-    const matrixName = matrixInfo.matrix_info.matrix_name;
-    const fileName = `/models_coords/${matrixName}_coordinates.json`;
+    const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
+    const endpoint = `http://localhost:5000/load-graph-settings/${matrixName}`;
 
-    fetch(fileName)
-      .then((response) => {
-        if (!response.ok) {
-          console.warn(
-            `Файл с координатами ${fileName} не найден или недоступен.`
-          );
-          return null;
-        }
-        return response.json();
-      })
+    fetch(endpoint)
+      .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
-        if (!data) return;
+        if (!data) {
+          console.warn(`Файл настроек ${matrixName} отсутствует.`);
+          return;
+        }
 
-        // Проверяем наличие данных о графе
         const { graph_settings, node_coordinates } = data;
-
-        // Применяем координаты к узлам
-        if (node_coordinates && typeof node_coordinates === "object") {
-          if (networkRef.current) {
-            Object.keys(node_coordinates).forEach((nodeId) => {
-              const node = networkRef.current.body.nodes[nodeId];
-              if (node && node_coordinates[nodeId]) {
-                node.x = node_coordinates[nodeId].x;
-                node.y = node_coordinates[nodeId].y;
+        if (networkRef.current) {
+          if (node_coordinates) {
+            Object.entries(node_coordinates).forEach(([nodeId, coords]) => {
+              if (networkRef.current.body.nodes[nodeId]) {
+                networkRef.current.body.nodes[nodeId].x = coords.x;
+                networkRef.current.body.nodes[nodeId].y = coords.y;
               }
             });
-            console.log("Координаты узлов применены.");
           }
-        }
 
-        // Применяем настройки графа: позицию и масштаб
-        if (graph_settings) {
-          const { position, scale } = graph_settings;
-          if (networkRef.current) {
+          if (graph_settings) {
             networkRef.current.moveTo({
-              position: position || { x: 0, y: 0 },
-              scale: scale || 1,
-              animation: {
-                duration: 1000,
-                easingFunction: "easeInOutQuad",
-              },
+              position: graph_settings.position || { x: 0, y: 0 },
+              scale: graph_settings.scale || 1,
+              animation: { duration: 1000, easingFunction: "easeInOutQuad" },
             });
-            console.log("Позиция и масштаб графа применены.");
           }
-        }
 
-        // Обновляем граф
-        if (networkRef.current) {
           networkRef.current.redraw();
         }
       })
-      .catch((error) => {
-        console.error("Ошибка при загрузке данных для графа:", error);
-      });
+      .catch((error) => console.error("Ошибка загрузки графа:", error));
   };
 
 
