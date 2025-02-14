@@ -263,13 +263,12 @@ const GraphComponent = ({
     alert("Настройки графа загружены.");
   };
 
-  // Сохраняем граф
   const saveGraphSettings = async () => {
     if (!networkRef.current) {
       console.log("Граф не инициализирован.");
       return;
     }
-
+  
     const nodePositions = networkRef.current.body.nodes;
     const coordinates = Object.fromEntries(
       Object.entries(nodePositions).map(([nodeId, node]) => [
@@ -277,31 +276,34 @@ const GraphComponent = ({
         { x: node.x, y: node.y },
       ])
     );
-
-    const { position, scale } = networkRef.current.getViewPosition();
-    const dataToSave = {
-      graph_settings: { position, scale },
-      node_coordinates: coordinates,
-    };
-
+  
+    // Получаем параметры представления графа
     try {
+      const position = networkRef.current.getViewPosition?.() || { x: 0, y: 0 };
+      const scale = networkRef.current.getScale?.() || 1;
+  
+      const dataToSave = {
+        graph_settings: { position, scale },
+        node_coordinates: coordinates,
+      };
+  
       const matrixName = matrixInfo.matrix_info.matrix_name;
       const response = await fetch(`http://localhost:5000/save-graph-settings/${matrixName}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSave),
       });
-
+  
       if (response.ok) {
         console.log(`Настройки сохранены (${matrixName}_graph_settings.json)`);
       } else {
         console.error("Ошибка сохранения.");
       }
     } catch (error) {
-      console.error("Ошибка при отправке запроса:", error);
+      console.error("Ошибка получения позиции графа:", error);
     }
   };
-
+  
   // Загружаем настройки при старте
   useEffect(() => {
     loadCoordinates();
@@ -586,10 +588,6 @@ const GraphComponent = ({
     }, 700);
   };
 
-  // [CAT LOGIC] - колбэк, который вызывает CatAnimation, когда кот добегает до конца
-  const handleCatAnimationEnd = () => {
-    setShowCat(false); // убираем кота с экрана
-  };
 
   const [isHovered, setIsHovered] = useState(false);
   const buttonStyle = {
