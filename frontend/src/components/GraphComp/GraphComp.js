@@ -220,95 +220,142 @@ const GraphComponent = ({
     }
   }, [selectedEdges, graphData, positiveEdgeColor, negativeEdgeColor]);
 
-  // Загружаем координаты при старте и нажатии reset
-  const loadCoordinates = () => {
+
+  const userId = "defaultUser";
+
+ // Функция загрузки пользовательских настроек
+ const loadUserCoordinates = async () => {
+  try {
     const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
-    const endpoint = `http://localhost:5000/load-graph-settings/${matrixName}`;
-
-    fetch(endpoint)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => {
-        if (!data) {
-          console.warn(`Файл настроек ${matrixName} отсутствует.`);
-          return;
-        }
-
-        const { graph_settings, node_coordinates } = data;
-        if (networkRef.current) {
-          if (node_coordinates) {
-            Object.entries(node_coordinates).forEach(([nodeId, coords]) => {
-              if (networkRef.current.body.nodes[nodeId]) {
-                networkRef.current.body.nodes[nodeId].x = coords.x;
-                networkRef.current.body.nodes[nodeId].y = coords.y;
-              }
-            });
-          }
-
-          if (graph_settings) {
-            networkRef.current.moveTo({
-              position: graph_settings.position || { x: 0, y: 0 },
-              scale: graph_settings.scale || 1,
-              animation: { duration: 1000, easingFunction: "easeInOutQuad" },
-            });
-          }
-
-          networkRef.current.redraw();
-        }
-      })
-      .catch((error) => console.error("Ошибка загрузки графа:", error));
-  };
-
-  // Сбрасываем координаты
-  const resetNodeCoordinates = () => {
-    loadCoordinates();
-    alert("Настройки графа загружены.");
-  };
-
-  const saveGraphSettings = async () => {
-    if (!networkRef.current) {
-      console.log("Граф не инициализирован.");
+    const endpoint = `http://localhost:5000/${userId}/load-graph-settings/${matrixName}`;
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      console.warn("Пользовательские настройки не найдены.");
       return;
     }
+    const data = await response.json();
+    applyCoordinates(data);
+    console.log("Пользовательские настройки успешно загружены и применены.");
+  } catch (error) {
+    console.error("Ошибка загрузки пользовательских настроек:", error);
+  }
+};
 
-    const nodePositions = networkRef.current.body.nodes;
-    const coordinates = Object.fromEntries(
-      Object.entries(nodePositions).map(([nodeId, node]) => [
-        nodeId,
-        { x: node.x, y: node.y },
-      ])
-    );
+// Функция загрузки дефолтных настроек
+const loadDefaultCoordinates = () => {
+  const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
+  const endpoint = `http://localhost:5000/load-graph-settings/${matrixName}`;
+  return fetch(endpoint)
+    .then((response) => (response.ok ? response.json() : null))
+    .catch((error) => {
+      console.error("Ошибка загрузки дефолтных настроек:", error);
+      return null;
+    });
+};
 
-    // Получаем параметры представления графа
-    try {
-      const position = networkRef.current.getViewPosition?.() || { x: 0, y: 0 };
-      const scale = networkRef.current.getScale?.() || 1;
-
-      const dataToSave = {
-        graph_settings: { position, scale },
-        node_coordinates: coordinates,
-      };
-
-      const matrixName = matrixInfo.matrix_info.matrix_name;
-      const response = await fetch(`http://localhost:5000/save-graph-settings/${matrixName}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataToSave),
+// Функция, применяющая полученные настройки к графу
+const applyCoordinates = (data) => {
+  const { graph_settings, node_coordinates } = data;
+  if (networkRef.current) {
+    if (node_coordinates) {
+      Object.entries(node_coordinates).forEach(([nodeId, coords]) => {
+        if (networkRef.current.body.nodes[nodeId]) {
+          networkRef.current.body.nodes[nodeId].x = coords.x;
+          networkRef.current.body.nodes[nodeId].y = coords.y;
+        }
       });
-
-      if (response.ok) {
-        console.log(`Настройки сохранены (${matrixName}_graph_settings.json)`);
-      } else {
-        console.error("Ошибка сохранения.");
-      }
-    } catch (error) {
-      console.error("Ошибка получения позиции графа:", error);
     }
-  };
+    if (graph_settings) {
+      networkRef.current.moveTo({
+        position: graph_settings.position || { x: 0, y: 0 },
+        scale: graph_settings.scale || 1,
+        animation: { duration: 1000, easingFunction: "easeInOutQuad" },
+      });
+    }
+    networkRef.current.redraw();
+  }
+};
 
-  // Загружаем настройки при старте
-  useEffect(() => {
-    loadCoordinates();
-  }, []);
+// Функция загрузки настроек при старте: сначала пытаемся загрузить пользовательские настройки,
+// если их нет – загружаем дефолтные.
+const loadCoordinates = () => {
+  loadUserCoordinates().then((data) => {
+    if (data) {
+      applyCoordinates(data);
+    } else {
+      console.warn("Пользовательские настройки не найдены, загружаем дефолтные.");
+      loadDefaultCoordinates().then((defaultData) => {
+        if (defaultData) {
+          applyCoordinates(defaultData);
+        }
+      });
+    }
+  });
+};
+
+// Кнопка "Reset" подтягивает дефолтные координаты
+const resetNodeCoordinates = () => {
+  loadDefaultCoordinates().then((data) => {
+    if (data) {
+      applyCoordinates(data);
+      alert("Дефолтные настройки графа загружены.");
+    } else {
+      alert("Дефолтные настройки графа не найдены.");
+    }
+  });
+};
+
+// Функция сохранения пользовательских настроек (не перезаписывает дефолтный файл)
+const saveGraphSettings = async () => {
+  if (!networkRef.current) {
+    console.log("Граф не инициализирован.");
+    return;
+  }
+
+  const nodePositions = networkRef.current.body.nodes;
+  const coordinates = Object.fromEntries(
+    Object.entries(nodePositions).map(([nodeId, node]) => [
+      nodeId,
+      { x: node.x, y: node.y },
+    ])
+  );
+
+  // Получаем параметры представления графа
+  try {
+    const position = networkRef.current.getViewPosition?.() || { x: 0, y: 0 };
+    const scale = networkRef.current.getScale?.() || 1;
+
+    const dataToSave = {
+      graph_settings: { position, scale },
+      node_coordinates: coordinates,
+    };
+
+    const matrixName = matrixInfo.matrix_info.matrix_name;
+    // Используем пользовательский эндпоинт для сохранения настроек графа
+    const endpoint = `http://localhost:5000/${userId}/save-graph-settings/${matrixName}`;
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dataToSave),
+    });
+
+    if (response.ok) {
+      console.log(
+        `Пользовательские настройки сохранены (${userId}/${matrixName}_graph_settings.json)`
+      );
+    } else {
+      console.error("Ошибка сохранения пользовательских настроек.");
+    }
+  } catch (error) {
+    console.error("Ошибка получения позиции графа:", error);
+  }
+};
+
+// Загружаем настройки при старте
+useEffect(() => {
+  loadCoordinates();
+}, []);
+
 
   // --- После появления graphData рисуем сеть ---
   useEffect(() => {
@@ -317,8 +364,13 @@ const GraphComponent = ({
 
       const options = {
         edges: {
-          smooth: { type: "continues", roundness: edgeRoundness },
-          scaling: { enabled: false },
+          smooth: { type: "curvedCW", roundness: edgeRoundness },
+          // Убираем enabled: false
+          scaling: {
+            min: 1,
+            max: 1,
+            label: { enabled: true, min: 11, max: 11, maxVisible: 55, drawThreshold: 5 },
+          },
           arrows: { to: true },
           font: { size: 24, align: "horizontal" },
           color: { highlight: "white", hover: "white" },
@@ -668,6 +720,11 @@ const GraphComponent = ({
           <li>
             <button className="game-button" onClick={resetNodeCoordinates}>
               Reset
+            </button>
+          </li>
+          <li>
+            <button className="game-button" style={{fontSize: "10px"}} onClick={loadUserCoordinates}>
+              Загрузить последний вид
             </button>
           </li>
         </ul>

@@ -190,3 +190,46 @@ def load_graph_settings(matrix_name):
         print(f"[ERROR] Ошибка загрузки файла: {e}")
         return jsonify({"error": "Ошибка загрузки файла."}), 500
 
+
+@matrix_bp.route('/<user_id>/save-graph-settings/<matrix_name>', methods=['POST'])
+def save_user_graph_settings(user_id, matrix_name):
+    """Сохраняет настройки графа для пользователя в JSON-файл (перезаписывает старый файл)."""
+    try:
+        data = request.json
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+
+        # Определяем путь и создаём папку для конкретного пользователя
+        save_folder = os.path.join(CURRENT_BASE_DIR, "graph_settings", user_id)
+        os.makedirs(save_folder, exist_ok=True)
+        file_path = os.path.join(save_folder, f"{matrix_name}_graph_settings.json")
+
+        # Записываем JSON-файл (заменяя старый)
+        with open(file_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, indent=2)
+
+        print(f"[INFO] Файл {file_path} успешно обновлён для пользователя {user_id}.")
+        return jsonify({"message": "Настройки графа успешно сохранены."}), 200
+    except Exception as e:
+        print(f"[ERROR] Ошибка при сохранении файла: {e}")
+        return jsonify({"error": "Ошибка при сохранении файла."}), 500
+
+
+@matrix_bp.route('/<user_id>/load-graph-settings/<matrix_name>', methods=['GET'])
+def load_user_graph_settings(user_id, matrix_name):
+    """Загружает настройки графа для пользователя из JSON-файла."""
+    try:
+        save_folder = os.path.join(CURRENT_BASE_DIR, "graph_settings", user_id)
+        file_path = os.path.join(save_folder, f"{matrix_name}_graph_settings.json")
+
+        if not os.path.exists(file_path):
+            return jsonify({'error': f"Файл настроек для '{matrix_name}' пользователя '{user_id}' не найден."}), 404
+
+        with open(file_path, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+
+        print(f"[INFO] Загружены настройки для '{matrix_name}' пользователя '{user_id}'.")
+        return jsonify(data), 200
+    except Exception as e:
+        print(f"[ERROR] Ошибка загрузки файла: {e}")
+        return jsonify({"error": "Ошибка загрузки файла."}), 500
