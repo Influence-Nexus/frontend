@@ -85,9 +85,9 @@ export const ScienceGraphComp = ({
               id: `${fromId}${toId}`,
               from: fromId,
               to: toId,
-              value,
-              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"
-                } ${to.ru_name} на ${value}`,
+              rawValue: value, // сохраняем исходное значение
+              width: 1,        // задаём фиксированную ширину по умолчанию
+              title: `При увеличении ${from.name} ${value > 0 ? "увеличивается" : "уменьшается"} ${to.ru_name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
               color: value > 0 ? positiveEdgeColor : negativeEdgeColor,
@@ -274,12 +274,21 @@ export const ScienceGraphComp = ({
       setSelectedEdges((prevSelectedEdges) => {
         const newSelectedEdges = new Set(prevSelectedEdges);
         clickedEdgeIds.forEach((edgeId) => {
+          const edgeObj = graphData.edges.get(edgeId); // получаем объект ребра
           if (newSelectedEdges.has(edgeId)) {
             newSelectedEdges.delete(edgeId);
-            graphData.edges.update({ id: edgeId, width: 1, color: { color: negativeEdgeColor } });
+            graphData.edges.update({
+              id: edgeId,
+              width: 1,
+              color: { color: edgeObj.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor },
+            });
           } else {
             newSelectedEdges.add(edgeId);
-            graphData.edges.update({ id: edgeId, width: 5, color: { color: "white" } });
+            graphData.edges.update({
+              id: edgeId,
+              width: 5, // выбранное ребро становится толще
+              color: { color: "white" },
+            });
           }
         });
         return Array.from(newSelectedEdges);
@@ -313,13 +322,21 @@ export const ScienceGraphComp = ({
   useEffect(() => {
     if (graphData?.edges) {
       selectedEdges.forEach((edgeId) => {
-        graphData.edges.update({ id: edgeId, width: 4, color: { color: "white" } });
+        graphData.edges.update({
+          id: edgeId,
+          width: 4, // выбранное ребро становится толще
+          color: { color: "white" },
+        });
       });
-
-      // Сбрасываем толщину у невыбранных рёбер
+  
+      // Сбрасываем стиль у невыбранных рёбер
       graphData.edges.forEach((edge) => {
         if (!selectedEdges.includes(edge.id)) {
-          graphData.edges.update({ id: edge.id, width: 1, color: { color: edge.value > 0 ? positiveEdgeColor : negativeEdgeColor } });
+          graphData.edges.update({
+            id: edge.id,
+            width: 1,
+            color: { color: edge.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor },
+          });
         }
       });
     }

@@ -161,22 +161,23 @@ const GraphComponent = ({
 
           // Рёбра
           try {
+
             const edgeId = `${fromId}${toId}`;
 
             edgesDataSet.add({
               id: edgeId,
               from: fromId,
               to: toId,
-              value,
-              title: `При увеличении ${oldnodes[fromId - 1].name} ${
-                value > 0 ? "увеличивается" : "уменьшается"
-              } ${oldnodes[toId - 1].name} на ${value}`,
+              // value: value, // либо закомментировать, либо заменить:
+              rawValue: value, // сохраняем для других целей (например, для label)
+              width: 1, // Фиксированная ширина по умолчанию
+              title: `При увеличении ${oldnodes[fromId - 1].name} ${value > 0 ? "увеличивается" : "уменьшается"
+                } ${oldnodes[toId - 1].name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
-              color: {
-                color: value > 0 ? positiveEdgeColor : negativeEdgeColor,
-              },
+              color: { color: value > 0 ? positiveEdgeColor : negativeEdgeColor },
             });
+
           } catch (e) {
             console.log(e);
           }
@@ -199,7 +200,7 @@ const GraphComponent = ({
       selectedEdges.forEach((edgeId) => {
         graphData.edges.update({
           id: edgeId,
-          width: 4,
+          width: 5,
           color: { color: "white" },
         });
       });
@@ -211,7 +212,7 @@ const GraphComponent = ({
             id: edge.id,
             width: 1,
             color: {
-              color: edge.value > 0 ? positiveEdgeColor : negativeEdgeColor,
+              color: edge.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor,
             },
           });
         }
@@ -268,7 +269,7 @@ const GraphComponent = ({
       console.log("Граф не инициализирован.");
       return;
     }
-  
+
     const nodePositions = networkRef.current.body.nodes;
     const coordinates = Object.fromEntries(
       Object.entries(nodePositions).map(([nodeId, node]) => [
@@ -276,24 +277,24 @@ const GraphComponent = ({
         { x: node.x, y: node.y },
       ])
     );
-  
+
     // Получаем параметры представления графа
     try {
       const position = networkRef.current.getViewPosition?.() || { x: 0, y: 0 };
       const scale = networkRef.current.getScale?.() || 1;
-  
+
       const dataToSave = {
         graph_settings: { position, scale },
         node_coordinates: coordinates,
       };
-  
+
       const matrixName = matrixInfo.matrix_info.matrix_name;
       const response = await fetch(`http://localhost:5000/save-graph-settings/${matrixName}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSave),
       });
-  
+
       if (response.ok) {
         console.log(`Настройки сохранены (${matrixName}_graph_settings.json)`);
       } else {
@@ -303,7 +304,7 @@ const GraphComponent = ({
       console.error("Ошибка получения позиции графа:", error);
     }
   };
-  
+
   // Загружаем настройки при старте
   useEffect(() => {
     loadCoordinates();
@@ -316,29 +317,11 @@ const GraphComponent = ({
 
       const options = {
         edges: {
-          smooth: {
-            type: "curvedCW",
-            roundness: edgeRoundness,
-          },
-          scaling: {
-            min: 1,
-            max: 1,
-            label: {
-              enabled: true,
-              min: 11,
-              max: 11,
-              maxVisible: 55,
-              drawThreshold: 5,
-            },
-          },
+          smooth: { type: "continues", roundness: edgeRoundness },
+          scaling: { enabled: false },
           arrows: { to: true },
-          font: {
-            size: 24,
-            align: "horizontal",
-          },
-          color: {
-            highlight: "white",
-          },
+          font: { size: 24, align: "horizontal" },
+          color: { highlight: "white", hover: "white" },
           chosen: true,
         },
         physics: {
@@ -446,21 +429,21 @@ const GraphComponent = ({
         clickedEdgeIds.forEach((edgeId) => {
           if (newSelectedEdges.has(edgeId)) {
             newSelectedEdges.delete(edgeId);
+            const edgeObj = graphData.edges.get(edgeId);
             graphData.edges.update({
               id: edgeId,
-              width: 1,
-              color: { color: negativeEdgeColor },
+              width: 1, // сбрасываем до 1
+              color: { color: edgeObj.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor },
             });
           } else {
             newSelectedEdges.add(edgeId);
             graphData.edges.update({
               id: edgeId,
-              width: 5,
+              width: 5, // выбранное ребро становится толще
               color: { color: "white" },
-            }); // Делаем жирнее
+            });
           }
         });
-
         return Array.from(newSelectedEdges);
       });
     }
@@ -877,19 +860,18 @@ const GraphComponent = ({
                         <ListGroup.Item
                           key={node.id}
                           action
-                          className={`list-group-item ${
-                            highlightedNode === node.id ? "active" : ""
-                          }`}
+                          className={`list-group-item ${highlightedNode === node.id ? "active" : ""
+                            }`}
                           onMouseEnter={() => setHighlightedNode(node.id)}
                           onMouseLeave={() => setHighlightedNode(null)}
                           ref={
                             highlightedNode === node.id
                               ? (element) =>
-                                  element &&
-                                  element.scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "nearest",
-                                  })
+                                element &&
+                                element.scrollIntoView({
+                                  behavior: "smooth",
+                                  block: "nearest",
+                                })
                               : null
                           }
                         >
@@ -978,8 +960,8 @@ const GraphComponent = ({
           <div className="csv-table-container">
             <h2>CSV Data</h2>
             {matrixInfo &&
-            matrixInfo.csv_data &&
-            matrixInfo.csv_data.length > 0 ? (
+              matrixInfo.csv_data &&
+              matrixInfo.csv_data.length > 0 ? (
               <Table striped bordered hover>
                 <thead>
                   <tr>
