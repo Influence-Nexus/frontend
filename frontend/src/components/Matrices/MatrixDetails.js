@@ -7,6 +7,7 @@ import GraphComponent from "../GraphComp/GraphComp";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../GraphComp/Graph.css"; // Импортируем файл CSS для стилизации
 import { cardcreds, cards } from "../SoralSystem/cards";
+import Header from "../Header/Header";
 
 
 
@@ -96,38 +97,6 @@ useEffect(() => {
               src={`../${cardcreds[selectedPlanet.name].src}`}
             />
             <h1 className="matrix-name" style={{ color: cardcreds[selectedPlanet.name].color }}>{cards[selectedPlanet.name][selectedCardIndex].title}</h1>
-          </div>
-          <div className="local-header" style={{ zIndex: 12 }}>
-            <div>
-              {/* <Button
-                className="game-button"
-                variant="primary"
-                onClick={handleOpenModal}
-                style={{ zIndex: 1000 }}
-              >
-                <FaInfoCircle /> Preview
-            
-              </Button>
-
-              <Button
-                className="game-button"
-              // id="pills-graph-tab"
-              // data-bs-toggle="pill"
-              // data-bs-target="#pills-graph"
-              // type="button"
-              // role="tab"
-              // aria-controls="pills-graph"
-              // aria-selected="true"
-              >
-                {" "}
-                <Link style={{ color: "white" }} to={"/science"}>
-                  Science
-                </Link>
-                <KeyIcon key={0} />
-                <KeyIcon key={1} />
-            
-              </Button> */}
-            </div>
           </div>
           <div>
             {matrixInfo.edges && (

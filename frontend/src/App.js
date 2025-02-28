@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MatrixList from './components/Matrices/MatrixList';
@@ -8,19 +8,22 @@ import Header from './components/Header/Header';
 import RulesPage from './components/UsersPages/RulesPage';
 import SolarSystem from './components/SoralSystem/SolarSystem';
 import SpaceshipView from './components/SpaceShip/SpaceshipView';
-import ChallengeComponent from './components/AlDafiraWelcome/ChallengeComponent'
+import ChallengeComponent from './components/AlDafiraWelcome/ChallengeComponent';
 import CodeChallenge from './components/ChallengeYour/CodeChallenge';
-import CatAnimation from './components/GraphComp/CatAnimation'
-
+import CatAnimation from './components/GraphComp/CatAnimation';
 import { SciencePage } from './components/Science/SciencePage';
 import { AlgoPage } from './components/Science/AlgoPAge/AlgoPage';
 import { RegistrationPage } from './components/UserCreds/RegistrationPage';
 import { LoginPage } from './components/UserCreds/LoginPage';
-
+import {BackgroundMusic} from './BG_MUSIC'
+// import { ScrollToTop } from './components/GraphComp/SCROLL_TOP';
 
 const App = () => {
   return (
     <Router>
+      {/* Фоновая музыка будет работать постоянно, пока приложение работает */}
+      <BackgroundMusic />
+      {/* <ScrollToTop /> */}
       <Header />
       <Routes>
         <Route path="/" element={<CodeChallenge />} />

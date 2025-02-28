@@ -17,14 +17,14 @@ const SolarSystem = () => {
     setHoveredPlanet('Orange')
   }, 100)
 
-  useEffect(() => {
-    const appHeader = document.querySelector(".App-header");
-    if (selectedPlanet) {
-      appHeader.style.display = "none";
-    } else {
-      appHeader.style.display = "flex";
-    }
-  }, [selectedPlanet]);
+  // useEffect(() => {
+  //   const appHeader = document.querySelector(".App-header");
+  //   if (selectedPlanet) {
+  //     appHeader.style.display = "none";
+  //   } else {
+  //     appHeader.style.display = "flex";
+  //   }
+  // }, [selectedPlanet]);
 
   return (
     <div className="solar-system">

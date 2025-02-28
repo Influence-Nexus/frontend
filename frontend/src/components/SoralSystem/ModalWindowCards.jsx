@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Cancel";
 import { cards, cardcreds } from "./cards";
 import { Link } from "react-router-dom";
-import { Carousel, Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import "./styles.css"; // Import the CSS file for styling
 import { useState } from "react";
 
@@ -130,7 +130,7 @@ export const PlanetCard = ({ selectedPlanet, setSelectedPlanet }) => {
                         id="buttonPlayZoommedCard"
                         style={{ backgroundColor: cardcreds[selectedPlanet.name].color }}
                         to={`/matrix/${selectedCardIndex + 1}`} state={{ selectedPlanet, selectedCardIndex }}
-                        onClick={localStorage.removeItem('hasReloaded')}
+                        // onClick={localStorage.removeItem('hasReloaded')}
                       >
                         <p>Play</p>
                       </Link>

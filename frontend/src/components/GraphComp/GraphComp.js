@@ -55,7 +55,8 @@ const GraphComponent = ({
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [movesHistory, setMovesHistory] = useState([]);
   const [disabledNodes, setDisabledNodes] = useState([]);
-
+  const hoverSoundRef = useRef(null);
+  const gameOverSoundRef = useRef(null);
   const intervalRef = useRef();
   const networkRef = useRef(null);
 
@@ -95,9 +96,22 @@ const GraphComponent = ({
 
   // --- Если время превысило 600 секунд, заканчиваем игру (Game Over) ---
   useEffect(() => {
-    if (elapsedTime >= 600 && isRunning) {
+    if (elapsedTime >= 2 && isRunning) {
       setIsRunning(false);
+      handleClearSelection();
       setShowGameOverModal(true);
+      // Воспроизводим звук Game Over
+      if (gameOverSoundRef.current) {
+        gameOverSoundRef.current.currentTime = 0;
+        gameOverSoundRef.current.play().catch((err) => {
+          console.error("Ошибка воспроизведения звука Game Over:", err);
+        });
+      }
+      // Останавливаем фоновую музыку
+      const bgAudio = document.getElementById("backgroundMusic");
+      if (bgAudio) {
+        bgAudio.pause();
+      }
     }
 
     // [CAT LOGIC] - Если достигли 300 секунд и ещё не запускали кота, запускаем
@@ -161,7 +175,6 @@ const GraphComponent = ({
 
           // Рёбра
           try {
-
             const edgeId = `${fromId}${toId}`;
 
             edgesDataSet.add({
@@ -171,13 +184,15 @@ const GraphComponent = ({
               // value: value, // либо закомментировать, либо заменить:
               rawValue: value, // сохраняем для других целей (например, для label)
               width: 1, // Фиксированная ширина по умолчанию
-              title: `При увеличении ${oldnodes[fromId - 1].name} ${value > 0 ? "увеличивается" : "уменьшается"
-                } ${oldnodes[toId - 1].name} на ${value}`,
+              title: `При увеличении ${oldnodes[fromId - 1].name} ${
+                value > 0 ? "увеличивается" : "уменьшается"
+              } ${oldnodes[toId - 1].name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
-              color: { color: value > 0 ? positiveEdgeColor : negativeEdgeColor },
+              color: {
+                color: value > 0 ? positiveEdgeColor : negativeEdgeColor,
+              },
             });
-
           } catch (e) {
             console.log(e);
           }
@@ -220,156 +235,160 @@ const GraphComponent = ({
     }
   }, [selectedEdges, graphData, positiveEdgeColor, negativeEdgeColor]);
 
-
   const userId = "defaultUser";
 
- // Функция загрузки пользовательских настроек
- const loadUserCoordinates = async () => {
-  try {
+  // Функция загрузки пользовательских настроек
+  const loadUserCoordinates = async () => {
+    try {
+      const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
+      const endpoint = `http://localhost:5000/${userId}/load-graph-settings/${matrixName}`;
+      const response = await fetch(endpoint);
+      if (!response.ok) {
+        console.warn("Пользовательские настройки не найдены.");
+        return;
+      }
+      const data = await response.json();
+      applyCoordinates(data);
+      console.log("Пользовательские настройки успешно загружены и применены.");
+    } catch (error) {
+      console.error("Ошибка загрузки пользовательских настроек:", error);
+    }
+  };
+
+  // Функция загрузки дефолтных настроек
+  const loadDefaultCoordinates = () => {
     const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
-    const endpoint = `http://localhost:5000/${userId}/load-graph-settings/${matrixName}`;
-    const response = await fetch(endpoint);
-    if (!response.ok) {
-      console.warn("Пользовательские настройки не найдены.");
+    const endpoint = `http://localhost:5000/load-graph-settings/${matrixName}`;
+    return fetch(endpoint)
+      .then((response) => (response.ok ? response.json() : null))
+      .catch((error) => {
+        console.error("Ошибка загрузки дефолтных настроек:", error);
+        return null;
+      });
+  };
+
+  // Функция, применяющая полученные настройки к графу
+  const applyCoordinates = (data) => {
+    const { graph_settings, node_coordinates } = data;
+    if (networkRef.current) {
+      if (node_coordinates) {
+        Object.entries(node_coordinates).forEach(([nodeId, coords]) => {
+          if (networkRef.current.body.nodes[nodeId]) {
+            networkRef.current.body.nodes[nodeId].x = coords.x;
+            networkRef.current.body.nodes[nodeId].y = coords.y;
+          }
+        });
+      }
+      if (graph_settings) {
+        networkRef.current.moveTo({
+          position: graph_settings.position || { x: 0, y: 0 },
+          scale: graph_settings.scale || 1,
+          animation: { duration: 1000, easingFunction: "easeInOutQuad" },
+        });
+      }
+      networkRef.current.redraw();
+    }
+  };
+
+  // Функция загрузки настроек при старте: сначала пытаемся загрузить пользовательские настройки,
+  // если их нет – загружаем дефолтные.
+  const loadCoordinates = () => {
+    loadUserCoordinates().then((data) => {
+      if (data) {
+        applyCoordinates(data);
+      } else {
+        console.warn(
+          "Пользовательские настройки не найдены, загружаем дефолтные."
+        );
+        loadDefaultCoordinates().then((defaultData) => {
+          if (defaultData) {
+            applyCoordinates(defaultData);
+          }
+        });
+      }
+    });
+  };
+
+  // Кнопка "Reset" подтягивает дефолтные координаты
+  const resetNodeCoordinates = () => {
+    loadDefaultCoordinates().then((data) => {
+      if (data) {
+        applyCoordinates(data);
+        alert("Дефолтные настройки графа загружены.");
+      } else {
+        alert("Дефолтные настройки графа не найдены.");
+      }
+    });
+  };
+
+  // Функция сохранения пользовательских настроек (не перезаписывает дефолтный файл)
+  const saveGraphSettings = async () => {
+    if (!networkRef.current) {
+      console.log("Граф не инициализирован.");
       return;
     }
-    const data = await response.json();
-    applyCoordinates(data);
-    console.log("Пользовательские настройки успешно загружены и применены.");
-  } catch (error) {
-    console.error("Ошибка загрузки пользовательских настроек:", error);
-  }
-};
 
-// Функция загрузки дефолтных настроек
-const loadDefaultCoordinates = () => {
-  const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
-  const endpoint = `http://localhost:5000/load-graph-settings/${matrixName}`;
-  return fetch(endpoint)
-    .then((response) => (response.ok ? response.json() : null))
-    .catch((error) => {
-      console.error("Ошибка загрузки дефолтных настроек:", error);
-      return null;
-    });
-};
+    const nodePositions = networkRef.current.body.nodes;
+    const coordinates = Object.fromEntries(
+      Object.entries(nodePositions).map(([nodeId, node]) => [
+        nodeId,
+        { x: node.x, y: node.y },
+      ])
+    );
 
-// Функция, применяющая полученные настройки к графу
-const applyCoordinates = (data) => {
-  const { graph_settings, node_coordinates } = data;
-  if (networkRef.current) {
-    if (node_coordinates) {
-      Object.entries(node_coordinates).forEach(([nodeId, coords]) => {
-        if (networkRef.current.body.nodes[nodeId]) {
-          networkRef.current.body.nodes[nodeId].x = coords.x;
-          networkRef.current.body.nodes[nodeId].y = coords.y;
-        }
+    // Получаем параметры представления графа
+    try {
+      const position = networkRef.current.getViewPosition?.() || { x: 0, y: 0 };
+      const scale = networkRef.current.getScale?.() || 1;
+
+      const dataToSave = {
+        graph_settings: { position, scale },
+        node_coordinates: coordinates,
+      };
+
+      const matrixName = matrixInfo.matrix_info.matrix_name;
+      // Используем пользовательский эндпоинт для сохранения настроек графа
+      const endpoint = `http://localhost:5000/${userId}/save-graph-settings/${matrixName}`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToSave),
       });
+
+      if (response.ok) {
+        console.log(
+          `Пользовательские настройки сохранены (${userId}/${matrixName}_graph_settings.json)`
+        );
+      } else {
+        console.error("Ошибка сохранения пользовательских настроек.");
+      }
+    } catch (error) {
+      console.error("Ошибка получения позиции графа:", error);
     }
-    if (graph_settings) {
-      networkRef.current.moveTo({
-        position: graph_settings.position || { x: 0, y: 0 },
-        scale: graph_settings.scale || 1,
-        animation: { duration: 1000, easingFunction: "easeInOutQuad" },
-      });
-    }
-    networkRef.current.redraw();
-  }
-};
+  };
 
-// Функция загрузки настроек при старте: сначала пытаемся загрузить пользовательские настройки,
-// если их нет – загружаем дефолтные.
-const loadCoordinates = () => {
-  loadUserCoordinates().then((data) => {
-    if (data) {
-      applyCoordinates(data);
-    } else {
-      console.warn("Пользовательские настройки не найдены, загружаем дефолтные.");
-      loadDefaultCoordinates().then((defaultData) => {
-        if (defaultData) {
-          applyCoordinates(defaultData);
-        }
-      });
-    }
-  });
-};
-
-// Кнопка "Reset" подтягивает дефолтные координаты
-const resetNodeCoordinates = () => {
-  loadDefaultCoordinates().then((data) => {
-    if (data) {
-      applyCoordinates(data);
-      alert("Дефолтные настройки графа загружены.");
-    } else {
-      alert("Дефолтные настройки графа не найдены.");
-    }
-  });
-};
-
-// Функция сохранения пользовательских настроек (не перезаписывает дефолтный файл)
-const saveGraphSettings = async () => {
-  if (!networkRef.current) {
-    console.log("Граф не инициализирован.");
-    return;
-  }
-
-  const nodePositions = networkRef.current.body.nodes;
-  const coordinates = Object.fromEntries(
-    Object.entries(nodePositions).map(([nodeId, node]) => [
-      nodeId,
-      { x: node.x, y: node.y },
-    ])
-  );
-
-  // Получаем параметры представления графа
-  try {
-    const position = networkRef.current.getViewPosition?.() || { x: 0, y: 0 };
-    const scale = networkRef.current.getScale?.() || 1;
-
-    const dataToSave = {
-      graph_settings: { position, scale },
-      node_coordinates: coordinates,
-    };
-
-    const matrixName = matrixInfo.matrix_info.matrix_name;
-    // Используем пользовательский эндпоинт для сохранения настроек графа
-    const endpoint = `http://localhost:5000/${userId}/save-graph-settings/${matrixName}`;
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dataToSave),
-    });
-
-    if (response.ok) {
-      console.log(
-        `Пользовательские настройки сохранены (${userId}/${matrixName}_graph_settings.json)`
-      );
-    } else {
-      console.error("Ошибка сохранения пользовательских настроек.");
-    }
-  } catch (error) {
-    console.error("Ошибка получения позиции графа:", error);
-  }
-};
-
-// Загружаем настройки при старте
-useEffect(() => {
-  loadCoordinates();
-}, []);
-
+  // Загружаем настройки при старте
+  useEffect(() => {
+    loadCoordinates();
+  }, []);
 
   // --- После появления graphData рисуем сеть ---
   useEffect(() => {
     if (graphData) {
       const container = document.getElementById("graph-container");
-
       const options = {
         edges: {
           smooth: { type: "curvedCW", roundness: edgeRoundness },
-          // Убираем enabled: false
           scaling: {
             min: 1,
             max: 1,
-            label: { enabled: true, min: 11, max: 11, maxVisible: 55, drawThreshold: 5 },
+            label: {
+              enabled: true,
+              min: 11,
+              max: 11,
+              maxVisible: 55,
+              drawThreshold: 5,
+            },
           },
           arrows: { to: true },
           font: { size: 24, align: "horizontal" },
@@ -410,6 +429,7 @@ useEffect(() => {
         },
       };
 
+      // Убираем lockedNodes из зависимостей, чтобы его сброс не вызывал перерисовку графа
       if (networkRef.current) {
         networkRef.current.destroy();
       }
@@ -431,6 +451,13 @@ useEffect(() => {
         setShowNodeList(true);
         setHoveredNode(event.node);
         setCursorPosition({ x: event.pointer.DOM.x, y: event.pointer.DOM.y });
+
+        if (hoverSoundRef.current) {
+          hoverSoundRef.current.currentTime = 0;
+          hoverSoundRef.current.play().catch((err) => {
+            console.error("Ошибка воспроизведения звука:", err);
+          });
+        }
       });
       newNetwork.on("blurNode", () => {
         setHighlightedNode(null);
@@ -450,7 +477,7 @@ useEffect(() => {
       networkRef.current = newNetwork;
       loadCoordinates();
     }
-  }, [graphData, lockedNodes, edgeRoundness, physicsEnabled, nodeSize]);
+  }, [graphData, edgeRoundness, physicsEnabled, nodeSize]); // lockedNodes убран из зависимостей
 
   // --- Клики по вершинам/рёбрам ---
   const handleNodeClick = (event) => {
@@ -485,7 +512,10 @@ useEffect(() => {
             graphData.edges.update({
               id: edgeId,
               width: 1, // сбрасываем до 1
-              color: { color: edgeObj.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor },
+              color: {
+                color:
+                  edgeObj.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor,
+              },
             });
           } else {
             newSelectedEdges.add(edgeId);
@@ -503,6 +533,12 @@ useEffect(() => {
 
   // --- Очистить выбор ---
   const handleClearSelection = () => {
+    if (hoverSoundRef.current) {
+      hoverSoundRef.current.currentTime = 0;
+      hoverSoundRef.current.play().catch((err) => {
+        console.error("Ошибка воспроизведения звука:", err);
+      });
+    }
     setSelectedNodes([]);
     setSelectedEdges([]);
   };
@@ -538,6 +574,7 @@ useEffect(() => {
   const handleCloseModal = () => setShowModal(false);
 
   const handleShowHistoryModal = () => setShowHistoryModal(true);
+
   const handleCloseHistoryModal = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -619,10 +656,20 @@ useEffect(() => {
     setIsClosing(true);
     setTimeout(() => {
       setShowGameOverModal(false);
+      // Останавливаем фоновую музыку
+      const bgAudio = document.getElementById("backgroundMusic");
+      if (bgAudio) {
+        bgAudio.play();
+      }
       setIsClosing(false);
     }, 700);
   };
 
+  // Инициализация звука Game Over
+  useEffect(() => {
+    gameOverSoundRef.current = new Audio("/sounds/gameOver.mp3");
+    gameOverSoundRef.current.volume = 0.4; // настройте громкость по необходимости
+  }, []);
 
   const [isHovered, setIsHovered] = useState(false);
   const buttonStyle = {
@@ -634,17 +681,14 @@ useEffect(() => {
     transition: "background-color 0.3s, color 0.3s", // Плавный переход
   };
 
+  useEffect(() => {
+    // Замените путь на ваш файл
+    hoverSoundRef.current = new Audio("/sounds/clearSection.mp3");
+    hoverSoundRef.current.volume = 0.5; // настроить громкость по необходимости
+  }, []);
+
   return (
     <div style={{ display: "flex", zIndex: -1, flexDirection: "column" }}>
-      {/* [CAT LOGIC] - рендерим кота только если showCat === true */}
-      {showCat && (
-        <CatAnimation
-          triggerAnimation={true}
-          stopAtX={1100}
-          onAnimationEnd={() => console.log("Остановился на 600px!")}
-        />
-      )}
-
       <div style={{ position: "relative", flex: "1", paddingRight: "20px" }}>
         <ul
           className="Button-Group"
@@ -723,12 +767,23 @@ useEffect(() => {
             </button>
           </li>
           <li>
-            <button className="game-button" style={{fontSize: "10px"}} onClick={loadUserCoordinates}>
+            <button
+              className="game-button"
+              style={{ fontSize: "13px", width: "10rem" }}
+              onClick={loadUserCoordinates}
+            >
               Загрузить последний вид
             </button>
           </li>
         </ul>
-
+        {/* [CAT LOGIC] - рендерим кота только если showCat === true */}
+        {showCat && (
+          <CatAnimation
+            triggerAnimation={true}
+            stopAtX={1100}
+            onAnimationEnd={() => console.log("Остановился на 600px!")}
+          />
+        )}
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>{cards[planet.name][cardIndex].title}</Modal.Title>
@@ -917,18 +972,19 @@ useEffect(() => {
                         <ListGroup.Item
                           key={node.id}
                           action
-                          className={`list-group-item ${highlightedNode === node.id ? "active" : ""
-                            }`}
+                          className={`list-group-item ${
+                            highlightedNode === node.id ? "active" : ""
+                          }`}
                           onMouseEnter={() => setHighlightedNode(node.id)}
                           onMouseLeave={() => setHighlightedNode(null)}
                           ref={
                             highlightedNode === node.id
                               ? (element) =>
-                                element &&
-                                element.scrollIntoView({
-                                  behavior: "smooth",
-                                  block: "nearest",
-                                })
+                                  element &&
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "nearest",
+                                  })
                               : null
                           }
                         >
@@ -1017,8 +1073,8 @@ useEffect(() => {
           <div className="csv-table-container">
             <h2>CSV Data</h2>
             {matrixInfo &&
-              matrixInfo.csv_data &&
-              matrixInfo.csv_data.length > 0 ? (
+            matrixInfo.csv_data &&
+            matrixInfo.csv_data.length > 0 ? (
               <Table striped bordered hover>
                 <thead>
                   <tr>
