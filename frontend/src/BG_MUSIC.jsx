@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const BackgroundMusic = ({ volume = 0.3 }) => {
+export const BackgroundMusic = ({ volume = 0.1 }) => {
   useEffect(() => {
     const audio = document.getElementById('backgroundMusic');
     

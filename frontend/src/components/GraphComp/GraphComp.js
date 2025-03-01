@@ -49,9 +49,9 @@ const GraphComponent = ({
   const [hoveredNode, setHoveredNode] = useState(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [showModal, setShowModal] = useState(false);
-  const [serverResponseData, setServerResponseData] = useState(null);
+  // const [serverResponseData, setServerResponseData] = useState(null);
   const [score, setScore] = useState(0);
-  const [maxScorePerMove, setMaxScorePerMove] = useState(0);
+  // const [maxScorePerMove, setMaxScorePerMove] = useState(0);
   const [isClosing, setIsClosing] = useState(false);
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [movesHistory, setMovesHistory] = useState([]);
@@ -636,7 +636,7 @@ const GraphComponent = ({
 
   useEffect(() => {
     gameOverSoundRef.current = new Audio("/sounds/gameOver.mp3");
-    gameOverSoundRef.current.volume = 0.4;
+    gameOverSoundRef.current.volume = 0.2;
   }, []);
 
   const [isHovered, setIsHovered] = useState(false);
@@ -651,7 +651,7 @@ const GraphComponent = ({
 
   useEffect(() => {
     hoverSoundRef.current = new Audio("/sounds/clearSection.mp3");
-    hoverSoundRef.current.volume = 0.5;
+    hoverSoundRef.current.volume = 0.05;
   }, []);
 
   return (
@@ -684,7 +684,7 @@ const GraphComponent = ({
               }}
               onClick={handleOpenModal}
             >
-              <InfoIcon /> Description
+              <InfoIcon /> Details
             </button>
           </li>
           <li>
@@ -692,7 +692,7 @@ const GraphComponent = ({
               <button
                 className="game-button"
                 disabled={isRunning}
-                title={isRunning ? "Недоступно в процессе игры" : ""}
+                title={isRunning ? "Not available during the game" : ""}
               >
                 Science
               </button>
@@ -712,7 +712,6 @@ const GraphComponent = ({
               Graph
             </button>
           </li>
-
           <li className="nav-item" role="presentation">
             <button
               className="game-button"
@@ -724,15 +723,14 @@ const GraphComponent = ({
               aria-controls="profile"
               aria-selected="false"
               disabled={isRunning}
-              title={isRunning ? "Недоступно в процессе игры" : ""}
+              title={isRunning ? "Not available during the game" : ""}
             >
               Profile
             </button>
           </li>
-
           <li>
             <button className="game-button" onClick={saveGraphSettings}>
-              Сохранить вид
+              Save View
             </button>
           </li>
           <li>
@@ -743,13 +741,14 @@ const GraphComponent = ({
           <li>
             <button
               className="game-button"
-              style={{ fontSize: "13px", width: "10rem" }}
               onClick={loadUserCoordinates}
+              title="Загружает последний сохранённый вид графа"
             >
-              Загрузить последний вид
+              Load Last View
             </button>
           </li>
         </ul>
+
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>{cards[planet.name][cardIndex].title}</Modal.Title>
@@ -834,7 +833,7 @@ const GraphComponent = ({
           <div
             className="VerticalProgressBar-container"
             style={{
-              top: 280,
+              top: 330,
               left: "13%",
               position: "absolute",
               zIndex: 1,
@@ -846,7 +845,7 @@ const GraphComponent = ({
           <div
             className="stopwatch-container"
             style={{
-              top: 280,
+              top: 330,
               right: 75,
               position: "absolute",
               zIndex: 1,
