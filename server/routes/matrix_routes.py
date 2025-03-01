@@ -181,10 +181,9 @@ def get_user_settings_filepath(user_id, matrix_name):
     return os.path.join(folder, f"{matrix_name}_settings.json")
 
 def get_user_creds_filepath(username):
-    """Возвращает путь для хранения учетных данных пользователя."""
-    folder = os.path.join(CURRENT_BASE_DIR, "users", username, "user_creds")
-    ensure_dir(folder)
-    return os.path.join(folder, f"{username}.json")
+    """Возвращает путь к файлу учетных данных пользователя без создания папок."""
+    return os.path.join(CURRENT_BASE_DIR, "users", username, "user_creds", f"{username}.json")
+
 
 
 # ===================== ЭНДПОИНТЫ ДЛЯ НАСТРОЕК ГРАФА =====================
@@ -279,6 +278,10 @@ def sign_up():
         if os.path.exists(creds_filepath):
             return jsonify({"error": "Пользователь с таким именем уже существует"}), 400
 
+        # Создаем директорию, если её нет
+        folder = os.path.dirname(creds_filepath)
+        os.makedirs(folder, exist_ok=True)
+
         user_data = {
             "username": username,
             "email": email,
@@ -289,6 +292,7 @@ def sign_up():
         return jsonify({"message": "Пользователь успешно зарегистрирован"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @matrix_bp.route('/sign-in', methods=['POST'])
 def sign_in():
