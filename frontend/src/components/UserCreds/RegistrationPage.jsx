@@ -1,81 +1,90 @@
-// RegistrationPage.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Импортируем useNavigate
+import { useNavigate } from 'react-router-dom';
+import './RegistrationPage.css';
 
 export const RegistrationPage = () => {
-  const navigate = useNavigate(); // Инициализируем хук useNavigate
+  const navigate = useNavigate();
 
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Форма отправлена:');
-    console.log('Никнейм:', nickname);
-    console.log('Email:', email);
-    console.log('Пароль:', password);
+    setErrorMessage('');
+    setSuccessMessage('');
+    
+    const payload = {
+      username: nickname,
+      email: email,
+      password: password,
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/sign-up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setSuccessMessage("Пользователь успешно зарегистрирован!");
+        // Опционально: через несколько секунд перенаправляем на страницу логина
+        setTimeout(() => navigate('/login'), 2000);
+      } else {
+        setErrorMessage(result.error || "Ошибка регистрации");
+      }
+    } catch (error) {
+      setErrorMessage("Ошибка при отправке данных на сервер: " + error.message);
+    }
   };
 
   const handleLoginClick = () => {
-    navigate('/login'); // Переход на страницу /login
+    navigate('/login');
   };
 
   return (
-    <div style={{ textAlign: 'center', padding: '20px' }}>
-      <h1 style={{ color: "white", justifyContent: "center", display: "flex" }}>Регистрация</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px', margin: 'auto' }}>
-        {/* Поле для ввода никнейма */}
+    <div className="registration-container">
+      <h1 className="registration-title">Регистрация</h1>
+      <form onSubmit={handleSubmit} className="registration-form">
         <input
           type="text"
           placeholder="Никнейм"
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           required
-          style={{ padding: '8px', fontSize: '16px' }}
+          className="registration-input"
         />
-        {/* Поле для ввода email */}
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ padding: '8px', fontSize: '16px' }}
+          className="registration-input"
         />
-        {/* Поле для ввода пароля */}
         <input
           type="password"
           placeholder="Пароль"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{ padding: '8px', fontSize: '16px' }}
+          className="registration-input"
         />
-        {/* Кнопка отправки формы */}
-        <button
-          type="submit"
-          style={{
-            padding: '10px',
-            fontSize: '16px',
-            backgroundColor: '#007BFF',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: '5px'
-          }}
-        >
+        <button type="submit" className="registration-button">
           Зарегистрироваться
         </button>
       </form>
+      
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
 
-      {/* Текст и ссылка "Уже есть аккаунт? Войти" */}
-      <div style={{ marginTop: '15px', fontSize: '14px', color: "white" }}>
+      <div className="registration-footer">
         <span>Уже есть аккаунт? </span>
-        <span
-          style={{ textDecoration: 'underline', color: '#007BFF', cursor: 'pointer' }}
-          onClick={handleLoginClick}
-        >
+        <span className="registration-link" onClick={handleLoginClick}>
           Войти
         </span>
       </div>

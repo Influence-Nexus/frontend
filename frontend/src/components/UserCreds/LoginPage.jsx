@@ -1,67 +1,81 @@
-// LoginPage.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './LoginPage.css';
 
 export const LoginPage = () => {
-  // Состояния для управления значениями полей формы
-  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+
+  // Используем "username" вместо "email"
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // Обработка отправки формы
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Предотвращаем стандартную отправку формы
-    console.log('Попытка входа:');
-    console.log('Email:', email);
-    console.log('Пароль:', password);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-    // Здесь можно добавить логику аутентификации пользователя
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    const payload = { username, password };
+
+    try {
+      const response = await fetch("http://localhost:5000/sign-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSuccessMessage("Вход выполнен успешно!");
+        localStorage.setItem("currentUser", username);
+
+        // После успешного входа можно перенаправить пользователя, например, на страницу дашборда:
+        setTimeout(() => navigate('/'), 2000);
+      } else {
+        setErrorMessage(result.error || "Ошибка входа");
+      }
+    } catch (error) {
+      setErrorMessage("Ошибка при отправке данных на сервер: " + error.message);
+    }
   };
 
   return (
-    <div style={{ textAlign: 'center', padding: '20px' }}>
-      <h1 style={{ color: "white", justifyContent: "center", display: "flex" }}>Вход</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px', margin: 'auto' }}>
-        {/* Поле для ввода email */}
+    <div className="login-container">
+      <h1 className="login-title">Вход</h1>
+      <form onSubmit={handleSubmit} className="login-form">
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Никнейм"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
-          style={{ padding: '8px', fontSize: '16px' }}
+          className="login-input"
         />
-        {/* Поле для ввода пароля */}
         <input
           type="password"
           placeholder="Пароль"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{ padding: '8px', fontSize: '16px' }}
+          className="login-input"
         />
-        {/* Кнопка отправки формы */}
-        <button
-          type="submit"
-          style={{
-            padding: '10px',
-            fontSize: '16px',
-            backgroundColor: '#007BFF',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: '5px'
-          }}
-        >
+        <button type="submit" className="login-button">
           Войти
         </button>
       </form>
-
-      {/* Текст и ссылка "Нет аккаунта? Зарегистрироваться" */}
-      <div style={{ marginTop: '15px', fontSize: '14px', color: "white" }}>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
+      <div className="login-footer">
         <span>Нет аккаунта? </span>
-        <a href="/registration" style={{ textDecoration: 'underline', color: '#007BFF', cursor: 'pointer' }}>
+        <a href="/registration" className="login-link">
           Зарегистрироваться
         </a>
       </div>
     </div>
   );
 };
+
+export default LoginPage;

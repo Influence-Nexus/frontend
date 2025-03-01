@@ -4,6 +4,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from routes.matrix_routes import matrix_bp
 import os
 from flask import send_from_directory
+from datetime import timedelta
 
 app = Flask(__name__)
 CORS(app)
@@ -11,6 +12,7 @@ CORS(app)
 # Подключение Blueprint для роутов
 app.register_blueprint(matrix_bp)
 app.secret_key = 'super_secret_key'  # Задайте ваш секретный ключ
+app.permanent_session_lifetime = timedelta(days=7)
 
 # Swagger
 SWAGGER_URL = '/api/docs'  # URL для документации

@@ -4,7 +4,6 @@ from utils.score_counter import calculate_order_score
 import numpy as np
 import pathlib
 from drafts.testik import BASE_DIR, process_input_files
-from collections import OrderedDict
 import os
 import json
 
@@ -148,24 +147,59 @@ def get_science_table():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+
+
+
+# ===================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====================
+
+def ensure_dir(directory):
+    """Создает директорию, если она не существует."""
+    os.makedirs(directory, exist_ok=True)
+    return directory
+
+def save_json(filepath, data):
+    """Сохраняет data в виде JSON в указанный filepath."""
+    with open(filepath, 'w', encoding='utf-8') as file:
+        json.dump(data, file, indent=2)
+
+def load_json(filepath):
+    """Читает JSON из указанного filepath."""
+    with open(filepath, 'r', encoding='utf-8') as file:
+        return json.load(file)
+
+def get_default_settings_filepath(matrix_name):
+    """Возвращает путь для сохранения настроек графа по умолчанию."""
+    folder = os.path.join(CURRENT_BASE_DIR, "graph_settings")
+    ensure_dir(folder)
+    return os.path.join(folder, f"{matrix_name}_graph_settings.json")
+
+def get_user_settings_filepath(user_id, matrix_name):
+    """Возвращает путь для сохранения настроек графа для пользователя."""
+    folder = os.path.join(CURRENT_BASE_DIR, "users", user_id, "user_settings")
+    ensure_dir(folder)
+    return os.path.join(folder, f"{matrix_name}_settings.json")
+
+def get_user_creds_filepath(username):
+    """Возвращает путь для хранения учетных данных пользователя."""
+    folder = os.path.join(CURRENT_BASE_DIR, "users", username, "user_creds")
+    ensure_dir(folder)
+    return os.path.join(folder, f"{username}.json")
+
+
+# ===================== ЭНДПОИНТЫ ДЛЯ НАСТРОЕК ГРАФА =====================
+
+# 1. Настройки графа по умолчанию
 @matrix_bp.route('/save-graph-settings/<matrix_name>', methods=['POST'])
 def save_graph_settings(matrix_name):
-    """Сохраняет настройки графа в JSON-файл (перезаписывает старый файл)."""
+    """Сохраняет настройки графа по умолчанию в JSON-файл."""
     try:
-        data = request.json
+        data = request.get_json()
         if not data:
             return jsonify({'error': 'No data provided'}), 400
-        
-        # Определяем путь и создаём папку при необходимости
-        save_folder = os.path.join(CURRENT_BASE_DIR, "graph_settings")
-        os.makedirs(save_folder, exist_ok=True)  
-        file_path = os.path.join(save_folder, f"{matrix_name}_graph_settings.json")
-        
-        # Записываем JSON-файл (заменяя старый)
-        with open(file_path, 'w', encoding='utf-8') as file:
-            json.dump(data, file, indent=2)
-        
-        print(f"[INFO] Файл {file_path} успешно обновлён.")
+        filepath = get_default_settings_filepath(matrix_name)
+        save_json(filepath, data)
+        print(f"[INFO] Default settings saved at {filepath}.")
         return jsonify({"message": "Настройки графа успешно сохранены."}), 200
     except Exception as e:
         print(f"[ERROR] Ошибка при сохранении файла: {e}")
@@ -173,63 +207,114 @@ def save_graph_settings(matrix_name):
 
 @matrix_bp.route('/load-graph-settings/<matrix_name>', methods=['GET'])
 def load_graph_settings(matrix_name):
-    """Загружает настройки графа из JSON-файла."""
+    """Загружает настройки графа по умолчанию из JSON-файла."""
     try:
-        save_folder = os.path.join(CURRENT_BASE_DIR, "graph_settings")
-        file_path = os.path.join(save_folder, f"{matrix_name}_graph_settings.json")
-        
-        if not os.path.exists(file_path):
+        filepath = get_default_settings_filepath(matrix_name)
+        if not os.path.exists(filepath):
             return jsonify({'error': f"Файл настроек для '{matrix_name}' не найден."}), 404
-        
-        with open(file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-
-        print(f"[INFO] Загружены настройки для '{matrix_name}'.")
+        data = load_json(filepath)
+        print(f"[INFO] Default settings loaded from {filepath}.")
         return jsonify(data), 200
     except Exception as e:
         print(f"[ERROR] Ошибка загрузки файла: {e}")
         return jsonify({"error": "Ошибка загрузки файла."}), 500
 
 
+# 2. Пользовательские настройки графа (координат)
 @matrix_bp.route('/<user_id>/save-graph-settings/<matrix_name>', methods=['POST'])
 def save_user_graph_settings(user_id, matrix_name):
-    """Сохраняет настройки графа для пользователя в JSON-файл (перезаписывает старый файл)."""
+    """
+    Сохраняет настройки графа для пользователя.
+    Сохраняет данные в: 
+      users/<user_id>/user_settings/<matrix_name>_settings.json
+    """
     try:
-        data = request.json
+        data = request.get_json()
         if not data:
             return jsonify({'error': 'No data provided'}), 400
-
-        # Определяем путь и создаём папку для конкретного пользователя
-        save_folder = os.path.join(CURRENT_BASE_DIR, "graph_settings", user_id)
-        os.makedirs(save_folder, exist_ok=True)
-        file_path = os.path.join(save_folder, f"{matrix_name}_graph_settings.json")
-
-        # Записываем JSON-файл (заменяя старый)
-        with open(file_path, 'w', encoding='utf-8') as file:
-            json.dump(data, file, indent=2)
-
-        print(f"[INFO] Файл {file_path} успешно обновлён для пользователя {user_id}.")
+        filepath = get_user_settings_filepath(user_id, matrix_name)
+        save_json(filepath, data)
+        print(f"[INFO] Settings for user '{user_id}' saved at {filepath}.")
         return jsonify({"message": "Настройки графа успешно сохранены."}), 200
     except Exception as e:
-        print(f"[ERROR] Ошибка при сохранении файла: {e}")
+        print(f"[ERROR] Ошибка при сохранении файла for user '{user_id}': {e}")
         return jsonify({"error": "Ошибка при сохранении файла."}), 500
-
 
 @matrix_bp.route('/<user_id>/load-graph-settings/<matrix_name>', methods=['GET'])
 def load_user_graph_settings(user_id, matrix_name):
-    """Загружает настройки графа для пользователя из JSON-файла."""
+    """
+    Загружает настройки графа для пользователя из файла:
+      users/<user_id>/user_settings/<matrix_name>_settings.json
+    """
     try:
-        save_folder = os.path.join(CURRENT_BASE_DIR, "graph_settings", user_id)
-        file_path = os.path.join(save_folder, f"{matrix_name}_graph_settings.json")
-
-        if not os.path.exists(file_path):
+        filepath = get_user_settings_filepath(user_id, matrix_name)
+        if not os.path.exists(filepath):
             return jsonify({'error': f"Файл настроек для '{matrix_name}' пользователя '{user_id}' не найден."}), 404
-
-        with open(file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-
-        print(f"[INFO] Загружены настройки для '{matrix_name}' пользователя '{user_id}'.")
+        data = load_json(filepath)
+        print(f"[INFO] Settings for user '{user_id}' loaded from {filepath}.")
         return jsonify(data), 200
     except Exception as e:
-        print(f"[ERROR] Ошибка загрузки файла: {e}")
+        print(f"[ERROR] Ошибка загрузки файла for user '{user_id}': {e}")
         return jsonify({"error": "Ошибка загрузки файла."}), 500
+
+
+# ===================== ЭНДПОИНТЫ ДЛЯ АВТОРИЗАЦИИ =====================
+
+@matrix_bp.route('/sign-up', methods=['POST'])
+def sign_up():
+    """
+    Роутер для регистрации пользователя.
+    Ожидает JSON с полями: username, email, password.
+    Данные сохраняются в: ./users/<username>/user_creds/<username>.json
+    """
+    try:
+        data = request.get_json()
+        username = data.get("username")
+        email = data.get("email")
+        password = data.get("password")
+        if not username or not email or not password:
+            return jsonify({"error": "username, email и password обязательны"}), 400
+
+        creds_filepath = get_user_creds_filepath(username)
+        if os.path.exists(creds_filepath):
+            return jsonify({"error": "Пользователь с таким именем уже существует"}), 400
+
+        user_data = {
+            "username": username,
+            "email": email,
+            "password": password  # Пароль хранится в открытом виде (не рекомендуется для продакшена)
+        }
+        save_json(creds_filepath, user_data)
+        print(f"[INFO] User '{username}' registered with credentials stored at {creds_filepath}.")
+        return jsonify({"message": "Пользователь успешно зарегистрирован"}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@matrix_bp.route('/sign-in', methods=['POST'])
+def sign_in():
+    """
+    Роутер для входа пользователя.
+    Ожидает JSON с полями: username и password.
+    При успешной аутентификации имя пользователя сохраняется в сессии.
+    """
+    try:
+        data = request.get_json()
+        username = data.get("username")
+        password = data.get("password")
+        if not username or not password:
+            return jsonify({"error": "username и password обязательны"}), 400
+
+        creds_filepath = get_user_creds_filepath(username)
+        if not os.path.exists(creds_filepath):
+            return jsonify({"error": "Пользователь не найден"}), 404
+
+        user_data = load_json(creds_filepath)
+        if user_data.get("password") != password:
+            return jsonify({"error": "Неверный пароль"}), 401
+
+        session.permanent = True  # Устанавливаем постоянную сессию
+        session["user"] = username
+        print(f"[INFO] User '{username}' logged in successfully.")
+        return jsonify({"message": "Вход выполнен успешно"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

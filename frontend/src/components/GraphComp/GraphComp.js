@@ -9,11 +9,11 @@ import Modal from "react-bootstrap/Modal";
 import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
-import KeyIcon from "@mui/icons-material/Key";
+// import KeyIcon from "@mui/icons-material/Key";
 import InfoIcon from "@mui/icons-material/Info";
 import "../Science/SciencePageComponents/Buttons/SciencePageButtons.css";
 
-import { FaInfoCircle, FaMedal, FaStar, FaStopwatch } from "react-icons/fa";
+import { FaMedal, FaStopwatch } from "react-icons/fa";
 import VerticalProgressBar from "./VerticalProgress";
 import { InfoModalWindow } from "./InfoModalWindow";
 import { cardcreds, cards } from "../SoralSystem/cards";
@@ -33,6 +33,7 @@ const GraphComponent = ({
   selectedPlanet,
   selectedCardIndex,
 }) => {
+  // Прочие состояния и ссылки
   const [graphData, setGraphData] = useState(null);
   const [highlightedNode, setHighlightedNode] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
@@ -59,6 +60,16 @@ const GraphComponent = ({
   const gameOverSoundRef = useRef(null);
   const intervalRef = useRef();
   const networkRef = useRef(null);
+  const maxTime = 600
+  // Получаем текущего пользователя из localStorage
+  const [userId, setUserId] = useState(localStorage.getItem("currentUser") || "defaultUser");
+
+  useEffect(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      setUserId(currentUser);
+    }
+  }, []);
 
   const location = useLocation();
   const selectedPlanetLocal = location.state?.selectedPlanet;
@@ -90,34 +101,29 @@ const GraphComponent = ({
     } else {
       clearInterval(intervalRef.current);
     }
-
     return () => clearInterval(intervalRef.current);
   }, [isRunning]);
 
   // --- Если время превысило 600 секунд, заканчиваем игру (Game Over) ---
   useEffect(() => {
-    if (elapsedTime >= 2 && isRunning) {
+    if (elapsedTime >= maxTime && isRunning) {
       setIsRunning(false);
       handleClearSelection();
       setShowGameOverModal(true);
-      // Воспроизводим звук Game Over
       if (gameOverSoundRef.current) {
         gameOverSoundRef.current.currentTime = 0;
         gameOverSoundRef.current.play().catch((err) => {
           console.error("Ошибка воспроизведения звука Game Over:", err);
         });
       }
-      // Останавливаем фоновую музыку
       const bgAudio = document.getElementById("backgroundMusic");
       if (bgAudio) {
         bgAudio.pause();
       }
     }
-
-    // [CAT LOGIC] - Если достигли 300 секунд и ещё не запускали кота, запускаем
-    if (elapsedTime >= 300 && !catAnimationLaunched) {
-      setShowCat(true); // показать кота на экране
-      setCatAnimationLaunched(true); // больше не запускать
+    if (elapsedTime >= (maxTime / 2) && !catAnimationLaunched) {
+      setShowCat(true);
+      setCatAnimationLaunched(true);
     }
   }, [elapsedTime, isRunning, catAnimationLaunched]);
 
@@ -176,17 +182,13 @@ const GraphComponent = ({
           // Рёбра
           try {
             const edgeId = `${fromId}${toId}`;
-
             edgesDataSet.add({
               id: edgeId,
               from: fromId,
               to: toId,
-              // value: value, // либо закомментировать, либо заменить:
-              rawValue: value, // сохраняем для других целей (например, для label)
-              width: 1, // Фиксированная ширина по умолчанию
-              title: `При увеличении ${oldnodes[fromId - 1].name} ${
-                value > 0 ? "увеличивается" : "уменьшается"
-              } ${oldnodes[toId - 1].name} на ${value}`,
+              rawValue: value,
+              width: 1,
+              title: `При увеличении ${oldnodes[fromId - 1].name} ${value > 0 ? "увеличивается" : "уменьшается"} ${oldnodes[toId - 1].name} на ${value}`,
               label: value.toString(),
               smooth: { type: "continues", roundness: edgeRoundness },
               color: {
@@ -201,14 +203,7 @@ const GraphComponent = ({
 
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
-  }, [
-    matrixInfo,
-    nodeColor,
-    positiveEdgeColor,
-    negativeEdgeColor,
-    edgeRoundness,
-    disabledNodes,
-  ]);
+  }, [matrixInfo, nodeColor, positiveEdgeColor, negativeEdgeColor, edgeRoundness, disabledNodes]);
 
   useEffect(() => {
     if (graphData?.edges) {
@@ -219,8 +214,6 @@ const GraphComponent = ({
           color: { color: "white" },
         });
       });
-
-      // Сбрасываем толщину у невыбранных рёбер
       graphData.edges.forEach((edge) => {
         if (!selectedEdges.includes(edge.id)) {
           graphData.edges.update({
@@ -235,12 +228,11 @@ const GraphComponent = ({
     }
   }, [selectedEdges, graphData, positiveEdgeColor, negativeEdgeColor]);
 
-  const userId = "defaultUser";
-
-  // Функция загрузки пользовательских настроек
+  // Функция загрузки пользовательских координат
   const loadUserCoordinates = async () => {
     try {
       const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
+      // Новый URL для загрузки настроек пользователя
       const endpoint = `http://localhost:5000/${userId}/load-graph-settings/${matrixName}`;
       const response = await fetch(endpoint);
       if (!response.ok) {
@@ -254,6 +246,7 @@ const GraphComponent = ({
       console.error("Ошибка загрузки пользовательских настроек:", error);
     }
   };
+
 
   // Функция загрузки дефолтных настроек
   const loadDefaultCoordinates = () => {
@@ -297,9 +290,7 @@ const GraphComponent = ({
       if (data) {
         applyCoordinates(data);
       } else {
-        console.warn(
-          "Пользовательские настройки не найдены, загружаем дефолтные."
-        );
+        console.warn("Пользовательские настройки не найдены, загружаем дефолтные.");
         loadDefaultCoordinates().then((defaultData) => {
           if (defaultData) {
             applyCoordinates(defaultData);
@@ -321,7 +312,8 @@ const GraphComponent = ({
     });
   };
 
-  // Функция сохранения пользовательских настроек (не перезаписывает дефолтный файл)
+  // Функция сохранения пользовательских координат (привязанных к пользователю)
+
   const saveGraphSettings = async () => {
     if (!networkRef.current) {
       console.log("Граф не инициализирован.");
@@ -336,29 +328,23 @@ const GraphComponent = ({
       ])
     );
 
-    // Получаем параметры представления графа
     try {
       const position = networkRef.current.getViewPosition?.() || { x: 0, y: 0 };
       const scale = networkRef.current.getScale?.() || 1;
-
       const dataToSave = {
         graph_settings: { position, scale },
         node_coordinates: coordinates,
       };
-
-      const matrixName = matrixInfo.matrix_info.matrix_name;
-      // Используем пользовательский эндпоинт для сохранения настроек графа
+      const matrixName = encodeURIComponent(matrixInfo.matrix_info.matrix_name);
+      // Новый URL для сохранения настроек пользователя
       const endpoint = `http://localhost:5000/${userId}/save-graph-settings/${matrixName}`;
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSave),
       });
-
       if (response.ok) {
-        console.log(
-          `Пользовательские настройки сохранены (${userId}/${matrixName}_graph_settings.json)`
-        );
+        console.log("Пользовательские настройки успешно сохранены.");
       } else {
         console.error("Ошибка сохранения пользовательских настроек.");
       }
@@ -366,6 +352,7 @@ const GraphComponent = ({
       console.error("Ошибка получения позиции графа:", error);
     }
   };
+
 
   // Загружаем настройки при старте
   useEffect(() => {
@@ -429,13 +416,11 @@ const GraphComponent = ({
         },
       };
 
-      // Убираем lockedNodes из зависимостей, чтобы его сброс не вызывал перерисовку графа
       if (networkRef.current) {
         networkRef.current.destroy();
       }
 
       const newNetwork = new Network(container, graphData, options);
-
       newNetwork.moveTo({
         position: { x: -100, y: -350 },
         scale: 0.85,
@@ -444,14 +429,12 @@ const GraphComponent = ({
           easingFunction: "easeInOutQuad",
         },
       });
-
       newNetwork.on("click", handleNodeClick);
       newNetwork.on("hoverNode", (event) => {
         setHighlightedNode(event.node);
         setShowNodeList(true);
         setHoveredNode(event.node);
         setCursorPosition({ x: event.pointer.DOM.x, y: event.pointer.DOM.y });
-
         if (hoverSoundRef.current) {
           hoverSoundRef.current.currentTime = 0;
           hoverSoundRef.current.play().catch((err) => {
@@ -477,21 +460,15 @@ const GraphComponent = ({
       networkRef.current = newNetwork;
       loadCoordinates();
     }
-  }, [graphData, edgeRoundness, physicsEnabled, nodeSize]); // lockedNodes убран из зависимостей
+  }, [graphData, edgeRoundness, physicsEnabled, nodeSize]);
 
   // --- Клики по вершинам/рёбрам ---
   const handleNodeClick = (event) => {
     const clickedNodeIds = event.nodes;
     const clickedEdgeIds = event.edges;
-
-    // Выбор узла
     if (clickedNodeIds.length === 1) {
       const clickedNodeId = clickedNodeIds[0];
-      // Проверяем, не заблокирована ли эта вершина
-      if (
-        !lockedNodes[clickedNodeId] &&
-        !disabledNodes.includes(clickedNodeId)
-      ) {
+      if (!lockedNodes[clickedNodeId] && !disabledNodes.includes(clickedNodeId)) {
         setSelectedNodes((prevSelectedNodes) => {
           if (prevSelectedNodes.includes(clickedNodeId)) {
             return prevSelectedNodes.filter((id) => id !== clickedNodeId);
@@ -501,7 +478,6 @@ const GraphComponent = ({
         });
       }
     }
-
     if (clickedEdgeIds.length > 0) {
       setSelectedEdges((prevSelectedEdges) => {
         const newSelectedEdges = new Set(prevSelectedEdges);
@@ -511,7 +487,7 @@ const GraphComponent = ({
             const edgeObj = graphData.edges.get(edgeId);
             graphData.edges.update({
               id: edgeId,
-              width: 1, // сбрасываем до 1
+              width: 1,
               color: {
                 color:
                   edgeObj.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor,
@@ -521,7 +497,7 @@ const GraphComponent = ({
             newSelectedEdges.add(edgeId);
             graphData.edges.update({
               id: edgeId,
-              width: 5, // выбранное ребро становится толще
+              width: 5,
               color: { color: "white" },
             });
           }
@@ -556,7 +532,6 @@ const GraphComponent = ({
   // --- Стоп ---
   const handleStop = () => {
     setIsRunning(false);
-
     setStopwatchHistory([
       ...stopwatchHistory,
       {
@@ -566,15 +541,12 @@ const GraphComponent = ({
         resscore: score,
       },
     ]);
-
     setElapsedTime(0);
   };
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-
   const handleShowHistoryModal = () => setShowHistoryModal(true);
-
   const handleCloseHistoryModal = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -586,10 +558,21 @@ const GraphComponent = ({
   // --- При нажатии "Make Move" ---
   const makeMove = async () => {
     try {
-      let selectedNodesDictionary = createSelectedNodesDictionary(
-        selectedNodes,
-        lastIndex
-      );
+      // Рассчитываем количество активных (не отключённых) вершин
+      let availableNodesCount = 0;
+      if (graphData && graphData.nodes) {
+        const allNodes = graphData.nodes.get();
+        availableNodesCount = allNodes.filter(node => !disabledNodes.includes(node.id)).length;
+      }
+      // Минимальное число вершин для хода: 3 или количество активных, если их меньше 3
+      const minRequired = availableNodesCount < 3 ? availableNodesCount : 3;
+
+      if (selectedNodes.length < minRequired) {
+        alert(`Для хода необходимо выбрать минимум ${minRequired} вершин.`);
+        return;
+      }
+
+      let selectedNodesDictionary = createSelectedNodesDictionary(selectedNodes, lastIndex);
 
       const response = await fetch("http://localhost:5000/calculate_score", {
         method: "POST",
@@ -601,47 +584,34 @@ const GraphComponent = ({
           matrixName: matrixInfo.matrix_info.matrix_name,
         }),
       });
-
       if (!response.ok) {
         throw new Error(`Server responded with status ${response.status}`);
       }
-
       const responseData = await response.json();
-
       if (!isRunning) {
         handleStart();
       }
-
       if (responseData && typeof responseData === "object") {
         const { turn_score, total_score } = responseData;
-
         setMoveHistory((prevHistory) => [
           ...prevHistory,
           { selectedNodes: [...selectedNodes], score: turn_score },
         ]);
-
         setMovesHistory((prevMoves) => [
           ...prevMoves,
           { moveNumber: prevMoves.length + 1, nodes: [...selectedNodes] },
         ]);
-
         setScore((prevScore) =>
           typeof total_score === "number" && !isNaN(total_score)
             ? total_score
             : prevScore
         );
-
-        // Блокируем выбранные вершины
         setDisabledNodes((prev) => [...new Set([...prev, ...selectedNodes])]);
-
         handleClearSelection();
-
-        // Индекс для уникальных ключей
         setLastIndex((prevLastIndex) => {
           const maxIndex = Math.max(...Object.keys(selectedNodesDictionary));
           return maxIndex + 1;
         });
-
         setShowHistoryModal(true);
       } else {
         console.error("Error: Invalid or missing server response data");
@@ -656,7 +626,6 @@ const GraphComponent = ({
     setIsClosing(true);
     setTimeout(() => {
       setShowGameOverModal(false);
-      // Останавливаем фоновую музыку
       const bgAudio = document.getElementById("backgroundMusic");
       if (bgAudio) {
         bgAudio.play();
@@ -665,10 +634,9 @@ const GraphComponent = ({
     }, 700);
   };
 
-  // Инициализация звука Game Over
   useEffect(() => {
     gameOverSoundRef.current = new Audio("/sounds/gameOver.mp3");
-    gameOverSoundRef.current.volume = 0.4; // настройте громкость по необходимости
+    gameOverSoundRef.current.volume = 0.4;
   }, []);
 
   const [isHovered, setIsHovered] = useState(false);
@@ -678,17 +646,23 @@ const GraphComponent = ({
     backgroundColor: isHovered
       ? "transparent"
       : cardcreds[selectedPlanet.name].color,
-    transition: "background-color 0.3s, color 0.3s", // Плавный переход
+    transition: "background-color 0.3s, color 0.3s",
   };
 
   useEffect(() => {
-    // Замените путь на ваш файл
     hoverSoundRef.current = new Audio("/sounds/clearSection.mp3");
-    hoverSoundRef.current.volume = 0.5; // настроить громкость по необходимости
+    hoverSoundRef.current.volume = 0.5;
   }, []);
 
   return (
     <div style={{ display: "flex", zIndex: -1, flexDirection: "column" }}>
+      {showCat && (
+        <CatAnimation
+          triggerAnimation={true}
+          stopAtX={1100}
+          onAnimationEnd={() => console.log("Остановился на 600px!")}
+        />
+      )}
       <div style={{ position: "relative", flex: "1", paddingRight: "20px" }}>
         <ul
           className="Button-Group"
@@ -776,14 +750,6 @@ const GraphComponent = ({
             </button>
           </li>
         </ul>
-        {/* [CAT LOGIC] - рендерим кота только если showCat === true */}
-        {showCat && (
-          <CatAnimation
-            triggerAnimation={true}
-            stopAtX={1100}
-            onAnimationEnd={() => console.log("Остановился на 600px!")}
-          />
-        )}
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>{cards[planet.name][cardIndex].title}</Modal.Title>
@@ -828,7 +794,6 @@ const GraphComponent = ({
           </Modal.Footer>
         </Modal>
 
-        {/* Модальное окно "Game Over" */}
         <Modal
           show={showGameOverModal}
           centered
@@ -876,7 +841,7 @@ const GraphComponent = ({
               color: "white",
             }}
           >
-            <VerticalProgressBar currentTime={elapsedTime} maxTime={600} />
+            <VerticalProgressBar currentTime={elapsedTime} maxTime={maxTime} />
           </div>
           <div
             className="stopwatch-container"
@@ -904,7 +869,6 @@ const GraphComponent = ({
                 <FaMedal /> {`${score}`}
               </p>
             </div>
-
             <div className="stopwatch-container-table">
               <h1>Vertices</h1>
               {movesHistory.length > 0 ? (
@@ -920,12 +884,11 @@ const GraphComponent = ({
                 <p>No moves made yet</p>
               )}
             </div>
-
             <div className="stopwatch-container-buttons">
               <Button
                 style={buttonStyle}
-                onMouseEnter={() => setIsHovered(true)} // Устанавливаем hover
-                onMouseLeave={() => setIsHovered(false)} // Сбрасываем hover
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
                 disabled={isRunning}
                 onClick={handleStart}
               >
@@ -972,19 +935,18 @@ const GraphComponent = ({
                         <ListGroup.Item
                           key={node.id}
                           action
-                          className={`list-group-item ${
-                            highlightedNode === node.id ? "active" : ""
-                          }`}
+                          className={`list-group-item ${highlightedNode === node.id ? "active" : ""
+                            }`}
                           onMouseEnter={() => setHighlightedNode(node.id)}
                           onMouseLeave={() => setHighlightedNode(null)}
                           ref={
                             highlightedNode === node.id
                               ? (element) =>
-                                  element &&
-                                  element.scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "nearest",
-                                  })
+                                element &&
+                                element.scrollIntoView({
+                                  behavior: "smooth",
+                                  block: "nearest",
+                                })
                               : null
                           }
                         >
@@ -1073,8 +1035,8 @@ const GraphComponent = ({
           <div className="csv-table-container">
             <h2>CSV Data</h2>
             {matrixInfo &&
-            matrixInfo.csv_data &&
-            matrixInfo.csv_data.length > 0 ? (
+              matrixInfo.csv_data &&
+              matrixInfo.csv_data.length > 0 ? (
               <Table striped bordered hover>
                 <thead>
                   <tr>

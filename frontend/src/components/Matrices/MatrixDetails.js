@@ -84,7 +84,7 @@ useEffect(() => {
           color: "white",
           textAlign: "center",
           font: "400 72px Moon Dance, cursive",
-          marginTop: "-5%"
+          // marginTop: "-5%"
         }}
       >
         Challenge your mind!
