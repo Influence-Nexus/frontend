@@ -1,0 +1,445 @@
+/* Готовим все классы для тех мест, где были инлайн-стили, 
+   плюс то, что ты уже дал в сниппете для stopwatch-container и game-button.
+   По желанию можно разбить на несколько CSS, но здесь всё вместе. */
+
+/* ----------------------------------
+   Стили для Stopwatch (ранее .stopwatch-container)
+---------------------------------- */
+.stopwatch-container {
+  padding: 10px;
+  border-radius: 32px;
+  border: 3px solid white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.17);
+  height: calc(620px - 26px);
+  width: 350px;
+}
+
+/* Кнопки/контейнеры внутри stopwatch */
+.stopwatch-container-buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.btn-start,
+.btn-stop {
+  color: black;
+  font: 600 14px "Montserrat", sans-serif;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.stopwatch-container-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white;
+  font-size: 28px;
+}
+.stopwatch-container-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white;
+  font-size: 28px;
+}
+.stopwatch-container-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white;
+  font-size: 28px;
+  height: 380px;
+}
+
+/* ----------------------------------
+   Общие кнопки (.game-button)
+---------------------------------- */
+.game-button {
+  background-color: #342b41 !important;
+  border-radius: 15px !important;
+  border: 3px solid white !important;
+  /* padding-left: 30px !important; */
+  /* padding-right: 30px !important; */
+  height: 52px;
+  width: 10em;
+  color: white;
+  cursor: pointer;
+}
+.game-button:disabled {
+  background-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ----------------------------------
+   Контейнер графа (GraphCanvasRender)
+---------------------------------- */
+.graph-container {
+  height: 620px;
+  width: 100%;
+  position: relative;
+  margin: 0 20px;
+  left: 0;
+  z-index: 1;
+  color: white;
+  overflow: hidden;
+  border: 1px solid white;
+  border-radius: 20px;
+  /* Прежний inline backgroundColor.
+     Если нужен статичный фон, раскомментируй:
+     background-color: #1f1f1f;
+  */
+}
+
+/* ----------------------------------
+   Горизонтальный layout в GraphComponent
+---------------------------------- */
+.graph-component-header {
+  display: flex;
+  padding-left: 80px;
+  align-items: center;
+}
+.graph-component-inner {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  position: relative;
+  gap: 30px;
+}
+.graph-component-row {
+  display: flex;
+  color: white;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 80px;
+}
+
+/* ----------------------------------
+   Кнопки-контейнер (Buttons.jsx)
+---------------------------------- */
+.buttons-group {
+  display: flex;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+  margin: 0;
+  align-items: center;
+  gap: 10px;
+}
+/* Отдельный класс, если нужен для детали: */
+#details-button {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#science-button {
+  background-color: #4f75ff !important;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+}
+
+#science-button p {
+  margin-right: 0.25rem;
+  font: 600 1rem "Montserrat", sans-serif;
+}
+
+/* ================================
+   Graph Preview Modal: CLEAN SLATE
+   ================================ */
+
+/* Обёртка: контейнер с фоновой пеленой */
+.preview-main-div,
+.game-over-main-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.6);
+  transition: opacity 0.5s ease;
+}
+
+.preview-main-div.hidden,
+.game-over-main-div.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Анимации для модалки */
+@keyframes slideIn {
+  0% {
+    transform: translateX(-150%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(150%);
+    opacity: 0;
+  }
+}
+
+/* Контейнер модалки */
+.modal-wrapper {
+  width: 500px;
+  height: auto;
+  border: 1px solid white;
+  border-radius: 15px;
+  color: rgb(255, 218, 150);
+  animation-duration: 0.7s;
+  animation-fill-mode: forwards;
+  text-align: center;
+  padding: 15px 5px;
+}
+
+#buttonOkGraphPreview {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 20px;
+  border-radius: 10px;
+}
+
+.preview-modal-window {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Анимации */
+.modal-wrapper.slide-in {
+  animation-name: slideIn;
+}
+
+.modal-wrapper.slide-out {
+  animation-name: slideOut;
+}
+
+/* --- Game Over Modal --- */
+
+.game-over-main-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.6);
+  transition: opacity 0.5s ease;
+}
+
+.game-over-main-div.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.game-over-modal-wrapper {
+  width: 500px;
+  animation-duration: 0.7s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes gameSlideIn {
+  0% {
+    transform: translateX(-150%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes gameSlideOut {
+  0% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(150%);
+    opacity: 0;
+  }
+}
+
+.game-over-modal-wrapper.slide-in {
+  animation-name: gameSlideIn;
+}
+
+.game-over-modal-wrapper.slide-out {
+  animation-name: gameSlideOut;
+}
+
+.game-over-modal-window {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+}
+
+#game-over-title {
+  font-size: 2em;
+  font-family: "Montserrat", sans-serif;
+  color: #ffaaaa;
+}
+
+.GameOverModalBody h3 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.GameOverModalFooter {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.game-over-button {
+  padding: 10px 30px;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 1.1em;
+  font-weight: bold;
+  font-family: "Montserrat", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.game-over-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ----------------------------------
+   VerticalProgressBar
+---------------------------------- */
+.vertical-progress-bar {
+  height: calc(620px - 4px);
+  width: 50px;
+  border: 2px solid white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.17);
+}
+.vertical-progress-bar-fill {
+  width: 100%;
+  transition: height 0.1s ease;
+  background-color: rgba(169, 169, 169, 0.8);
+}
+
+/* ----------------------------------
+   GraphMainLayout (ChallengeYourMindText)
+---------------------------------- */
+.layout-challenge-container {
+  position: relative;
+  top: -20px;
+}
+
+/* Стили для статусов (loading / error) */
+.loading-status {
+  color: yellow;
+  font-size: 18px;
+}
+.error-status {
+  color: red;
+  font-size: 18px;
+}
+
+.node-list-container {
+  position: absolute;
+  top: 200px;
+  right: 0;
+  left: 65% !important;
+  z-index: 2;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-family: Montserrat, sans-serif;
+  color: black;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.node-list {
+  padding-left: 20px;
+}
+
+.node-item {
+  padding: 5px;
+  border-radius: 4px;
+  list-style: none;
+}
+
+.selected-nodes-list {
+  position: absolute;
+  top: 240px;
+  right: 520px;
+  z-index: 1;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-family: Montserrat, sans-serif;
+  color: black;
+}
+
+.selected-list {
+  padding-left: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.selected-item {
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.highlighted {
+  background-color: #fff3cd;
+  font-weight: bold;
+}
+
+.button-row {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+

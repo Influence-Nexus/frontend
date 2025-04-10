@@ -131,6 +131,9 @@ DO WHILE(ABS(a-o).GE.1.0E-06*(ABS(a)+ABS(o)))
 ENDDO
 f=a*2.0
 WRITE(*,*)'Unconditional Eigen Value =',a
+!OPEN(UNIT=3, FILE='Maximal_Eigen_Value.txt', ACTION="WRITE")
+!WRITE(UNIT=3, FMT=*)a, 1/a
+!CLOSE(UNIT=3)
 IF(l.GT.0)THEN
  a=1.0E+04
  DO i=0,l
@@ -240,7 +243,7 @@ REAL,ALLOCATABLE::a(:,:),b(:,:),c(:,:),u(:,:),x(:,:),y(:),z(:,:),g(:,:)
 CHARACTER o
 REAL sp
 OPEN(UNIT=1, FILE='matrica.txt')
-READ(UNIT=1,FMT=*)n
+READ(UNIT=1,FMT=*)n !,d,r
 READ(UNIT=1,FMT=*)m,k,l
 IF(l.GT.0)THEN
  ALLOCATE(i(1:l),c(1:n,1:l))
@@ -259,9 +262,8 @@ CLOSE(UNIT=1)
 d=0.0
 CALL df(n,a,w,r)
 DO WHILE(d.LE.0.0.OR.d.GE.r)
- d=0.3
- !!WRITE(*,*)'Damping-Factor:'
- !!READ(*,*)d
+ WRITE(*,*)'Damping-Factor:'
+ READ(*,*)d
 ENDDO
 a=-a*d
 DO j=1,n

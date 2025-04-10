@@ -1,0 +1,118 @@
+/* Медиа-запрос для мобильных устройств */
+@media (max-width: 480px) {
+  /* Основной контейнер модального окна */
+  .modal-content-custom {
+    width: 95%; /* Полная ширина экрана */
+    height: 90vh; /* Увеличенная высота */
+    border-radius: 15px;
+    padding: 15px;
+    overflow-y: auto;
+  }
+
+  /* Заголовок модального окна */
+  .modal-header-custom {
+    padding: 10px 0;
+    gap: 10px;
+  }
+  .life-strategy {
+    font-size: 14px;
+  }
+  /* Изображение планеты */
+  .planet-image {
+    position: relative;
+    top: -60px;
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Заголовок планеты */
+  .selected-planet-name {
+    font-size: 2.5rem; /* Уменьшенный размер шрифта */
+    margin: 0;
+  }
+
+  /* Контейнер карточек */
+  .cards-container {
+    gap: 15px;
+    padding: 0 10px;
+    overflow-y: auto;
+  }
+
+  /* Обычная карточка */
+  .card-item-normal {
+    width: 100%; /* Полная ширина контейнера */
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  /* Заголовок карточки */
+  .card-header {
+    font-size: 14px;
+    height: 40px;
+    color: rgb(255, 218, 150);
+  }
+
+  /* Изображение в карточке */
+  .card-img {
+    width: 80%;
+    height: auto;
+  }
+
+  /* Описание карточки */
+  .card-description {
+    font-size: 14px;
+    width: 100%;
+    max-height: 150px;
+    padding: 5px;
+  }
+
+  /* Кнопки действий */
+  .modal-cards-buttons {
+    width: 120px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .card-item-zoomed {
+    width: 100%; /* Полная ширина экрана */
+    max-width: 100%; /* Запрещаем выход за экран */
+    padding: 20px;
+    border-radius: 15px;
+    height: 85vh;
+    overflow-y: auto;
+    position: fixed; /* Убедитесь, что позиционирование сохранено */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Убираем фиксированную ширину для внутренних блоков */
+  .card-item-zoomed .card-header,
+  .card-item-zoomed .card-body {
+    max-width: 100% !important; /* !important для перезаписи */
+    width: 100%;
+  }
+
+  /* Корректируем изображение в зумированной карточке */
+  .card-item-zoomed .card-img-zoomed {
+    width: 80%;
+    height: auto;
+    max-width: 80%;
+    max-height: 400px; /* Ограничение по высоте */
+    object-fit: contain;
+  }
+
+  /* Адаптивные размеры для текста */
+  .card-item-zoomed .card-description {
+    font-size: 14px;
+    width: 80%;
+    max-width: 100%;
+    padding: 5px;
+  }
+  .close-cardList-modal-window,
+  .close-card-modal-window {
+    font-size: 2rem; /* Увеличьте размер на мобильных */
+    top: 10px;
+    right: 10px;
+  }
+}

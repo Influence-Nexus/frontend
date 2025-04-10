@@ -1,0 +1,217 @@
+.science-page {
+  display: flex;
+  color: white;
+  flex-direction: column;
+  padding: 0 70px 100px 70px;
+}
+
+.regulator h1 {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.science-graph-page,
+.graph-container-science {
+  height: 700px;
+}
+
+.planet-creds-div {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#huge-table-alignment-div h5, #small-table-alignment-div  h5 {
+  color: #ffd700;
+  height: 48px;
+}
+
+.tables-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.tables-section thead {
+  height: 100px;
+}
+
+.Conditions-Restrictins-div {
+  max-width: 760px;
+  margin-top: 20px;
+}
+
+/* Общие стили для таблиц */
+.small-table-container,
+.huge-table-container {
+  border: 2px solid #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Прокрутка */
+.small-table-container,
+.huge-table-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Общие стили для таблиц */
+.small-table-container table,
+.huge-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.small-table-container th,
+.huge-table-container th,
+.small-table-container td,
+.huge-table-container td {
+  border: 1px solid #fff;
+  padding: 8px 12px;
+  text-align: center;
+  color: #fff;
+}
+
+.small-table-container th,
+.huge-table-container th {
+  background-color: #0e0a20;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.small-table-container tr:nth-child(even),
+.huge-table-container tr:nth-child(even) {
+  background-color: #0e0a20;
+}
+
+.small-table-container tr:hover,
+.huge-table-container tr:hover {
+  background-color: gray;
+}
+
+/* Адаптивная ширина секции таблиц */
+#small-table-alignment-div,
+#huge-table-alignment-div {
+  flex: 1;
+  min-width: 400px;
+}
+
+
+
+.SciencePageButtons-div button {
+  color: white;
+  border: 1px solid white;
+  height: 3.5rem;
+  width: 325px;
+  border-radius: 15px;
+  align-items: center;
+  text-align: center;
+  padding: 0;
+}
+
+.SciencePageButtons-div p {
+  margin: 0;
+}
+
+.SciencePageButtons-div a {
+  text-decoration: none;
+  color: white
+}
+
+.SciencePageButtons-div {
+  display: flex;
+  gap: 1.5em;
+  margin: 1.5rem 0;
+}
+
+
+#game-button {
+  background-color: #342b41;
+  cursor: pointer;
+}
+
+#algo-button {
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.science-graph-page {
+  max-width: 100%;
+  width: 700px;
+  border: 1px solid white;
+  border-radius: 20px;
+}
+
+.graph-section {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+
+.science-stopwatch-container{
+  position: relative;
+  color: white;
+  padding: 10px;
+  border-radius: 32px;
+  border: 3px solid white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.17);
+  height: 600px;
+}
+
+.science-stopwatch-container-buttons{
+  display: flex;
+  align-self: center !important;
+  gap: 3rem;
+  margin-top: 10px
+}
+
+.science-stopwatch-container-time{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white  ;
+  font-size: 28px;
+}
+
+.science-stopwatch-container-score{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white  ;
+  font-size: 28px;
+}
+
+#small-table-name, #huge-table-name {
+  height: 75px;
+}
+
+.science-stopwatch-container-table{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid white  ;
+  font-size: 28px;
+  height: 380px;
+  min-width: 220px
+}
+
+.selected-list {
+  list-style: none;
+}
+
+.node-list-container {
+  position: fixed;
+  left: 55%;
+  max-width: 500px;
+}
+
+.selected-nodes-list {
+  position: fixed;
+}

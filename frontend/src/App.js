@@ -1,47 +1,74 @@
-import React, { useEffect } from 'react';
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import MatrixList from './components/Matrices/MatrixList';
-import MatrixDetails from './components/Matrices/MatrixDetails';
-import Graph from './components/GraphComp/Graph';
-import Header from './components/Header/Header';
-import RulesPage from './components/UsersPages/RulesPage';
-import SolarSystem from './components/SoralSystem/SolarSystem';
-import SpaceshipView from './components/SpaceShip/SpaceshipView';
-import ChallengeComponent from './components/AlDafiraWelcome/ChallengeComponent';
-import CodeChallenge from './components/ChallengeYour/CodeChallenge';
-import CatAnimation from './components/GraphComp/CatAnimation';
-import { SciencePage } from './components/Science/SciencePage';
-import { AlgoPage } from './components/Science/AlgoPAge/AlgoPage';
-import { RegistrationPage } from './components/UserCreds/RegistrationPage';
-import { LoginPage } from './components/UserCreds/LoginPage';
-import {BackgroundMusic} from './BG_MUSIC'
-// import { ScrollToTop } from './components/GraphComp/SCROLL_TOP';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import StartPage from "./Components/StartPage/StartPage";
+import Header from "./Components/Header/Header";
+import ChallengeComponent from "./Components/AldafiraWelcome/ChallengeComponent";
+import { useState } from "react";
+import SolarSystem from "./Components/Solar/SolarSystem";
+import { GraphMainLayout } from "./Components/Graph/GraphMainLayout";
+import { SignUp } from "./Components/UserCreds/SignUp";
+import { SignIn } from "./Components/UserCreds/SignIn";
+import { CustomStatesProvider } from "./CustomStates";
+import { SciencePage } from "./Components/Science/SciencePage";
+import { AlgoPage } from "./Components/Science/AlgoPage";
+import { RulesPage } from "./Components/RulesPage/RulesPage";
+import { GlobalAudioManager } from "./Components/Audio";
 
-const App = () => {
+
+function App() {
+  const [headerShow, setHeaderShow] = useState(true);
+
+
+
   return (
-    <Router>
-      {/* Фоновая музыка будет работать постоянно, пока приложение работает */}
-      <BackgroundMusic />
-      {/* <ScrollToTop /> */}
-      <Header />
-      <Routes>
-        <Route path="/" element={<CodeChallenge />} />
-        <Route path="/matrix/:matrix_id" element={<MatrixDetails />} />
-        <Route path="/matrices" element={<MatrixList />} />
-        <Route path="/model" element={<Graph />} />
-        <Route path="/cabine" element={<SpaceshipView />} />
-        <Route path="/solar" element={<SolarSystem />} />
-        <Route path="/rules" element={<RulesPage />} />
-        <Route path="/science" element={<SciencePage />} />
-        <Route path="/ChallengeComponent" element={<ChallengeComponent />} />
-        <Route path="/algorithm" element={<AlgoPage />} />
-        <Route path="/registration" element={<RegistrationPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/test_animation" element={<CatAnimation />} />
-      </Routes>
-    </Router>
+    <CustomStatesProvider>
+      {" "}
+      {/* 🚀 ОБЁРТКА ЗДЕСЬ */}
+      <Router>
+        <Header headerShow={headerShow} />
+        <Routes>
+          <Route
+            path="/"
+            element={<StartPage setHeaderShow={setHeaderShow} />}
+          />
+          <Route
+            path="/challengecomponent"
+            element={<ChallengeComponent setHeaderShow={setHeaderShow} />}
+          />
+          <Route
+            path="/solar"
+            element={<SolarSystem setHeaderShow={setHeaderShow} />}
+          />
+          <Route
+            path="/science/:uuid"
+            element={<SciencePage setHeaderShow={setHeaderShow} />}
+          />
+          <Route
+            path="/matrix_uuid/:uuid"
+            element={<GraphMainLayout setHeaderShow={setHeaderShow} />}
+          />
+          <Route
+            path="/sign-up"
+            element={<SignUp setHeaderShow={setHeaderShow} />}
+          />
+          <Route
+            path="/sign-in"
+            element={<SignIn setHeaderShow={setHeaderShow} />}
+          />
+          <Route
+            path="/algorithm"
+            element={<AlgoPage setHeaderShow={setHeaderShow} />}
+          />
+          <Route
+            path="/rules"
+            element={<RulesPage setHeaderShow={setHeaderShow} />}
+          />
+        </Routes>
+      </Router>
+      {/* 🎵 Воспроизведение фоновой музыки */}
+      <GlobalAudioManager />
+    </CustomStatesProvider>
   );
-};
+}
 
 export default App;

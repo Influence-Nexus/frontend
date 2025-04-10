@@ -1,7 +1,0 @@
-#ENV's
-
-/venv
-code/
-__pycache__
-
-/routes/users

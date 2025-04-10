@@ -1,0 +1,10 @@
+	Sales	Turnover	Expenditures	Debts & loans	Research & innovation	Investments	Market share	Stability of enterprise	Present capital
+Sales	0	0.6	0	-0.4	0.2	0.3	0.6	0.8	0
+Turnover	0	0	0	-0.2	0.2	0.5	0.1	0.3	0
+Expenditures	0	0	0	0.4	-0.5	-0.4	0	-0.6	-0.5
+Debts & loans	0	0	-0.4	0	-0.7	-0.8	0	-0.7	-0.4
+Research & innovation	0.2	0.3	0	0	0	0.5	0.3	0.2	-0.2
+Investments	0.3	0.2	0.6	0.5	-0.3	0	0.3	0.3	-0.4
+Market share	0.4	0.3	0	-0.2	0	0	0	0.4	0.5
+Stability of enterprise	0	0	0	0	0	0	0	0	0
+Present capital	0	0	0	-0.3	0.2	0.4	0	0.2	0

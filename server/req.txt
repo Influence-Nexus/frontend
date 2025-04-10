@@ -1,8 +1,0 @@
-flask
-flask-cors
-flask-swagger-ui
-pytest
-pytest-flask
-
-pandas
-mysql-connector-python
