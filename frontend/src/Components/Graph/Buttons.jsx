@@ -76,7 +76,9 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
         </li>
 
         {/* Остальные кнопки */}
-        <li><button className="game-button">Graph</button></li>
+        <li><button className="game-button">
+          Game
+          </button></li>
         <li>
           <button className="game-button" disabled={isRunning} title={isRunning ? "Not available during the game" : ""}>
             Profile

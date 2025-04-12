@@ -3,8 +3,8 @@ import "./RulesPage.css";
 import { Link } from "react-router-dom";
 import crimeImg from "../Science/images/C_P.png"
 
-export const RulesPage = ({setHeaderShow}) => {
-    setHeaderShow=true
+export const RulesPage = ({ setHeaderShow }) => {
+  setHeaderShow = true
   return (
     <div className="container Rules-div">
       <h1 className="Start-End-Phrase">Meet the Equilibrium!</h1>
@@ -14,7 +14,7 @@ export const RulesPage = ({setHeaderShow}) => {
         возможных за одну игру. Это означает уровень изменения ситуации в лучшую
         сторону благодаря Вашей стратегии действий. Игра заканчивается, когда у
         игрока не остается больше ходов. <span id="video-span">ВИДЕО</span> с
-        соответствующими действиями доступно по кнопке{" "}
+        соответствующими действиями доступно в {" "}
         <button
           style={{
             borderRadius: "10px",
@@ -43,12 +43,14 @@ export const RulesPage = ({setHeaderShow}) => {
             <h2 id="list-header-h2">
               Ознакомление и исследование игровой ситуации
             </h2>
+            <br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">A.1. </span>
               <p id="spanned-list-header-p">
                 Описание модели, представляющей ситуации
               </p>
             </div>
+            <br />
             <p>
               Игрок знакомится с ситуацией, отображающей реальную ситуацию мира.
             </p>
@@ -94,17 +96,20 @@ export const RulesPage = ({setHeaderShow}) => {
                 </p>
               </li>
             </ol>
-            <h3>
+            <br />
+            <h3 style={{ fontSize: "1.75rem" }}>
               <span
                 style={{
                   fontStyle: "italic",
-                  backgroundColor: "rgb(114, 144, 255)",
+                  // backgroundColor: "rgb(114, 144, 255)",
+                  fontSize: "1.75rem"
                 }}
               >
                 Пример
               </span>
               . Модель «Преступление и наказание»
             </h3>
+            <br />
             <ol id="num-list-uncolored">
               <li>
                 <p>
@@ -182,6 +187,7 @@ export const RulesPage = ({setHeaderShow}) => {
               вызывает...) к уменьшению Theft (и наоборот, уменьшение значения
               узла Присутствие полиции приведет к увеличению количества Краж).
             </p>
+            <br /><br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">A.2. </span>
               <p id="spanned-list-header-p">
@@ -189,7 +195,9 @@ export const RulesPage = ({setHeaderShow}) => {
               </p>
             </div>
           </li>
+          <br /><br />
           <p>Игрок может:</p>
+          <br />
           <ul id="listik">
             <li>
               <p>
@@ -198,6 +206,7 @@ export const RulesPage = ({setHeaderShow}) => {
                 связей между ними. Для этого, при наведении курсора на объект
                 представляется:
               </p>
+              <br />
               <ul type="circle" id="players-capabilities-list">
                 <li>
                   <p>перечень узлов модели;</p>
@@ -210,6 +219,7 @@ export const RulesPage = ({setHeaderShow}) => {
                 </li>
               </ul>
             </li>
+            <br />
             <li>
               <p>
                 <strong>Идентифицировать целевой узел.</strong> Визуализировать
@@ -217,7 +227,7 @@ export const RulesPage = ({setHeaderShow}) => {
                 реакцию (отклик) при воздействии на другие узлы модели.
               </p>
             </li>
-
+            <br />
             <li>
               <p>
                 <strong>Идентифицировать пути</strong> путем подсвечивания. Для
@@ -227,54 +237,64 @@ export const RulesPage = ({setHeaderShow}) => {
               </p>
             </li>
           </ul>
+          <br /><br />
           <p>
             Время ознакомления с ситуацией <strong>не нормируется.</strong>
           </p>
+          <br /><br />
           <li>
             <p id="list-header-h2">Воздействие на ситуацию</p>
+            <br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">B.1. </span>
               <p id="spanned-list-header-p">Задача игрока</p>
             </div>
+            <br />
             <p>
               Атлас Стратегос – опытный влиятельный человек, поведение которого
               отражает мудрость и расчетливый интеллект.
             </p>
+            <br />
             <p>
               Вам, как стратегу и влиятельному человеку, поручено разобраться в
               тонкостях институционального комплекса.
             </p>
+            <br />
             <p>
               Вы можете воздействовать на ситуацию, прилагая воздействия к узлам
               графа с целью достигнуть максимальной реакции модели. Как правило,
               у общества нет средств и возможности воздействовать сразу на все
               узлы.
             </p>
+            <br />
             <p>
               Поэтому Ваша задача – в первый ход выбрать наиболее значимые, с
               Вашей точки зрения, узлы. Практически первый ход из трех узлов
               захватит почти 50% силы всех возможных воздействий на систему.
               Последующие ходы только дополнят Ваше решение.
             </p>
+            <br />
             <p>
               Постарайтесь максимизировать первый ход. Он определит всю Вашу
               стратегию и ее успех!
             </p>
+            <br /><br />
             <p>
               <strong>Максимальная реакция</strong> модели – это достижение
               максимально возможной реакции модели с ориентацией на целевой
               узел. Это достигается за счет выстраивания правильной стратегии
               воздействия на узлы графа.
             </p>
+            <br /><br />
             <p>
               <strong>Стратегия воздействия</strong> – это последовательность из
               узлов, выбранных Вами для воздействия на систему.
             </p>
-            <p>
+            <p><br />
               <strong>Максимально возможная </strong>(оптимальная) реакция
               модели рассчитывается алгоритмом игры с помощью специального
               математического алгоритма -{" "}
-              <Link to={"/science"}>
+              <Link to={"/algorithm"}>
                 <button
                   style={{
                     borderRadius: "10px",
@@ -288,11 +308,14 @@ export const RulesPage = ({setHeaderShow}) => {
               </Link>
               .
             </p>
+            <br /><br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">B.2. </span>
               <p id="spanned-list-header-p">Правила игры</p>
             </div>
+            <br /><br />
             <p style={{ textDecoration: "underline" }}>Ходы игрока: </p>
+            <br />
             <ol id="num-list-uncolored">
               <li>
                 <p>
@@ -321,6 +344,7 @@ export const RulesPage = ({setHeaderShow}) => {
                 </p>
               </li>
             </ol>
+            <br /><br />
             <span
               style={{
                 fontStyle: "italic",
@@ -334,7 +358,7 @@ export const RulesPage = ({setHeaderShow}) => {
               Модель «Преступление и наказание» включает 7 узлов. Значит Вы
               имеете <strong>2 хода</strong>.
             </p>
-
+            <br />
             <p>
               <span style={{ fontStyle: "italic" }}>Первый ход </span> – выбор
               первой последовательности из трех узлов. Например, вы указали
@@ -344,14 +368,14 @@ export const RulesPage = ({setHeaderShow}) => {
               больше, чем узла 4. То есть, узлу 2 присваивается первый ранг,
               узлу 7 – второй ранг, узлу 4 – третий ранг.
             </p>
-
+            <br />
             <p>
               <span style={{ fontStyle: "italic" }}>Второй ход </span> - выбор
               второй последовательности. В данном случае остается для
               воздействия четыре узла, так как меньше 3-х выбирать не
               допускается.
             </p>
-
+            <br /><br />
             <p style={{ textDecoration: "underline" }}>Время игры: </p>
             <ol id="num-list-uncolored">
               <li>
@@ -395,10 +419,12 @@ export const RulesPage = ({setHeaderShow}) => {
                 </p>
               </li>
             </ol>
+            <br /><br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">B.3. </span>
               <p id="spanned-list-header-p">Подсчет очков</p>
             </div>
+            <br />
             <p style={{ textDecoration: "underline" }}>
               Правила подсчета очков
             </p>
@@ -429,7 +455,9 @@ export const RulesPage = ({setHeaderShow}) => {
                 </p>
               </li>
             </ol>
+            <br />
             <p>Баллы начисляются по каждому узлу и затем суммируются.</p>
+            <br />
             <p style={{ textDecoration: "underline" }}>Табло очков:</p>
             <ul type="disc" id="disc-list-uncolored">
               <li>
@@ -445,6 +473,7 @@ export const RulesPage = ({setHeaderShow}) => {
                 <p>Количество набранных очков.</p>
               </li>
             </ul>
+            <br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">B.4. </span>
               <p id="spanned-list-header-p">Конец игры</p>

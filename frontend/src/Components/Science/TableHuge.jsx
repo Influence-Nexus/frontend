@@ -5,7 +5,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const TableHeader1 = [
-  { title: "Расчётные данные", width: "300px", colSpan: 2 },
+  { title: "Расчётные данные (по воздействию)", width: "300px", colSpan: 2 },
   { title: "Ваш игровой результат", width: "300px", colSpan: 2 },
 ];
 

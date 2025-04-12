@@ -18,6 +18,11 @@
   font-family: "Montserrat", sans-serif;
 }
 
+#card-desc-link, .card-desc-link {
+  color: rgb(255, 218, 150);
+  text-decoration: underline !important;
+}
+
 .selected-planet-name {
   font: 900 4rem "Montserrat-Bold", sans-serif;
 }

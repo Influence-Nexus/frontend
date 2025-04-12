@@ -138,7 +138,10 @@
   }
   
   #spanned-list-header-p {
-    color: rgb(114, 144, 255);
+    /* color: rgb(114, 144, 255); */
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 2px;
   }
   
   
