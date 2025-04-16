@@ -92,6 +92,17 @@
   background-color: gray;
 }
 
+
+/* Ячейки со значениями "Счёт" */
+.huge-table-container td:nth-child(2) {
+  border: 3px solid #ffd700;
+  font-weight: bold;
+}
+
+.small-table-container td:nth-child(5) {
+  border: 3px solid #ffd700;
+}
+
 /* Адаптивная ширина секции таблиц */
 #small-table-alignment-div,
 #huge-table-alignment-div {

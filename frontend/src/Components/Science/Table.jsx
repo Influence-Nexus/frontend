@@ -41,7 +41,7 @@ export const MovesTable = ({ data }) => {
 
   return (
     <div id="synthetic-table-container">
-      <h5 style={{ color: "#ffd700", textAlign: "center", marginBottom: "10px" }}>
+      <h5 style={{ color: "#ffd700", height: "48px", fontSize: "1.25rem"}}>
         Данные о ходах и очках
       </h5>
       <div style={{ overflowX: "auto" }}>

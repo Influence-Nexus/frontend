@@ -425,7 +425,7 @@ async def get_science_table(request: Request):
         normalized_u = [round(v / sum_sq_u, 4) for v in sq_u] if sum_sq_u else []
         normalized_x = [num ** 2 for num in x]
 
-        true_seq = {i + 1: v for i, v in enumerate(normalized_x)}
+        true_seq = {i + 1: v for i, v in enumerate(normalized_u)}
         sorted_seq = sorted(true_seq.items(), key=lambda item: item[1], reverse=True)
 
         return JSONResponse(content={
