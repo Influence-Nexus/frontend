@@ -14,7 +14,7 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
     handleLoadCoordinates,
     handleResetCoordinates,
     handleSaveUserView,
-    handleSaveDefaultView, applyCoordinates
+    handleSaveDefaultView, applyCoordinates, setShowHistory
   } = useCustomStates();
 
   const [scienceClicks, setScienceClicks] = useState(null); // null пока не загрузилось
@@ -76,11 +76,31 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
         </li>
 
         {/* Остальные кнопки */}
-        <li><button className="game-button">
-          Game
-        </button></li>
         <li>
-          <button className="game-button" disabled={isRunning} title={isRunning ? "Not available during the game" : ""}>
+
+          {/* GAME возвращает граф, без refresh */}
+          <button
+            className="game-button"
+            id="game-button-divider"
+            onClick={() => {
+              setShowHistory(false);        // возвращаемся в граф
+              if (matrixUuid && applyCoordinates) {
+                handleLoadCoordinates(matrixUuid, applyCoordinates); // переобновляем координаты
+              }
+            }}
+          >
+            Game
+          </button>
+
+        </li>
+        <li>
+          {/* PROFILE показывает историю */}
+          <button
+            className="game-button"
+            disabled={isRunning}
+            title={isRunning ? "Not available during the game" : ""}
+            onClick={() => setShowHistory(true)}
+          >
             Profile
           </button>
         </li>

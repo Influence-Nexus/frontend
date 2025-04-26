@@ -53,7 +53,7 @@ export const GraphMainLayout = ({ setHeaderShow }) => {
     nodeColor, setIsNetworkReady, isNetworkReady,
     graphDataState, setGraphDataState,
     showCat, setShowCat, maxTime,
-    catAnimationLaunched, setCatAnimationLaunched,
+    catAnimationLaunched, setCatAnimationLaunched, showHistory
 
   } = useCustomStates();
 
@@ -143,7 +143,7 @@ export const GraphMainLayout = ({ setHeaderShow }) => {
     handleClear, handleMakeMove, handleClearEdges, nodeColor,
     setIsNetworkReady, isNetworkReady,
     graphDataState, setGraphDataState, planetColor,
-    modelName, planetImg,
+    modelName, planetImg, showHistory
   };
 
   return (

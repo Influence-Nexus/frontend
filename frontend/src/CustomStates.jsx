@@ -72,6 +72,8 @@ export const CustomStatesProvider = ({ children }) => {
   // Пара планетных состояний
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [hoveredPlanet, setHoveredPlanet] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
+
 
   // ----- Дописанные функции-заглушки -----
 
@@ -581,7 +583,7 @@ export const CustomStatesProvider = ({ children }) => {
       isHoveredStop, setIsHoveredStop,
       showPreviewWindow,
       prevScores, setPrevScores,
-
+      showHistory, setShowHistory,
 
 
       // Рефы

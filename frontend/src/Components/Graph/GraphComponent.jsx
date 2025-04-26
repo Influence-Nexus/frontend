@@ -3,6 +3,7 @@ import { GraphCanvasRender } from './GraphCanvasRender'
 import Stopwatch from './Stopwatch'
 import VerticalProgressBar from './VerticalProgressBar'
 import { Buttons } from './Buttons'
+import { HistoryTable } from './HistoryTable'
 
 export const GraphComponent = (props) => {
   const {
@@ -26,7 +27,7 @@ export const GraphComponent = (props) => {
     setIsNetworkReady, isNetworkReady,
     graphDataState, setGraphDataState,
     planetColor, modelName, planetImg,
-
+    showHistory
   } = props
 
 
@@ -107,11 +108,18 @@ export const GraphComponent = (props) => {
           </div>
         </div>
       </div>
-      <div className="graph-component-row">
-        <VerticalProgressBar />
-        <GraphCanvasRender {...graphCanvasProps} />
-        <Stopwatch planetColor={planetColor} />
-      </div>
+      {/* если showHistory – показываем таблицу вместо графа */}
+      {showHistory ? (
+        <div style={{ padding: "20px" }}>
+          <HistoryTable matrixUuid={uuid} planetColor={planetColor} />
+        </div>
+      ) : (
+        <div className="graph-component-row">
+          <VerticalProgressBar />
+          <GraphCanvasRender {...graphCanvasProps} />
+          <Stopwatch planetColor={planetColor} />
+        </div>
+      )}
     </div>
   )
 }
