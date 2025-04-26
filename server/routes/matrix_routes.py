@@ -193,13 +193,42 @@ async def sign_in(request: Request):
             return JSONResponse({"error": "Неверный пароль"}, 401)
 
         user_uuid = user_data.get("user_uuid")
-        token = create_access_token({"sub": username, "uuid": user_uuid})
+
+        access_token = create_access_token({"sub": username, "uuid": user_uuid})
+        refresh_token = create_access_token({"sub": username, "uuid": user_uuid}, expires_delta=timedelta(days=30))
+
         log.info(f"[LOGIN] user_uuid: {user_uuid}")
-        return JSONResponse({"message": "Вход выполнен", "access_token": token, "token_type": "bearer"}, 200)
+        return JSONResponse({"message": "Вход выполнен", "access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}, 200)
 
     except Exception as e:
         log.error(f"[LOGIN ERROR]: {e}")
         return JSONResponse({"error": str(e)}, 500)
+
+@router.post("/refresh")
+async def refresh_token_endpoint(request: Request):
+    try:
+        data = await request.json()
+        refresh_token = data.get("refresh_token")
+        if not refresh_token:
+            raise HTTPException(status_code=400, detail="Refresh token is required")
+
+        payload = decode_access_token(refresh_token)
+        user_uuid = payload.get("uuid")
+        username = payload.get("sub")
+
+        if not user_uuid or not username:
+            raise HTTPException(status_code=401, detail="Invalid token")
+
+        new_access_token = create_access_token({"sub": username, "uuid": user_uuid})
+        return JSONResponse({"access_token": new_access_token}, 200)
+
+    except jwt.ExpiredSignatureError:
+        return JSONResponse({"error": "Refresh token expired"}, 401)
+    except jwt.JWTError:
+        return JSONResponse({"error": "Invalid refresh token"}, 401)
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, 500)
+
 
 # =============================== Эндпоинты: Матрицы ===============================
 @router.get("/testik/{uuid}")

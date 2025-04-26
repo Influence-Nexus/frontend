@@ -14,7 +14,7 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
     handleLoadCoordinates,
     handleResetCoordinates,
     handleSaveUserView,
-    handleSaveDefaultView
+    handleSaveDefaultView, applyCoordinates
   } = useCustomStates();
 
   const [scienceClicks, setScienceClicks] = useState(null); // null пока не загрузилось
@@ -78,16 +78,27 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
         {/* Остальные кнопки */}
         <li><button className="game-button">
           Game
-          </button></li>
+        </button></li>
         <li>
           <button className="game-button" disabled={isRunning} title={isRunning ? "Not available during the game" : ""}>
             Profile
           </button>
         </li>
         <li><button className="game-button" onClick={handleSaveUserView}>Save View</button></li>
-        <li><button className="game-button" onClick={handleResetCoordinates}>Reset</button></li>
+        <li><button
+          className="game-button"
+          onClick={() => handleResetCoordinates(matrixUuid, applyCoordinates)}
+          title="Сбросить граф к дефолтным настройкам"
+        >
+          Reset
+        </button>
+        </li>
         <li>
-          <button className="game-button" onClick={handleLoadCoordinates} title="Загружает последний сохранённый вид графа">
+          <button
+            className="game-button"
+            onClick={() => handleLoadCoordinates(matrixUuid, applyCoordinates)}
+            title="Загружает последний сохранённый вид графа"
+          >
             Load Last View
           </button>
         </li>

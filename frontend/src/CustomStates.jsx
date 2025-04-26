@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { jwtDecode } from "jwt-decode";
 
 import {
   calculateScore,
@@ -104,6 +105,32 @@ export const CustomStatesProvider = ({ children }) => {
   }, []);
 
 
+  const isTokenExpired = (token) => {
+    if (!token) return true;
+    try {
+      const decoded = jwtDecode(token);
+      if (!decoded.exp) return true;
+  
+      const now = Math.floor(Date.now() / 1000); // сейчас в секундах
+      return decoded.exp < now; // токен просрочен?
+    } catch (error) {
+      console.error("Ошибка при декодировании токена:", error);
+      return true;
+    }
+  };
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (!token || isTokenExpired(token)) {
+      console.warn("Токен отсутствует или истёк, принудительный выход");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("user_uuid");
+      setUserUuid(null);
+      // можно даже делать редирект здесь, если нужно
+      // window.location.href = "/sign-in";
+    }
+  }, []);
 
   const handleClosePreviewWindow = () => {
     setIsClosing(true);
@@ -315,6 +342,7 @@ export const CustomStatesProvider = ({ children }) => {
    */
   const loadDefaultCoordinates = async (uuid) => {
     try {
+      console.log("UUID перед отправкой запроса:", uuid, typeof uuid);
       const data = await loadDefaultCoordinatesAPI(uuid);
       const payload = Array.isArray(data) ? data[0] : data;
       return payload;
