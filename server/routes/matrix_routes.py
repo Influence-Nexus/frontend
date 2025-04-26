@@ -247,6 +247,53 @@ def preprocess_test(uuid: str):
         return JSONResponse({"error": str(e)}, 404)
     
 
+@router.get("/recalculate_true_seq")
+def recalculate_true_sequences():
+    """
+    Пересчитывает нормализованные true последовательности по всем доступным *_report.txt
+    """
+    reports_dir = CURRENT_DIR / "../data/processed_files/Reports"
+    true_seq_dir = CURRENT_DIR / "../data/processed_files/True_Seq"
+
+    if not reports_dir.exists():
+        return JSONResponse({"error": "Папка с отчётами не найдена"}, 404)
+
+    recalculated = []
+
+    for report_file in reports_dir.glob("*_report.txt"):
+        try:
+            matrix_name = report_file.stem.replace("_report", "")
+
+            with open(report_file, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+
+            u = [float(line[12:-1]) for line in lines if len(line) <= 23]
+            sq_u = [val ** 2 for val in u]
+            sum_sq_u = sum(sq_u)
+
+            if sum_sq_u == 0:
+                continue  # Пропустить файлы, где сумма = 0, чтобы не упасть
+
+            normalized_u = [value / sum_sq_u for value in sq_u]
+            normalized_u_pairs = list(enumerate(normalized_u, start=1))
+            sorted_normalized_u = sorted(normalized_u_pairs, key=lambda pair: pair[1], reverse=True)
+
+            true_seq = {str(node_id): round(value, 6) for node_id, value in sorted_normalized_u}
+
+            save_path = true_seq_dir / f"{matrix_name}_result.json"
+            save_json(save_path, true_seq)
+
+            recalculated.append(matrix_name)
+            log.info(f"[RECALCULATED] {matrix_name}")
+
+        except Exception as e:
+            log.error(f"[ERROR] Ошибка при пересчёте {report_file.name}: {e}")
+
+    if recalculated:
+        return JSONResponse({"message": "Пересчёт завершён", "matrices": recalculated}, 200)
+    else:
+        return JSONResponse({"message": "Нет файлов для пересчёта или все файлы пустые"}, 200)
+
 
 @router.get("/matrices")
 def get_matrices():
