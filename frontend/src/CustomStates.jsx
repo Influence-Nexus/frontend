@@ -66,7 +66,7 @@ export const CustomStatesProvider = ({ children }) => {
   // Для VerticalProgressBar
   const [currentTime, setCurrentTime] = useState(0);
   // maxTime — допущение, что это время на раунд/уровень
-  const maxTime = 600;
+  const maxTime = 300;
   const [progress, setProgress] = useState(0);
 
   // Пара планетных состояний

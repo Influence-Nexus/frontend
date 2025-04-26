@@ -158,7 +158,7 @@ export const AlgoPage = ({setHeaderShow}) => {
           <p>
             <strong>Главные научные труды (журналы Q1),</strong> в которых изложены
             математические и алгоритмические основы используемого в игре{" "}
-            <span class="blue-background" id="small-blue-bg">алгоритма</span>
+            <span class="blue-background" id="small-blue-bg">алгоритма</span>:
           </p>
           <ol>
             <li>
