@@ -1,428 +1,211 @@
-import json
-import pathlib
-import logging
+# ==========================  server.py  ==========================
+import json, pathlib, logging, bcrypt, jwt
 from uuid import uuid4
 from datetime import datetime, timedelta
 from typing import Dict, Any
+
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
-import jwt
 from fastapi.responses import JSONResponse
-import bcrypt
 
-
-
-# Внешние импорты
+# ───────── внешние импорты ─────────
 from services.matrix_service import get_all_matrices, get_matrix_data_by_name
-from utils.score_counter import calculate_step_score
-from drafts.file_processor import BASE_DIR, process_input_files
-from routes.UUID_MATRICES import MATRIX_UUIDS
+from utils.score_counter      import calculate_step_score
+from drafts.file_processor    import BASE_DIR, process_input_files
+from routes.UUID_MATRICES     import MATRIX_UUIDS
+# ────────────────────────────────────
 
-# =============================== Инициализация ===============================
-app = FastAPI()
-router = APIRouter()
-
+# ------------------- базовая инициализация -------------------
+app, router = FastAPI(), APIRouter()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # Смотри, можно ограничивать, если требуется
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"], allow_credentials=True,
+    allow_methods=["*"], allow_headers=["*"],
 )
-
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("matrix_routes")
 
-CURRENT_DIR = pathlib.Path(__file__).parent.resolve()
-USERS_ROOT = (CURRENT_DIR / "../users").resolve()
+CURRENT_DIR  = pathlib.Path(__file__).parent.resolve()
+USERS_ROOT   = (CURRENT_DIR / "../users").resolve()
 TRUE_SEQ_DIR = (CURRENT_DIR / "../data/processed_files/True_Seq").resolve()
 
 SECRET_KEY = "MY_SUPER_SECRET_KEY"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 3000
-oauth2_scheme = HTTPBearer()
+ALGORITHM  = "HS256"
+ACCESS_TOKEN_TTL = 3000  # минут
+oauth2  = HTTPBearer()
 
-# Здесь храним сессии в памяти, ключ: user_uuid -> { matrix_uuid -> { turns, used_nodes, total_score } }
-in_memory_sessions: Dict[str, Dict[str, Any]] = {}
+# ------------------- in-memory игровые сессии -------------------
+in_memory_sessions : Dict[str, Dict[str, Any]] = {}
+# ----------------------------------------------------------------
 
-# =============================== Утилиты ===============================
+# =================================================================
+#                          HELPERS
+# =================================================================
+def ensure_dir(p: pathlib.Path) -> pathlib.Path:
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+def save_json(path: pathlib.Path, data): path.write_text(json.dumps(data, indent=2), encoding='utf-8')
+def load_json(path: pathlib.Path):        return json.loads(path.read_text(encoding='utf-8'))
+
+# --- Path-генераторы (из твоего оригинала) -----------------------
+def get_user_uuid_creds_path(u):      return USERS_ROOT/u/"user_creds"/f"{u}.json"
+def get_user_settings_filepath(u,n):  return ensure_dir(USERS_ROOT/u/"user_settings") / f"{n}_settings.json"
+def get_default_settings_filepath(n): return ensure_dir(CURRENT_DIR/"../data/graph_settings") / f"{n}_graph_settings.json"
+def fp_history(u,n):                  return ensure_dir(USERS_ROOT/u/"history") / f"{n}_history.json"
+# -----------------------------------------------------------------
+
+# >>> HISTORY : сохранить сыгранную игру
+def save_game_to_history(uid: str, matrix_name: str, game: dict):
+    f = fp_history(uid, matrix_name)
+    history = load_json(f) if f.exists() else []
+    history = history if isinstance(history, list) else []
+    history.append(game)
+    save_json(f, history)
+
+# ---------------- JWT helpers ----------------
+def make_token(data, ttl=ACCESS_TOKEN_TTL):
+    payload = {**data, "exp": datetime.utcnow() + timedelta(minutes=ttl)}
+    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+def decode_token(tok:str):
+    try:    return jwt.decode(tok, SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.ExpiredSignatureError: raise HTTPException(401, "Token expired")
+    except jwt.JWTError:              raise HTTPException(401, "Bad token")
+
+def get_current_user_uuid(credentials:HTTPAuthorizationCredentials=Depends(oauth2)) -> str:
+    uid = decode_token(credentials.credentials).get("uuid")
+    if not uid:
+        raise HTTPException(401,"Token missing uuid")
+    return uid
+# ---------------------------------------------
+
 @app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    log.error(f"[UNHANDLED ERROR] {request.url.path} → {exc}")
-    return JSONResponse(content={"error": "Internal Server Error"}, status_code=500)
+async def global_exc(req:Request, exc:Exception):
+    log.error(f"[UNHANDLED] {req.url.path} → {exc}")
+    return JSONResponse({"error":"Internal Server Error"}, 500)
 
-def ensure_dir(path: pathlib.Path) -> pathlib.Path:
-    path.mkdir(parents=True, exist_ok=True)
-    return path
-
-def save_json(filepath: pathlib.Path, data):
-    with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2)
-
-def load_json(filepath: pathlib.Path):
-    with open(filepath, 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-def get_user_uuid_creds_path(user_uuid: str) -> pathlib.Path:
-    return (USERS_ROOT / user_uuid / "user_creds" / f"{user_uuid}.json").resolve()
-
-def get_user_settings_filepath(user_uuid: str, matrix_name: str) -> pathlib.Path:
-    path = USERS_ROOT / user_uuid / "user_settings"
-    ensure_dir(path)
-    return (path / f"{matrix_name}_settings.json").resolve()
-
-def get_default_settings_filepath(matrix_name: str) -> pathlib.Path:
-    path = CURRENT_DIR / "../data/graph_settings"
-    ensure_dir(path)
-    return (path / f"{matrix_name}_graph_settings.json").resolve()
-
-def load_true_sequence(matrix_name: str) -> Dict[int, float]:
-    path = TRUE_SEQ_DIR / f"{matrix_name}.json"
-    if not path.exists():
-        raise FileNotFoundError(f"True sequence not found: {path}")
-    with open(path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    return {int(k): float(v) for k, v in data.items()}
-
-def hash_password(plain_password: str) -> str:
-    return bcrypt.hashpw(plain_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
-
-
-def find_user_by_email(email: str) -> pathlib.Path | None:
-    for user_folder in USERS_ROOT.iterdir():
-        user_creds = user_folder / "user_creds" / f"{user_folder.name}.json"
-        if user_creds.exists():
-            try:
-                user_data = load_json(user_creds)
-                if user_data.get("email") == email:
-                    return user_creds
-            except Exception:
-                continue
+# =================================================================
+#                 РЕГИСТРАЦИЯ / ЛОГИН / REFRESH
+# =================================================================
+def _find_user_file_by(key,val):
+    for d in USERS_ROOT.iterdir():
+        f = get_user_uuid_creds_path(d.name)
+        if f.exists() and load_json(f).get(key)==val:
+            return f
     return None
 
-def find_user_by_username(username: str) -> pathlib.Path | None:
-    for user_folder in USERS_ROOT.iterdir():
-        user_creds = user_folder / "user_creds" / f"{user_folder.name}.json"
-        if user_creds.exists():
-            try:
-                user_data = load_json(user_creds)
-                if user_data.get("username") == username:
-                    return user_creds
-            except Exception:
-                continue
-    return None
-
-# =============================== JWT ===============================
-def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
-def decode_access_token(token: str):
-    try:
-        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-def get_current_user_uuid(credentials: HTTPAuthorizationCredentials = Depends(oauth2_scheme)) -> str:
-    token = credentials.credentials
-    payload = decode_access_token(token)
-    user_uuid = payload.get("uuid")
-    if not user_uuid:
-        raise HTTPException(status_code=401, detail="Token missing uuid")
-    return user_uuid
-
-# =============================== Эндпоинты: Регистрация и Вход ===============================
 @router.post("/sign-up")
-async def sign_up(request: Request):
-    try:
-        data = await request.json()
-        username, email, password = data.get("username"), data.get("email"), data.get("password")
-        if not username or not email or not password:
-            return JSONResponse({"error": "username, email и password обязательны"}, 400)
+async def sign_up(req:Request):
+    data = await req.json()
+    u,e,p = data.get("username"),data.get("email"),data.get("password")
+    if not all((u,e,p)):  return JSONResponse({"error":"username, email, password обязательны"},400)
+    if _find_user_file_by("username",u): return JSONResponse({"error":"username занят"},400)
+    if _find_user_file_by("email",e):    return JSONResponse({"error":"email занят"},400)
 
-
-        if find_user_by_username(username):
-            return JSONResponse({"error": "Пользователь с таким именем уже существует"}, 400)
-
-        if find_user_by_email(email):
-            return JSONResponse({"error": "Пользователь с таким email уже существует"}, 400)
-
-        user_uuid = str(uuid4())
-        hashed_password = hash_password(password)
-        user_data = {
-            "username": username,
-            "email": email,
-            "password": hashed_password,
-            "user_uuid": user_uuid,
-            "science_clicks": 2
-            }
-
-        uuid_creds_path = get_user_uuid_creds_path(user_uuid)
-        ensure_dir(uuid_creds_path.parent)
-        save_json(uuid_creds_path, user_data)
-
-        ensure_dir(USERS_ROOT / user_uuid / "user_settings")
-        log.info(f"[REGISTER] user_uuid: {user_uuid}")
-        return JSONResponse({"message": "Регистрация успешна", "user_uuid": user_uuid}, 201)
-    except Exception as e:
-        log.error(f"[REGISTER ERROR]: {e}")
-        return JSONResponse({"error": str(e)}, 500)
+    uid=str(uuid4())
+    creds={"username":u,"email":e,"password":bcrypt.hashpw(p.encode(),bcrypt.gensalt()).decode(),
+           "user_uuid":uid,"science_clicks":2}
+    ensure_dir(get_user_uuid_creds_path(uid).parent)
+    save_json(get_user_uuid_creds_path(uid),creds)
+    ensure_dir(USERS_ROOT/uid/"user_settings")
+    return JSONResponse({"user_uuid":uid,"message":"OK"},201)
 
 @router.post("/sign-in")
-async def sign_in(request: Request):
-    try:
-        data = await request.json()
-        username, password = data.get("username"), data.get("password")
-        if not username or not password:
-            return JSONResponse({"error": "username и password обязательны"}, 400)
-
-        user_file = find_user_by_username(username)
-        if not user_file or not user_file.exists():
-            return JSONResponse({"error": "Пользователь не найден"}, 404)
-
-        user_data = load_json(user_file)
-        if not verify_password(password, user_data.get("password", "")):
-            return JSONResponse({"error": "Неверный пароль"}, 401)
-
-        user_uuid = user_data.get("user_uuid")
-
-        access_token = create_access_token({"sub": username, "uuid": user_uuid})
-        refresh_token = create_access_token({"sub": username, "uuid": user_uuid}, expires_delta=timedelta(days=30))
-
-        log.info(f"[LOGIN] user_uuid: {user_uuid}")
-        return JSONResponse({"message": "Вход выполнен", "access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}, 200)
-
-    except Exception as e:
-        log.error(f"[LOGIN ERROR]: {e}")
-        return JSONResponse({"error": str(e)}, 500)
+async def sign_in(req:Request):
+    d=await req.json(); user,pw=d.get("username"),d.get("password")
+    if not all((user,pw)): return JSONResponse({"error":"username и password обязательны"},400)
+    f=_find_user_file_by("username",user)
+    if not f: return JSONResponse({"error":"not found"},404)
+    ud=load_json(f)
+    if not bcrypt.checkpw(pw.encode(),ud["password"].encode()): return JSONResponse({"error":"bad password"},401)
+    uid=ud["user_uuid"]
+    return {"access_token":make_token({"sub":user,"uuid":uid}),
+            "refresh_token":make_token({"sub":user,"uuid":uid},ttl=60*24*30),
+            "token_type":"bearer"}
 
 @router.post("/refresh")
-async def refresh_token_endpoint(request: Request):
-    try:
-        data = await request.json()
-        refresh_token = data.get("refresh_token")
-        if not refresh_token:
-            raise HTTPException(status_code=400, detail="Refresh token is required")
-
-        payload = decode_access_token(refresh_token)
-        user_uuid = payload.get("uuid")
-        username = payload.get("sub")
-
-        if not user_uuid or not username:
-            raise HTTPException(status_code=401, detail="Invalid token")
-
-        new_access_token = create_access_token({"sub": username, "uuid": user_uuid})
-        return JSONResponse({"access_token": new_access_token}, 200)
-
-    except jwt.ExpiredSignatureError:
-        return JSONResponse({"error": "Refresh token expired"}, 401)
-    except jwt.JWTError:
-        return JSONResponse({"error": "Invalid refresh token"}, 401)
-    except Exception as e:
-        return JSONResponse({"error": str(e)}, 500)
+async def refresh(req:Request):
+    rt=(await req.json()).get("refresh_token")
+    if not rt: raise HTTPException(400,"refresh_token required")
+    pl=decode_token(rt)
+    return {"access_token":make_token({"sub":pl["sub"],"uuid":pl["uuid"]})}
+# =================================================================
 
 
-# =============================== Эндпоинты: Матрицы ===============================
-@router.get("/testik/{uuid}")
-def preprocess_test(uuid: str):
-    try:
-        matrix_name = MATRIX_UUIDS.get(uuid)
-        if not matrix_name:
-            return JSONResponse({"error": f"UUID '{uuid}' не найден"}, 404)
-        process_input_files(
-                str(BASE_DIR / "../data/models"),
-                str(BASE_DIR / "../data/processed_files/Models"),
-                BASE_DIR / "edited_mils.f90"
-            )
-    except Exception as e:
-        log.error(f"АШИПКА: {e}")
-        return JSONResponse({"error": str(e)}, 404)
-    
-
-@router.get("/recalculate_true_seq")
-def recalculate_true_sequences():
-    """
-    Пересчитывает нормализованные true последовательности по всем доступным *_report.txt
-    """
-    reports_dir = CURRENT_DIR / "../data/processed_files/Reports"
-    true_seq_dir = CURRENT_DIR / "../data/processed_files/True_Seq"
-
-    if not reports_dir.exists():
-        return JSONResponse({"error": "Папка с отчётами не найдена"}, 404)
-
-    recalculated = []
-
-    for report_file in reports_dir.glob("*_report.txt"):
-        try:
-            matrix_name = report_file.stem.replace("_report", "")
-
-            with open(report_file, "r", encoding="utf-8") as f:
-                lines = f.readlines()
-
-            u = [float(line[12:-1]) for line in lines if len(line) <= 23]
-            sq_u = [val ** 2 for val in u]
-            sum_sq_u = sum(sq_u)
-
-            if sum_sq_u == 0:
-                continue  # Пропустить файлы, где сумма = 0, чтобы не упасть
-
-            normalized_u = [value / sum_sq_u for value in sq_u]
-            normalized_u_pairs = list(enumerate(normalized_u, start=1))
-            sorted_normalized_u = sorted(normalized_u_pairs, key=lambda pair: pair[1], reverse=True)
-
-            true_seq = {str(node_id): round(value, 6) for node_id, value in sorted_normalized_u}
-
-            save_path = true_seq_dir / f"{matrix_name}_result.json"
-            save_json(save_path, true_seq)
-
-            recalculated.append(matrix_name)
-            log.info(f"[RECALCULATED] {matrix_name}")
-
-        except Exception as e:
-            log.error(f"[ERROR] Ошибка при пересчёте {report_file.name}: {e}")
-
-    if recalculated:
-        return JSONResponse({"message": "Пересчёт завершён", "matrices": recalculated}, 200)
-    else:
-        return JSONResponse({"message": "Нет файлов для пересчёта или все файлы пустые"}, 200)
-
-
+# =================================================================
+#               МАТРИЦЫ (список / по uuid)
+# =================================================================
 @router.get("/matrices")
-def get_matrices():
-    try:
-        matrices = get_all_matrices()
-        result = []
-        for m in matrices:
-            matrix_name = m.get("matrix_name")
-            uuid = next((k for k, v in MATRIX_UUIDS.items() if v == matrix_name), None)
-            m["uuid"] = uuid
-            result.append(m)
-        return JSONResponse(content={"matrices": result}, status_code=200)
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
+def all_matrices():
+    mats=[]
+    for m in get_all_matrices():
+        m["uuid"]=next((k for k,v in MATRIX_UUIDS.items() if v==m["matrix_name"]),None)
+        mats.append(m)
+    return {"matrices":mats}
 
 @router.get("/matrix_by_uuid/{uuid}")
-def get_matrix_by_uuid(uuid: str):
-    matrix_name = MATRIX_UUIDS.get(uuid)
-    if not matrix_name:
-        return JSONResponse({"error": f"UUID '{uuid}' не найден"}, 404)
-    data = get_matrix_data_by_name(matrix_name)
-    if not data:
-        return JSONResponse({"error": f"Данные матрицы недоступны"}, 404)
-    return JSONResponse(content={
-        "matrix_info": {"matrix_name": matrix_name, "uuid": uuid},
-        "nodes": data["nodes"],
-        "edges": data["edges"]
-    }, status_code=200)
+def matrix_by_uuid(uuid:str):
+    name=MATRIX_UUIDS.get(uuid)
+    if not name:return JSONResponse({"error":"uuid not found"},404)
+    data=get_matrix_data_by_name(name)
+    if not data:return JSONResponse({"error":"data not ready"},404)
+    return {"matrix_info":{"matrix_name":name,"uuid":uuid},**data}
+# =================================================================
 
-# =============================== calculate_score ===============================
 
-@app.post("/calculate_score")
-async def calculate_score(
-    request: Request,
-    current_user_uuid: str = Depends(get_current_user_uuid)
-):
-    try:
-        body = await request.json()
-        step_nodes = body.get('selectedNodes', {})
-        matrix_uuid = body.get('uuid')
+# =================================================================
+#                          GAME API
+# =================================================================
+@router.post("/calculate_score")
+async def calc_score(req:Request, uid:str=Depends(get_current_user_uuid)):
+    b=await req.json(); m_uuid=b.get("uuid"); step=b.get("selectedNodes",{})
+    if not m_uuid: return JSONResponse({"error":"matrix uuid required"},400)
+    base=MATRIX_UUIDS.get(m_uuid)
+    if not base: return JSONResponse({"error":"uuid not found"},404)
 
-        if not matrix_uuid:
-            return JSONResponse({"error": "Matrix UUID is required"}, 400)
+    seq=TRUE_SEQ_DIR/f"{base}_result.json"
+    if not seq.exists(): return JSONResponse({"error":"true seq missing"},404)
+    order={int(k):v for k,v in load_json(seq).items()}
 
-        matrix_name_raw = MATRIX_UUIDS.get(matrix_uuid)
-        if not matrix_name_raw:
-            return JSONResponse({"error": "Matrix UUID not found"}, 404)
+    sess=in_memory_sessions.setdefault(uid,{}).setdefault(m_uuid,{"used_nodes":[],
+                "turns":[],"total_score":0})
+    nodes=list(step.values())
+    if any(n in sess["used_nodes"] for n in nodes):
+        return JSONResponse({"error":"node reused"},400)
 
-        matrix_name = f"{matrix_name_raw}_result"
-        path_to_seq = TRUE_SEQ_DIR / f"{matrix_name}.json"
-        if not path_to_seq.exists():
-            return JSONResponse({"error": f"True sequence for '{matrix_name}' not found"}, 404)
+    res=calculate_step_score(nodes,sess["used_nodes"],order)
+    sess["used_nodes"]+=nodes
+    sess["turns"].append({"nodes":nodes,"score":res["step_score"]})
+    sess["total_score"]=min(round(sess["total_score"]+res["step_score"],2),100)
+    return {"step_score":res["step_score"],"total_score":sess["total_score"],"turns":sess["turns"]}
 
-        with open(path_to_seq, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        matrix_order = {int(k): float(v) for k, v in data.items()}
+@router.post("/reset-game")
+async def reset_game(req:Request, uid:str=Depends(get_current_user_uuid)):
+    m_uuid=(await req.json()).get("uuid")
+    if not m_uuid:return JSONResponse({"error":"uuid required"},400)
+    name=MATRIX_UUIDS.get(m_uuid)
 
-        # Инициализация сессии
-        if current_user_uuid not in in_memory_sessions:
-            in_memory_sessions[current_user_uuid] = {}
+    sess=in_memory_sessions.get(uid,{}).get(m_uuid)
+    if name and sess and sess["turns"]:
+        save_game_to_history(uid,name,{"timestamp":datetime.utcnow().isoformat(),
+                                       "turns":sess["turns"],
+                                       "final_score":sess["total_score"]})
+    in_memory_sessions.setdefault(uid,{})[m_uuid]={"used_nodes":[],"turns":[],"total_score":0}
+    return {"message":"reset OK","matrix_uuid":m_uuid}
+# =================================================================
 
-        if matrix_uuid not in in_memory_sessions[current_user_uuid]:
-            in_memory_sessions[current_user_uuid][matrix_uuid] = {
-                "used_nodes": [],
-                "turns": [],
-                "total_score": 0
-            }
 
-        session = in_memory_sessions[current_user_uuid][matrix_uuid]
-        current_step = list(step_nodes.values())
-
-        if any(node in session['used_nodes'] for node in current_step):
-            return JSONResponse({"error": "Некоторые вершины уже использовались"}, 400)
-
-        # Считаем очки только за текущий шаг
-        score_result = calculate_step_score(current_step, session["used_nodes"], matrix_order)
-        print("score result: ", score_result)
-        print("current step: ", current_step)
-        print("session: ", session["used_nodes"])
-        print("matrix order: ", matrix_order)
-        # Обновляем сессию
-        session['used_nodes'].extend(current_step)
-        session['turns'].append({
-            "nodes": current_step,
-            "score": score_result["step_score"],
-            "details": score_result["details"]
-        })
-        session["total_score"] += score_result["step_score"]
-        session["total_score"] = min(round(session["total_score"], 2), 100)
-
-        return JSONResponse({
-            "step_score": score_result["step_score"],
-            "total_score": session["total_score"],
-            "turns": session["turns"],
-            "details": score_result
-        }, 200)
-
-    except Exception as e:
-        return JSONResponse({"error": str(e)}, 500)
-
-# ===================== Сброс игры (reset-game) =====================
-@app.post("/reset-game")
-async def reset_game(
-    request: Request,
-    current_user_uuid: str = Depends(get_current_user_uuid)
-):
-    """
-    Сбрасывает состояние (used_nodes, turns, total_score) для конкретной матрицы у конкретного user_uuid
-    """
-    try:
-        body = await request.json()
-        matrix_uuid = body.get("uuid")
-        if not matrix_uuid:
-            return JSONResponse({"error": "uuid is required"}, 400)
-
-        if current_user_uuid not in in_memory_sessions:
-            in_memory_sessions[current_user_uuid] = {}
-
-        in_memory_sessions[current_user_uuid][matrix_uuid] = {
-            "turns": [],
-            "total_score": 0,
-            "used_nodes": []
-        }
-
-        return JSONResponse({"message": "Game session reset", "matrix_uuid": matrix_uuid}, 200)
-
-    except Exception as e:
-        log.error(f"[RESET GAME ERROR]: {e}")
-        return JSONResponse({"error": str(e)}, 500)
+# =================================================================
+#                       HISTORY END-POINT
+# =================================================================
+@router.get("/history/{matrix_uuid}")
+async def history(matrix_uuid:str, uid:str=Depends(get_current_user_uuid)):
+    name=MATRIX_UUIDS.get(matrix_uuid)
+    if not name: return JSONResponse({"error":"uuid not found"},404)
+    f=fp_history(uid,name)
+    return {"history":load_json(f) if f.exists() else []}
 
 
 # =============================== science ===============================

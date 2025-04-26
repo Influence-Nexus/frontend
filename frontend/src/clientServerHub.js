@@ -182,6 +182,11 @@ export async function logScienceQuery(matrixUuid, userUuid) {
   });
 }
 
+
+export async function getGameHistory(matrixUuid) {
+  return await fetchJson(`${BASE_URL}/history/${matrixUuid}`);
+}
+
 // ========================= ГРАФ-НАСТРОЙКИ ========================= //
 
 export async function loadDefaultCoordinatesAPI(uuid) {

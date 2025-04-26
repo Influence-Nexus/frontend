@@ -52,7 +52,7 @@ export const CustomStatesProvider = ({ children }) => {
   const [isHoveredStart, setIsHoveredStart] = useState(false);
   const [isHoveredStop, setIsHoveredStop] = useState(false);
   const [showPreviewWindow, setShowPreviewWindow] = useState(true); // Состояние для окна "Исследуйте граф"
-
+  const [prevScores, setPrevScores] = useState([]); // Храним накопительные очки на момент каждого хода
 
   // Текущий юзер
   // const [userUuid, setuserUuid] = useState(localStorage.getItem("currentUser") || "defaultUser");
@@ -83,6 +83,8 @@ export const CustomStatesProvider = ({ children }) => {
   const intervalRef = useRef();
   const networkRef = useRef(null);
   const backgroundMusicRef = useRef(null);
+  const containerRef = useRef(null);
+
 
   useEffect(() => {
     const playMusic = () => {
@@ -92,15 +94,15 @@ export const CustomStatesProvider = ({ children }) => {
         });
       }
     };
-  
+
     playMusic(); // Пытаемся сразу
-  
+
     // На случай, если блокировка — слушаем первый клик
     const unlockAudio = () => {
       playMusic();
       document.removeEventListener("click", unlockAudio);
     };
-  
+
     document.addEventListener("click", unlockAudio);
   }, []);
 
@@ -110,7 +112,7 @@ export const CustomStatesProvider = ({ children }) => {
     try {
       const decoded = jwtDecode(token);
       if (!decoded.exp) return true;
-  
+
       const now = Math.floor(Date.now() / 1000); // сейчас в секундах
       return decoded.exp < now; // токен просрочен?
     } catch (error) {
@@ -118,6 +120,20 @@ export const CustomStatesProvider = ({ children }) => {
       return true;
     }
   };
+
+
+  useEffect(() => {
+    if (moveHistory.length > prevScores.length) {
+      setPrevScores((prev) => [...prev, score]);
+    }
+  }, [moveHistory, score]);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [prevScores]);
+
 
 
   useEffect(() => {
@@ -220,16 +236,16 @@ export const CustomStatesProvider = ({ children }) => {
 
   useEffect(() => {
     if (!graphData || !graphData.nodes || disabledNodes.length === 0) return;
-  
+
     const allNodeCount = graphData.nodes.length || graphData.nodes.get().length;
-  
+
     if (disabledNodes.length >= allNodeCount && isRunning) {
       setIsRunning(false);
       setShowGameOverModal(true);
       handleStop();
     } // eslint-disable-next-line 
   }, [disabledNodes, graphData, isRunning]);
-  
+
 
   useEffect(() => {
     if (selectedNodes.length > 0) {
@@ -297,7 +313,7 @@ export const CustomStatesProvider = ({ children }) => {
     setMovesHistory([]);
     setLockedNodes({});
     setDisabledNodes([]); // Очистили, чтобы все вершины снова стали кликабельными
-
+    setPrevScores([])
     // Запускаем таймер
     intervalRef.current = setInterval(() => {
       setCurrentTime(prev => prev + 1);
@@ -564,6 +580,9 @@ export const CustomStatesProvider = ({ children }) => {
       isHoveredStart, setIsHoveredStart,
       isHoveredStop, setIsHoveredStop,
       showPreviewWindow,
+      prevScores, setPrevScores,
+
+
 
       // Рефы
       hoverSoundRef,
@@ -571,6 +590,7 @@ export const CustomStatesProvider = ({ children }) => {
       intervalRef,
       networkRef,
       backgroundMusicRef,
+      containerRef,
 
       // Допфункции
       handleOpenModal,

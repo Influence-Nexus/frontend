@@ -20,6 +20,9 @@ export const RulesPage = ({ setHeaderShow }) => {
             borderRadius: "10px",
             color: "white",
             backgroundColor: "#4F75FF",
+            fontSize: "0.6em",
+            padding: "5px",
+            cursor: "pointer"
           }}
           href="/"
         >
@@ -300,7 +303,8 @@ export const RulesPage = ({ setHeaderShow }) => {
                     borderRadius: "10px",
                     color: "white",
                     backgroundColor: "#4F75FF",
-                    fontSize: "0.6em"
+                    fontSize: "0.6em",
+                    cursor: "pointer"
                   }}
                 >
                   Algorithm
