@@ -34,6 +34,7 @@ export const ScienceGraphComponent = () => {
     handleClearEdges,
     handleLoadCoordinates,
     applyCoordinates,
+    hoverSoundRef,
   } = useCustomStates();
 
   // Локальные refs для DataSet узлов, рёбер и экземпляра сети
@@ -250,6 +251,10 @@ export const ScienceGraphComponent = () => {
         setHoveredNode(null);
         return;
       }
+      // играем звук при наведении на активный узел
+      hoverSoundRef.current
+        ?.play()
+        .catch(err => console.warn("hoverSound play failed:", err.message));
       setHighlightedNode(event.node);
       setShowNodeList(true);
       setHoveredNode(event.node);

@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { jwtDecode } from "jwt-decode";
+import gameOverSoundSrc from "./assets/sounds/gameOver.mp3";
+import hoverSoundSrc from "./assets/sounds/clearSection.mp3";
 
 import {
   calculateScore,
@@ -66,7 +68,7 @@ export const CustomStatesProvider = ({ children }) => {
   // Для VerticalProgressBar
   const [currentTime, setCurrentTime] = useState(0);
   // maxTime — допущение, что это время на раунд/уровень
-  const maxTime = 200;
+  const maxTime = 600;
   const [progress, setProgress] = useState(0);
 
   // Пара планетных состояний
@@ -87,6 +89,15 @@ export const CustomStatesProvider = ({ children }) => {
   const backgroundMusicRef = useRef(null);
   const containerRef = useRef(null);
 
+
+  // разочек на старте приложения “подхватываем” звуки
+  useEffect(() => {
+    hoverSoundRef.current = new Audio(hoverSoundSrc);
+    hoverSoundRef.current.preload = 'auto';
+
+    gameOverSoundRef.current = new Audio(gameOverSoundSrc);
+    gameOverSoundRef.current.preload = 'auto';
+  }, []);
 
   useEffect(() => {
     const playMusic = () => {

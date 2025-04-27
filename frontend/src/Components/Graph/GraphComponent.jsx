@@ -27,7 +27,7 @@ export const GraphComponent = (props) => {
     setIsNetworkReady, isNetworkReady,
     graphDataState, setGraphDataState,
     planetColor, modelName, planetImg,
-    showHistory
+    showHistory, hoverSoundRef
   } = props
 
 
@@ -66,7 +66,7 @@ export const GraphComponent = (props) => {
     selectedNodes, hoveredNode,
     showModal, setShowModal, lastIndex, showNodeList,
     handleClearEdges, setIsNetworkReady,
-    graphDataState, setGraphDataState
+    graphDataState, setGraphDataState, hoverSoundRef
   };
 
   return (
