@@ -290,7 +290,7 @@ def process_input_files(input_folder, output_folder, fortran_file):
 
 if __name__ == "__main__":
     # Папки для входных и выходных файлов
-    INPUT_FOLDER = BASE_DIR / "../data/models"
+    INPUT_FOLDER = BASE_DIR / "../data/RU/models"
     FORTRAN_FILE = BASE_DIR / "edited_mils.f90"
     OUTPUT_FOLDER = BASE_DIR / "../data/processed_files/Models"  # Указываем папку для выходных данных
 
