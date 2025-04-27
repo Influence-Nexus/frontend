@@ -28,7 +28,7 @@ log = logging.getLogger("matrix_routes")
 
 CURRENT_DIR  = pathlib.Path(__file__).parent.resolve()
 USERS_ROOT   = (CURRENT_DIR / "../users").resolve()
-TRUE_SEQ_DIR = (CURRENT_DIR / "../data/processed_files/True_Seq").resolve()
+TRUE_SEQ_DIR = (CURRENT_DIR / "../data/RU/processed_files/True_Seq").resolve()
 
 SECRET_KEY = "MY_SUPER_SECRET_KEY"
 ALGORITHM  = "HS256"
@@ -260,7 +260,7 @@ async def get_science_table(request: Request):
         if not matrix_name:
             return JSONResponse({"error": "Matrix UUID not found"}, 404)
 
-        report_file_path = BASE_DIR / "../data/processed_files/Reports" / f"{matrix_name}_report.txt"
+        report_file_path = BASE_DIR / "../data/RU/processed_files/Reports" / f"{matrix_name}_report.txt"
 
         if not report_file_path.exists():
             log.info(f"Report not found: {report_file_path}. Processing...")

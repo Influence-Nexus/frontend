@@ -75,7 +75,7 @@ def get_meta_data(matrix_name):
 
 
 def get_response_strength(matrix_name):
-    report_path = f"./data/f90_calcs/{matrix_name}_report.txt"
+    report_path = f"./data/RU/f90_calcs/{matrix_name}_report.txt"
     if not os.path.exists(report_path):
         return {}
 

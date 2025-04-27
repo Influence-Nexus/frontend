@@ -182,7 +182,7 @@ def process_fortran_output(file_name):
             result_dict = {str(node_id): round(value, 6) for node_id, value in sorted_normalized_u}
             
             # Сохраняем результат в JSON-файл
-            result_file_path = BASE_DIR / "../data/processed_files/True_Seq" / f"{file_name}_result.json"
+            result_file_path = BASE_DIR / "../data/RU/processed_files/True_Seq" / f"{file_name}_result.json"
             with open(result_file_path, "w") as json_file:
                 json.dump(result_dict, json_file, indent=4)
 
@@ -195,12 +195,12 @@ def process_fortran_output(file_name):
                 max_eigen_value = "Не найдено"
 
             # Копирование Maximal_Eigen_Value.txt в Vadimka с новым именем
-            max_eigen_value_file = BASE_DIR / "../data/processed_files/MEVs" / f"{file_name}_MEV.txt"
+            max_eigen_value_file = BASE_DIR / "../data/RU/processed_files/MEVs" / f"{file_name}_MEV.txt"
             with open(max_eigen_value_file, "w") as f:
                 f.write(f"Maximal Eigen Value: {max_eigen_value}\n")
 
             # Копирование отчета в Vadimka с новым именем
-            report_file_copy_path = BASE_DIR / "../data/processed_files/Reports" / f"{file_name}_report.txt"
+            report_file_copy_path = BASE_DIR / "../data/RU/processed_files/Reports" / f"{file_name}_report.txt"
             shutil.copy(str(BASE_DIR / "report.txt"), str(report_file_copy_path))
 
             print(f"[INFO] Обработан файл: {file_name}. Результат: {result_file_path}, {max_eigen_value_file}, {report_file_copy_path}")
@@ -292,7 +292,7 @@ if __name__ == "__main__":
     # Папки для входных и выходных файлов
     INPUT_FOLDER = BASE_DIR / "../data/RU/models"
     FORTRAN_FILE = BASE_DIR / "edited_mils.f90"
-    OUTPUT_FOLDER = BASE_DIR / "../data/processed_files/Models"  # Указываем папку для выходных данных
+    OUTPUT_FOLDER = BASE_DIR / "../data/RU/processed_files/Models"  # Указываем папку для выходных данных
 
     if len(sys.argv) > 1:
         matrix_file_name = sys.argv[1]
