@@ -84,16 +84,18 @@ export const GraphMainLayout = ({ setHeaderShow }) => {
   }, [uuid, setMatrixInfo, setIsLoading, setError]);
 
   useEffect(() => {
+    const halfTime = Math.floor(maxTime / 2);
+    
     if (
       (currentTime === 30 ||
-        currentTime >= (maxTime / 2) ||
-        currentTime === (maxTime - 60)) &&
+       currentTime === halfTime ||
+       currentTime === (maxTime - 60)) &&
       !catAnimationLaunched
     ) {
       setShowCat(true);
       setCatAnimationLaunched(true);
     }
-  }, [currentTime, isRunning, catAnimationLaunched]);
+  }, [currentTime, catAnimationLaunched, maxTime]);
 
   if (isLoading) return <div className="loading-status">Загрузка графа...</div>;
   if (error) return <div className="error-status">Ошибка: {error}</div>;

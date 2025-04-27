@@ -44,21 +44,6 @@ export const GraphComponent = (props) => {
     handleLoadCoordinates(uuid, applyCoordinates);
   }, [matrixInfo, isNetworkReady, uuid, applyCoordinates]);
 
-
-  // --- Логика запуска/остановки таймера ---
-  useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        setCurrentTime((prevTime) => prevTime + 1);
-      }, 1000);
-    } else {
-      clearInterval(intervalRef.current);
-    }
-    return () => clearInterval(intervalRef.current);
-    // eslint-disable-next-line
-  }, [isRunning]);
-
-
   const graphCanvasProps = {
     matrixInfo,
     disabledNodes,
