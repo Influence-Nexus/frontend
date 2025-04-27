@@ -125,12 +125,19 @@ export const SciencePage = () => {
   }, [matrixInfo, userUuid]);
 
   useEffect(() => {
-    if (currentTime >= maxTime / 2 && !catAnimationLaunched) {
+    const halfTime = Math.floor(maxTime / 2);
+
+    if (
+      (currentTime === 30 ||
+        currentTime === halfTime ||
+        currentTime === (maxTime - 60)) &&
+      !catAnimationLaunched
+    ) {
       setShowCat(true);
       setCatAnimationLaunched(true);
     }
-    // eslint-disable-next-line
-  }, [currentTime, isRunning, catAnimationLaunched]);
+  }, [currentTime, catAnimationLaunched, maxTime]);
+
 
   return (
     <div className="science-page">
@@ -181,7 +188,14 @@ export const SciencePage = () => {
                     paddingBottom: "100px",
                   }}
                 >
-                  <CatAnimation triggerAnimation={true} stopAtX={850} />
+                  <CatAnimation
+                    triggerAnimation={true}
+                    stopAtX={800}
+                    onAnimationEnd={() => {
+                      setShowCat(false);           // скрыть кота
+                      setCatAnimationLaunched(false); // разрешить повторный запуск
+                    }}
+                  />
                 </div>
               )}
             </div>
