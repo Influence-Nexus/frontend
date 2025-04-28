@@ -9,7 +9,9 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import os
+
 from contextlib import asynccontextmanager
+
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import (
@@ -118,36 +120,35 @@ async def tg_save_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("👍 Сохранено!")
 
 # ─── lifespan ───────────────────────────────────────────────
-# @asynccontextmanager
-# async def lifespan(app):
-    # tg_app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-    # tg_app.add_handler(CommandHandler("start", tg_start))
-    # tg_app.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, tg_save_message))
+@asynccontextmanager
+async def lifespan(app):
+    tg_app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
+    tg_app.add_handler(CommandHandler("start", tg_start))
+    tg_app.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, tg_save_message))
 
     # 1-2. инициализация и запуск
-    # await tg_app.initialize()
-    # await tg_app.start()
+    await tg_app.initialize()
+    await tg_app.start()
 
     # 3. запускаем polling асинхронно (не блокируем FastAPI)
-    # await tg_app.updater.start_polling()
-    # logging.info("[✅ BOT] polling started")
+    await tg_app.updater.start_polling()
+    logging.info("[✅ BOT] polling started")
 
-    # try:
-    #     yield                      # ← здесь FastAPI начинает работать
-    # finally:
-    #     logging.info("[⏳ BOT] stopping…")
-    #     # 4. корректная остановка
-    #     await tg_app.updater.stop()
-    #     await tg_app.stop()
-    #     await tg_app.shutdown()
-    #     logging.info("[✅ BOT] stopped")
+    try:
+        yield                      # ← здесь FastAPI начинает работать
+    finally:
+        logging.info("[⏳ BOT] stopping…")
+        # 4. корректная остановка
+        await tg_app.updater.stop()
+        await tg_app.stop()
+        await tg_app.shutdown()
+        logging.info("[✅ BOT] stopped")
 
 
 
 # ------------------- базовая инициализация -------------------
 
-# app = FastAPI(lifespan=lifespan)
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 router = APIRouter()
 app.include_router(router, tags=["Matrix Routes"])
 
