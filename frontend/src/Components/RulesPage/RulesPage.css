@@ -46,7 +46,7 @@
   }
   
   #video-span {
-    color: red;
+    color: rgb(255, 215, 0);
   }
   
   #sub-topic {
@@ -90,19 +90,19 @@
   }
   
   #letter-sublist-uncolored li::marker {
-    color: red;
+    color: rgb(255, 215, 0);
     font-size: 1.5em;
   }
   
   #letter-list-uncolored li::marker {
-    color: red;
+    color: rgb(255, 215, 0);
     /* font-size: 1.5em; */
     font-size: calc(1.325rem + .9vw);
   }
   
   
   #sub-list-colored-span {
-    color: red;
+    color: rgb(255, 215, 0);
     font-size: 1.5em;
   
   }

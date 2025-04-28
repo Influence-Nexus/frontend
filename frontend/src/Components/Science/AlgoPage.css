@@ -5,8 +5,8 @@
 
 .algoPage-submain-div {
     display: flex;
-    justify-content: center;
-    align-content: center;
+    /* justify-content: center; */
+    /* align-content: center; */
     align-items: center;
     flex-direction: column;
     position: relative;
@@ -50,3 +50,17 @@ h1 {
 .italic {
     font-style: italic;
 }
+
+
+.algo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .algo-table th,
+  .algo-table td {
+    border: 1px solid #cccccc;
+    padding: 8px;
+    text-align: center;
+  }
