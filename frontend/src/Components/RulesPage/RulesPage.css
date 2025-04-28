@@ -3,7 +3,9 @@
     color: white;
     padding: 50px;
   }
-  
+  .Rules-div li::marker {
+    color:rgb(255, 215, 0) !important
+  }
   .Rules-div strong{
     font-weight: 850;
   }
