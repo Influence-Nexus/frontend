@@ -277,7 +277,7 @@ export const RulesPage = ({ setHeaderShow }) => {
               Последующие ходы только дополнят Ваше решение.
             </p>
             <br />
-            <p>
+            <p style={{fontWeight: "bold", color: "rgb(255, 215, 0)"}}>
               Постарайтесь максимизировать первый ход. Он определит всю Вашу
               стратегию и ее успех!
             </p>
@@ -336,7 +336,7 @@ export const RulesPage = ({ setHeaderShow }) => {
               <li>
                 <p>
                   Вы можете выбрать больше, чем 3 узла за один ход.{" "}
-                  <span style={{ color: "rgb(255, 215, 0)" }}>
+                  <span style={{ color: "rgb(255, 215, 0)", fontWeight: "bold"}}>
                     Однако помните, что последовательность узлов очень важна!
                   </span>
                 </p>
