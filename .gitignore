@@ -2,4 +2,4 @@ server/venv
 frontend/node_modules
 server/*/__pycache__
 server/*/*.pyc
-**/*/.env
+server/routes/.env
