@@ -147,6 +147,8 @@
 #algo-button {
   background-color: transparent;
   cursor: pointer;
+  background-color: #3498db;
+  font-style: italic;
 }
 
 #game-button, #algo-button {

@@ -135,10 +135,16 @@
   
   #list-header-h2 {
     font-weight: 800;
-    
+    font-size: 1.9rem;
   
   }
-  
+  .num-list-unordered {
+    list-style: none;
+  }
+  .num-list-unordered strong {
+    color: rgb(255, 215, 0);
+  }
+
   #spanned-list-header-p {
     /* color: rgb(114, 144, 255); */
     font-weight: 900;

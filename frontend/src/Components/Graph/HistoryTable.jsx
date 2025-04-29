@@ -1,9 +1,10 @@
 // components/HistoryTable.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { getGameHistory } from "../../clientServerHub";
+import "./Styles/HistoryTableStyles.css";
 
-export const HistoryTable = ({ matrixUuid, planetColor }) => {
-  const [history, setHistory] = useState([]);
+export const HistoryTable = ({ matrixUuid, planetColor, history, setHistory }) => {
+
 
   useEffect(() => {
     (async () => {
@@ -16,29 +17,32 @@ export const HistoryTable = ({ matrixUuid, planetColor }) => {
     })();
   }, [matrixUuid]);
 
-  if (!history.length) return <p style={{color:"white"}}>Нет сыгранных партий</p>;
+  if (!history.length)
+    return <p className="history-no-games">Нет сыгранных партий</p>;
 
   return (
-    <div style={{maxHeight:600,overflowY:"auto"}}>
-      <table style={{borderCollapse:"collapse",minWidth:400}}>
+    <div className="history-table-container">
+      <table className="history-table">
         <thead>
           <tr>
-            <th style={{border:"1px solid white",padding:8}}>Дата</th>
-            <th style={{border:"1px solid white",padding:8}}>Ходов</th>
-            <th style={{border:"1px solid white",padding:8}}>Счёт</th>
+            <th>Дата</th>
+            <th>Итоговый счёт</th>
+            <th>Ходы</th>
           </tr>
         </thead>
         <tbody>
-          {history.map((g,i)=>(
+          {history.map((g, i) => (
             <tr key={i}>
-              <td style={{border:"1px solid white",padding:8}}>
-                {new Date(g.timestamp).toLocaleString()}
-              </td>
-              <td style={{border:"1px solid white",padding:8,textAlign:"center"}}>
-                {g.turns?.length ?? 0}
-              </td>
-              <td style={{border:"1px solid white",padding:8,fontWeight:"bold",color:planetColor}}>
+              <td>{new Date(g.timestamp).toLocaleString()}</td>
+              <td style={{ fontWeight: "bold", color: planetColor }}>
                 {g.final_score}
+              </td>
+              <td>
+                {g.turns.map((turn, idx) => (
+                  <div key={idx} style={{ marginBottom: "5px" }}>
+                    Ход {idx + 1}: {turn.nodes.join(", ")}
+                  </div>
+                ))}
               </td>
             </tr>
           ))}

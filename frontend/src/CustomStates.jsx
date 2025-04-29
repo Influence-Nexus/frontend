@@ -55,6 +55,7 @@ export const CustomStatesProvider = ({ children }) => {
   const [isHoveredStop, setIsHoveredStop] = useState(false);
   const [showPreviewWindow, setShowPreviewWindow] = useState(true); // Состояние для окна "Исследуйте граф"
   const [prevScores, setPrevScores] = useState([]); // Храним накопительные очки на момент каждого хода
+  const [history, setHistory] = useState([]);
 
   // Текущий юзер
   // const [userUuid, setuserUuid] = useState(localStorage.getItem("currentUser") || "defaultUser");
@@ -595,6 +596,7 @@ export const CustomStatesProvider = ({ children }) => {
       showPreviewWindow,
       prevScores, setPrevScores,
       showHistory, setShowHistory,
+      history, setHistory,
 
 
       // Рефы

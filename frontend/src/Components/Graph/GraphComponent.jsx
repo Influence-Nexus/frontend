@@ -11,7 +11,7 @@ export const GraphComponent = (props) => {
     setHighlightedNode,
     setSelectedNodes,
     selectedEdges, setSelectedEdges,
-    isRunning, setCurrentTime,
+    history, setHistory,
     setShowNodeList, lockedNodes,
     setHoveredNode, handleLoadCoordinates,
     disabledNodes, matrixInfo,
@@ -96,7 +96,12 @@ export const GraphComponent = (props) => {
       {/* если showHistory – показываем таблицу вместо графа */}
       {showHistory ? (
         <div style={{ padding: "20px" }}>
-          <HistoryTable matrixUuid={uuid} planetColor={planetColor} />
+          <HistoryTable
+            matrixUuid={uuid}
+            planetColor={planetColor}
+            history={history}
+            setHistory={setHistory}
+          />
         </div>
       ) : (
         <div className="graph-component-row">
