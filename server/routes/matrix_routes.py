@@ -29,126 +29,101 @@ from routes.UUID_MATRICES     import MATRIX_UUIDS
 
 
 # ==========================TG Bot=======================================
-load_tg_bot = input("Загружать ТГ бота? ").lower()
-if load_tg_bot == "yes" or load_tg_bot == "da" or load_tg_bot == "lf" or load_tg_bot == "нуы" or load_tg_bot == "да":
-    load_dotenv()
-    TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-    if not TELEGRAM_TOKEN:
-        raise RuntimeError("TELEGRAM_BOT_TOKEN не найден в .env!")
-
-
-    # ─── bot handlers ───────────────────────────────────────────
-    async def tg_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        await update.message.reply_text("Привет! Я бот для обратной связи — пишите и присылайте файлы.")
-
-    async def tg_save_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-        from datetime import datetime
-        user = update.effective_user
-        uid = user.username or f"{user.first_name}_{user.last_name or ''}"
-        uid = uid.replace(" ", "_")  # на всякий случай
-
-        folder = pathlib.Path("feedback") / uid
-        folder.mkdir(parents=True, exist_ok=True)
-
-        ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        msg = update.message
-
-        # Путь к файлу истории
-        history_file = folder / "chat_history.json"
-
-        # Загружаем старую историю (если есть)
-        if history_file.exists():
-            with open(history_file, "r", encoding="utf-8") as f:
-                history = json.load(f)
-        else:
-            history = []
-
-        entry = {
-            "timestamp": ts,
-            "text": None,
-            "files": []
-        }
-
-        # Сохраняем текст
-        text = msg.text or msg.caption
-        if text:
-            entry["text"] = text
-
-        # Сохраняем медиа и заполняем ссылки на файлы
-        if msg.photo:
-            file = await msg.photo[-1].get_file()
-            file_path = folder / f"photo_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
-            await file.download_to_drive(str(file_path))
-            entry["files"].append(str(file_path.relative_to(folder)))
-
-        if msg.document:
-            file = await msg.document.get_file()
-            file_name = msg.document.file_name or f"document_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-            file_path = folder / file_name
-            await file.download_to_drive(str(file_path))
-            entry["files"].append(str(file_path.relative_to(folder)))
-
-        if msg.audio:
-            file = await msg.audio.get_file()
-            file_name = msg.audio.file_name or f"audio_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp3"
-            file_path = folder / file_name
-            await file.download_to_drive(str(file_path))
-            entry["files"].append(str(file_path.relative_to(folder)))
-
-        if msg.voice:
-            file = await msg.voice.get_file()
-            file_path = folder / f"voice_{datetime.now().strftime('%Y%m%d_%H%M%S')}.ogg"
-            await file.download_to_drive(str(file_path))
-            entry["files"].append(str(file_path.relative_to(folder)))
-
-        if msg.video:
-            file = await msg.video.get_file()
-            file_name = msg.video.file_name or f"video_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"
-            file_path = folder / file_name
-            await file.download_to_drive(str(file_path))
-            entry["files"].append(str(file_path.relative_to(folder)))
-
-        # Добавляем запись в историю
-        history.append(entry)
-
-        # Сохраняем историю обратно
-        with open(history_file, "w", encoding="utf-8") as f:
-            json.dump(history, f, ensure_ascii=False, indent=2)
-
-        await update.message.reply_text("👍 Сохранено!")
-
-    # ─── lifespan ───────────────────────────────────────────────
-    @asynccontextmanager
-    async def lifespan(app):
-        tg_app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-        tg_app.add_handler(CommandHandler("start", tg_start))
-        tg_app.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, tg_save_message))
-
-        # 1-2. инициализация и запуск
-        await tg_app.initialize()
-        await tg_app.start()
-
-        # 3. запускаем polling асинхронно (не блокируем FastAPI)
-        await tg_app.updater.start_polling()
-        logging.info("[✅ BOT] polling started")
-
-        try:
-            yield                      # ← здесь FastAPI начинает работать
-        finally:
-            logging.info("[⏳ BOT] stopping…")
-            # 4. корректная остановка
-            await tg_app.updater.stop()
-            await tg_app.stop()
-            await tg_app.shutdown()
-            logging.info("[✅ BOT] stopped")
-
-
-
-    # ------------------- базовая инициализация -------------------
-
-    app = FastAPI(lifespan=lifespan)
-else:
-    app = FastAPI()
+# load_tg_bot = input("Загружать ТГ бота? ").lower()
+# if load_tg_bot == "yes" or load_tg_bot == "da" or load_tg_bot == "lf" or load_tg_bot == "нуы" or load_tg_bot == "да":
+load_dotenv()
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+if not TELEGRAM_TOKEN:
+    raise RuntimeError("TELEGRAM_BOT_TOKEN не найден в .env!")
+# ─── bot handlers ───────────────────────────────────────────
+async def tg_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Привет! Я бот для обратной связи — пишите и присылайте файлы.")
+async def tg_save_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    from datetime import datetime
+    user = update.effective_user
+    uid = user.username or f"{user.first_name}_{user.last_name or ''}"
+    uid = uid.replace(" ", "_")  # на всякий случай
+    folder = pathlib.Path("feedback") / uid
+    folder.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    msg = update.message
+    # Путь к файлу истории
+    history_file = folder / "chat_history.json"
+    # Загружаем старую историю (если есть)
+    if history_file.exists():
+        with open(history_file, "r", encoding="utf-8") as f:
+            history = json.load(f)
+    else:
+        history = []
+    entry = {
+        "timestamp": ts,
+        "text": None,
+        "files": []
+    }
+    # Сохраняем текст
+    text = msg.text or msg.caption
+    if text:
+        entry["text"] = text
+    # Сохраняем медиа и заполняем ссылки на файлы
+    if msg.photo:
+        file = await msg.photo[-1].get_file()
+        file_path = folder / f"photo_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
+        await file.download_to_drive(str(file_path))
+        entry["files"].append(str(file_path.relative_to(folder)))
+    if msg.document:
+        file = await msg.document.get_file()
+        file_name = msg.document.file_name or f"document_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        file_path = folder / file_name
+        await file.download_to_drive(str(file_path))
+        entry["files"].append(str(file_path.relative_to(folder)))
+    if msg.audio:
+        file = await msg.audio.get_file()
+        file_name = msg.audio.file_name or f"audio_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp3"
+        file_path = folder / file_name
+        await file.download_to_drive(str(file_path))
+        entry["files"].append(str(file_path.relative_to(folder)))
+    if msg.voice:
+        file = await msg.voice.get_file()
+        file_path = folder / f"voice_{datetime.now().strftime('%Y%m%d_%H%M%S')}.ogg"
+        await file.download_to_drive(str(file_path))
+        entry["files"].append(str(file_path.relative_to(folder)))
+    if msg.video:
+        file = await msg.video.get_file()
+        file_name = msg.video.file_name or f"video_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"
+        file_path = folder / file_name
+        await file.download_to_drive(str(file_path))
+        entry["files"].append(str(file_path.relative_to(folder)))
+    # Добавляем запись в историю
+    history.append(entry)
+    # Сохраняем историю обратно
+    with open(history_file, "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+    await update.message.reply_text("👍 Сохранено!")
+# ─── lifespan ───────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(app):
+    tg_app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
+    tg_app.add_handler(CommandHandler("start", tg_start))
+    tg_app.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, tg_save_message))
+    # 1-2. инициализация и запуск
+    await tg_app.initialize()
+    await tg_app.start()
+    # 3. запускаем polling асинхронно (не блокируем FastAPI)
+    await tg_app.updater.start_polling()
+    logging.info("[✅ BOT] polling started")
+    try:
+        yield                      # ← здесь FastAPI начинает работать
+    finally:
+        logging.info("[⏳ BOT] stopping…")
+        # 4. корректная остановка
+        await tg_app.updater.stop()
+        await tg_app.stop()
+        await tg_app.shutdown()
+        logging.info("[✅ BOT] stopped")
+# ------------------- базовая инициализация -------------------
+app = FastAPI(lifespan=lifespan)
+# else:
+#     app = FastAPI()
 router = APIRouter()
 app.include_router(router, tags=["Matrix Routes"])
 
