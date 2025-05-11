@@ -326,7 +326,7 @@ export const CustomStatesProvider = ({ children }) => {
     setMoveHistory([]);
     setMovesHistory([]);
     setLockedNodes({});
-    setDisabledNodes([]); // Очистили, чтобы все вершины снова стали кликабельными
+    setDisabledNodes([]); // Очистили, чтобы все узлы снова стали кликабельными
     setPrevScores([])
     // Запускаем таймер
     intervalRef.current = setInterval(() => {

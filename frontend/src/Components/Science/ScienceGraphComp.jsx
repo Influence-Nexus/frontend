@@ -48,7 +48,7 @@ export const ScienceGraphComponent = () => {
   // При изменении disabledNodes обновляем ref:
   useEffect(() => {
     disabledNodesRef.current = disabledNodes;
-    // Если у нас были выбраны вершины, которые вдруг стали недоступными,
+    // Если у нас были выбраны узлы, которые вдруг стали недоступными,
     // уберём их из selectedNodes (аналог GraphCanvasRender).
     setSelectedNodes((prev) => prev.filter((id) => !disabledNodesRef.current.includes(id)));
   }, [disabledNodes, setSelectedNodes]);

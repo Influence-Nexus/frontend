@@ -28,7 +28,7 @@ def convert_excel_to_txt(input_file, output_file):
             vertices = []
             vertices_influence = [0, 0, 0]
             while True:
-                vertex_selection = input(f"Введите номер вершины (от 1 до {len(df.columns)}) или 0 для завершения: ")
+                vertex_selection = input(f"Введите номер узла (от 1 до {len(df.columns)}) или 0 для завершения: ")
                 if vertex_selection == "0":
                     # Форматируем списки для записи
                     vertices_str = re.sub(r'[\[\]]', '', str(vertices)).replace(", ", " ")
@@ -98,7 +98,7 @@ def convert_txt_to_fortran(input_file, output_file):
             vertices = []
             vertices_influence = [0, 0, 0]
             while True:
-                vertex_selection = input(f"Введите номер вершины (от 1 до {len(headers)+1}) или 0 для завершения: ")
+                vertex_selection = input(f"Введите номер узлы (от 1 до {len(headers)+1}) или 0 для завершения: ")
                 if vertex_selection == "0":
                     vertices_str = re.sub(r'[\[\]]', '', str(vertices)).replace(", ", " ")
                     influence_str = re.sub(r'[\[\]]', '', str(vertices_influence)).replace(", ", "\t")
