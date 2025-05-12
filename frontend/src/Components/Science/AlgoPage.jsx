@@ -1,7 +1,7 @@
 import React from "react";
 import "./AlgoPage.css";
 import crimeImg from "./images/C_P.png";
-import influenceGraphImg from "./images/influence_graph.jpg"; // Нужно будет добавить эту картинку!
+import influenceGraphImg from "./images/influence_graph.png"; // Нужно будет добавить эту картинку!
 
 export const AlgoPage = ({ setHeaderShow }) => {
   setHeaderShow = true;
