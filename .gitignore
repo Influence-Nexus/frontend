@@ -3,3 +3,5 @@ frontend/node_modules
 server/*/__pycache__
 server/*/*.pyc
 .env
+server/users
+server/feedback
