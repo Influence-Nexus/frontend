@@ -4,7 +4,10 @@ services:
     build: ./server
     ports:
       - "8000:8000"
-      
+    volumes:
+      # монтируем папки с данными
+      - ${HOME}/frontend/server/users:/app/users
+      - ${HOME}/frontend/server/feedback:/app/feedback
   frontend:
     build: ./frontend
     ports:
