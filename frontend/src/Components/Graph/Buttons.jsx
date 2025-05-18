@@ -58,12 +58,14 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
         </li>
 
         <li>
-          <Link to={`/science/${matrixUuid}`} state={{ selectedPlanet, selectedCardIndex, planetColor, planetImg }}>
+          {/* <Link to={`/science/${matrixUuid}`} state={{ selectedPlanet, selectedCardIndex, planetColor, planetImg }}> */}
             <button
               id="science-button"
               className='game-button'
               onClick={handleScienceClick}
-              disabled={scienceClicks !== null && scienceClicks <= 0}
+              // disabled={scienceClicks !== null && scienceClicks <= 0}
+              disabled
+              title='Временно заблокирована!'
             >
               <p>Science</p>
               {scienceClicks !== null &&
@@ -72,7 +74,7 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
                 ))
               }
             </button>
-          </Link>
+          {/* </Link> */}
         </li>
 
         {/* Остальные кнопки */}
