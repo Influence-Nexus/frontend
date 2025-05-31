@@ -24,14 +24,15 @@ export const PlanetCardModal = ({ selectedPlanet, setSelectedPlanet }) => {
     setIsZoomed(false);
     setTimeout(() => setSelectedCardIndex(null), 300);
   };
-
-  return (
+      // contentClassName={`modal-content-custom modal-content-${selectedPlanet.name.toLowerCase()}`}
+  return (    
     <Modal
       show={true}
       onHide={() => setSelectedPlanet(null)}
       centered
       dialogClassName="modal-dialog"
-      contentClassName="modal-content-custom"
+      contentClassName={`modal-content-custom ${selectedPlanet.name.toLowerCase()}`}
+      container={document.getElementById('root')}
     >
       <Modal.Header className="modal-header-custom">
         <Modal.Title>
@@ -106,7 +107,7 @@ export const PlanetCardModal = ({ selectedPlanet, setSelectedPlanet }) => {
                           <br />
                           <p style={{color: "rgb(255, 218, 150)"}}>Источник: </p>
                           <p>{card.paper}</p>
-                          <a className="card-desc-link" id="card-desc-link" target="_blank" href={card.link}>Ссылка на статью</a>
+                          <a className="card-desc-link" id="card-desc-link" target="_blank" rel="noreferrer" href={card.link}>Ссылка на статью</a>
                         </div>
                         <div className="card-footer">
                           <button

@@ -1,4 +1,4 @@
-/* Адаптивные стили для ноутбуков (max-width: 1366px) */
+  /* Адаптивные стили для ноутбуков (max-width: 1366px) */
 @media screen and (max-width: 1366px) {
   .start-page {
     margin-bottom: 150px;
@@ -117,4 +117,19 @@
     margin-bottom: 30px;
     margin-top: 20px;
   }
+}
+
+@media (max-width: 850px) {
+  #code-o{
+    font: 600 168px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 68px;
+  }
+  #code-E{
+    font-size: 48px;
+  }
+
+  .start-page {
+    margin-bottom: 50px;
+  }
+
 }

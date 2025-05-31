@@ -1,5 +1,6 @@
 import uvicorn
 from routes.matrix_routes import app, router
+
 app.include_router(router, tags=["Matrix Routes"])
 
 if __name__ == "__main__":

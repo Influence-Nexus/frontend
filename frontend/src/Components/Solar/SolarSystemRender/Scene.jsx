@@ -12,10 +12,10 @@ export const Scene = ({
   setHoveredPlanet,
   setSelectedPlanet,
   selectedPlanet,
-  hoveredPlanet
+  hoveredPlanet,
+  isPaused
 }) => {
-
-
+  
   useEffect(() => {
     setHoveredPlanet("Orange")
     // console.log("Hovered Planet изменился:", hoveredPlanet);
@@ -28,7 +28,7 @@ export const Scene = ({
     <>
       <Sun sunRef={sunRef} />
 
-      <Orbit radius={12} speed={0.3}>
+      <Orbit radius={12} speed={0.3} isPaused={isPaused}>
         <Planet
           name="Green"
           description="Жители планеты Green приняли всеобъемлющую стратегию сбережения ее природных ресурсов и жизни в окружении природы. Обеспечение качества среды обитания занимают первостепенное значение в принятии решений."
@@ -39,7 +39,8 @@ export const Scene = ({
           selectedPlanet={selectedPlanet}
         />
       </Orbit>
-      <Orbit radius={18} speed={-0.05}>
+
+      <Orbit radius={18} speed={-0.05} isPaused={isPaused}>
         <Planet
           name="Orange"
           description="Жители планеты Orange строят совершенное общественное устройство. Баланс социальных факторов определяет процветание нации. Настройка институционального комплекса во всех сферах жизни людей является первостепенной задачей."
@@ -50,7 +51,8 @@ export const Scene = ({
           selectedPlanet={selectedPlanet}
         />
       </Orbit>
-      <Orbit radius={28} speed={0.05}>
+
+      <Orbit radius={28} speed={0.05} isPaused={isPaused}>
         <Planet
           name="Violet"
           description="Жители планеты Violet сосредоточены на обеспечении устойчивого жизнеобеспечения, надежности и безопасности всех индустриальных и социально-экономических систем, развивающихся на планете. Предпочитают сберегающие методы, оказывающих положительное воздействие на окружающую среду, животных и людей."

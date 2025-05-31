@@ -160,3 +160,23 @@
   #players-capabilities-list li::marker {
     color: white;
   }
+
+
+@media (max-width: 850px) {
+  .Rules-div {
+    padding: 20px;  
+    font-size: xx-small;
+  }
+
+  #crime-img {
+    width: 300px;
+    height: 200px;
+  }
+  
+  .Example-crime-div{
+    gap: 1rem;
+  }
+  .num-list-unordered{
+    padding-left: 10px;
+  }
+}

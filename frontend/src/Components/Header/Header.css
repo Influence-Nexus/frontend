@@ -57,7 +57,6 @@ nav ul li:hover {
   color: #ffd700;
 }
 
-
 .logout-icon {
   display: flex;
   align-items: center;
@@ -121,4 +120,11 @@ nav ul li:hover {
     font-size: 1.2rem;
   }
 
+}
+
+
+@media (max-width: 850px) {
+  .App-header {
+    padding: 0.6rem;
+  }
 }

@@ -44,7 +44,6 @@
 
 .skipButton {
   position: fixed;
-  /* top: 20px; */
   bottom: 120px;
   right: 100px;
   z-index: 1001;

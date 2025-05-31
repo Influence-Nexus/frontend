@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useCustomStates } from '../../CustomStates';
 import InfoIcon from '@mui/icons-material/Info';
-import { Link } from 'react-router-dom';
 import KeyIcon from "@mui/icons-material/Key";
 import { getScienceClicks, logScienceAttempt } from '../../clientServerHub';
 
 export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
   const {
     isRunning,
-    selectedPlanet,
-    selectedCardIndex,
     handleOpenModal,
     handleLoadCoordinates,
     handleResetCoordinates,
@@ -18,6 +15,7 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
   } = useCustomStates();
 
   const [scienceClicks, setScienceClicks] = useState(null); // null пока не загрузилось
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Загружаем текущее количество science_clicks при монтировании
   useEffect(() => {
@@ -47,12 +45,31 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
       alert(error.message);
     }
   };
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Закрываем меню при клике на любую кнопку на мобильных устройствах
+  const handleButtonClick = (callback) => {
+    return () => {
+      callback();
+      if (window.innerWidth <= 768) {
+        setIsMenuOpen(false);
+      }
+    };
+  };
 
   return (
-    <div className="buttons-container">
+    <div 
+      className={`buttons-container ${isMenuOpen ? 'menu-open' : ''}`}
+      onClick={(e) => {
+        if (e.target.classList.contains('buttons-container') || e.target === e.currentTarget.firstChild) {
+          toggleMenu();
+        }
+      }}
+    >
       <ul className="buttons-group" id="pills-tab" role="tablist">
-        <li>
-          <button id="details-button" className="game-button" onClick={handleOpenModal}>
+        <li>          <button id="details-button" className="game-button" onClick={handleButtonClick(handleOpenModal)}>
             <InfoIcon /> Details
           </button>
         </li>
@@ -61,8 +78,7 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
           {/* <Link to={`/science/${matrixUuid}`} state={{ selectedPlanet, selectedCardIndex, planetColor, planetImg }}> */}
             <button
               id="science-button"
-              className='game-button'
-              onClick={handleScienceClick}
+              className='game-button'              onClick={handleButtonClick(handleScienceClick)}
               // disabled={scienceClicks !== null && scienceClicks <= 0}
               disabled
               title='Временно заблокирована!'
@@ -83,13 +99,12 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
           {/* GAME возвращает граф, без refresh */}
           <button
             className="game-button"
-            id="game-button-divider"
-            onClick={() => {
+            id="game-button-divider"            onClick={handleButtonClick(() => {
               setShowHistory(false);        // возвращаемся в граф
               if (matrixUuid && applyCoordinates) {
                 handleLoadCoordinates(matrixUuid, applyCoordinates); // переобновляем координаты
               }
-            }}
+            })}
           >
             Game
           </button>
@@ -100,16 +115,14 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
           <button
             className="game-button"
             disabled={isRunning}
-            title={isRunning ? "Not available during the game" : ""}
-            onClick={() => setShowHistory(true)}
+            title={isRunning ? "Not available during the game" : ""}            onClick={handleButtonClick(() => setShowHistory(true))}
           >
             Profile
           </button>
         </li>
-        <li><button className="game-button" onClick={handleSaveUserView}>Save View</button></li>
+        <li><button className="game-button" onClick={handleButtonClick(handleSaveUserView)}>Save View</button></li>
         <li><button
-          className="game-button"
-          onClick={() => handleResetCoordinates(matrixUuid, applyCoordinates)}
+          className="game-button"          onClick={handleButtonClick(() => handleResetCoordinates(matrixUuid, applyCoordinates))}
           title="Сбросить граф к дефолтным настройкам"
         >
           Reset
@@ -117,15 +130,13 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
         </li>
         <li>
           <button
-            className="game-button"
-            onClick={() => handleLoadCoordinates(matrixUuid, applyCoordinates)}
+            className="game-button"            onClick={handleButtonClick(() => handleLoadCoordinates(matrixUuid, applyCoordinates))}
             title="Загружает последний сохранённый вид графа"
           >
             Load Last View
           </button>
         </li>
-        <li>
-          <button className='game-button' onClick={handleSaveDefaultView} title='Временная кнопка'>
+        <li>          <button className='game-button' onClick={handleButtonClick(handleSaveDefaultView)} title='Временная кнопка'>
             Save Graph (Default)
           </button>
         </li>

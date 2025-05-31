@@ -124,7 +124,7 @@ export const RulesPage = ({ setHeaderShow }) => {
               </li>
             </ol>
             <div className="Example-crime-div">
-              <img src={crimeImg} id="crime-img" />
+              <img src={crimeImg} id="crime-img" alt=""/>
               <ol className="num-list-unordered">
                 <li>
                   <p><strong>Узел 1:</strong> Наличие имущества (видимое наличие имущества, желаемого ворами).</p>

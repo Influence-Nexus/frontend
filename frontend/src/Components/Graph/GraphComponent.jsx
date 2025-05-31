@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { GraphCanvasRender } from './GraphCanvasRender'
 import Stopwatch from './Stopwatch'
 import VerticalProgressBar from './VerticalProgressBar'
@@ -17,7 +17,7 @@ export const GraphComponent = (props) => {
     disabledNodes, matrixInfo,
     positiveEdgeColor, negativeEdgeColor,
     physicsEnabled, nodeSize,
-    edgeRoundness, intervalRef,
+    edgeRoundness, 
     networkRef, selectedPlanetLocal,
     uuid, nodeColor, applyCoordinates,
     handleClear, handleMakeMove,
@@ -30,11 +30,6 @@ export const GraphComponent = (props) => {
     showHistory, hoverSoundRef
   } = props
 
-
-  // const didLoadCoordsRef = useRef(false); // флаг
-
-
-  // // Добавляем useEffect, который при загрузке графа вызывает handleLoadCoordinates.
   useEffect(() => {
     if (!selectedPlanetLocal) return;
     if (!matrixInfo) return;
@@ -79,7 +74,7 @@ export const GraphComponent = (props) => {
             style={{ width: "150px", height: "150px", borderRadius: "15px" }}
           />
           <div className="graph-component-inner">
-            <h1 style={{ position: "relative", color: planetColor }}>
+            <h1 className="header" style={{ position: "relative", color: planetColor }}>
               {modelName}
             </h1>
             <Buttons

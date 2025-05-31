@@ -123,7 +123,7 @@ async def lifespan(app):
 # ------------------- базовая инициализация -------------------
 app = FastAPI(lifespan=lifespan)
 # else:
-#     app = FastAPI()
+# app = FastAPI() #для запуска без тг бота
 router = APIRouter()
 app.include_router(router, tags=["Matrix Routes"])
 

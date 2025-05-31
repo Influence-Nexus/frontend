@@ -2,28 +2,29 @@ import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-export const Orbit = ({ children, radius, speed }) => {
+export const Orbit = ({ children, radius, speed, isPaused }) => {
   const planetRef = useRef();
+  const angleRef = useRef(0);
 
-  // Обновляем позицию объекта по орбите
-  useFrame(({ clock }) => {
-    const elapsedTime = clock.getElapsedTime();
-    const angle = elapsedTime * speed;
-    if (planetRef.current) {
-      planetRef.current.position.set(
-        radius * Math.cos(angle),
-        planetRef.current.position.y, // сохраняем текущую координату y
-        radius * Math.sin(angle)
-      );
-    }
+  useFrame((_, delta) => {
+    if (!planetRef.current || isPaused) return;
+
+    // Обновляем угол только если не на паузе
+    angleRef.current = (angleRef.current + speed * delta) % (Math.PI * 2);
+
+    // Устанавливаем новую позицию
+    planetRef.current.position.x = radius * Math.cos(angleRef.current);
+    planetRef.current.position.z = radius * Math.sin(angleRef.current);
   });
 
-  // Генерация точек окружности орбиты
-  const points = Array.from({ length: 100 }, (_, i) => {
-    const angle = (i / 100) * Math.PI * 2;
-    return new THREE.Vector3(radius * Math.cos(angle), 0, radius * Math.sin(angle));
-  });
-  const orbitGeometry = new THREE.BufferGeometry().setFromPoints(points);
+  // Мемоизированная геометрия орбиты
+  const orbitGeometry = React.useMemo(() => {
+    const points = Array.from({ length: 64 }, (_, i) => {
+      const angle = (i / 64) * Math.PI * 2;
+      return new THREE.Vector3(radius * Math.cos(angle), 0, radius * Math.sin(angle));
+    });
+    return new THREE.BufferGeometry().setFromPoints(points);
+  }, [radius]);
 
   return (
     <>
