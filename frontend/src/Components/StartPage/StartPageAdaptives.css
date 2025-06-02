@@ -1,37 +1,5 @@
-  /* Адаптивные стили для ноутбуков (max-width: 1366px) */
-@media screen and (max-width: 1366px) {
-  .start-page {
-    margin-bottom: 150px;
-  }
-  .code-text {
-    height: 140px;
-    margin: 0;
-    -webkit-text-stroke: 5px rgba(255, 232, 28, 1);
-    font-size: 140px;
-  }
-  #code-o {
-    font-size: 128px;
-  }
-  #code-E {
-    font-size: 88px;
-  }
-
-  .play-button {
-    padding: 5px 55px;
-  }
-  .info-button {
-    padding: 9px 58.5px;
-  }
-  .perspective-container {
-    margin-bottom: 40px;
-  }
-  .mainImage {
-    width: 55%;
-  }
-}
-
 /* Адаптивные стили для планшетов (max-width: 768px) */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 768px) and (orientation: portrait )  {
   .start-page {
     position: absolute;
     top: 15%;
@@ -76,7 +44,7 @@
 }
 
 /* Адаптивные стили для телефонов (max-width: 480px) */
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 480px) and (orientation: portrait )   {
   .start-page {
     position: absolute;
     top: 20%;
@@ -119,17 +87,39 @@
   }
 }
 
-@media (max-width: 850px) {
-  #code-o{
-    font: 600 168px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica, sans-serif;
-    font-size: 68px;
-  }
-  #code-E{
-    font-size: 48px;
-  }
+/* Медиа-запрос для планшетов и мобильных в ландшафте (до 991px) */
+@media screen and (max-width: 991px) and (orientation: landscape) {
+    .start-page {
+      padding-bottom: 10px;
+    }
 
-  .start-page {
-    margin-bottom: 50px;
-  }
+    .code-text {
+      height: 5.5rem;
+      font-size: clamp(80px, 12vw, 120px);
+      -webkit-text-stroke: 5px rgba(255, 232, 28, 1);
+    }
 
+    #code-o {
+      font-size: clamp(70px, 11vw, 110px);
+    }
+
+    #code-E {
+      font-size: clamp(60px, 10vw, 90px);
+    }
+
+    .button-container {
+      gap: 30px;
+    }
+
+    .play-button,
+    .info-button {
+      padding: 12px 50px;
+      font-size: 1.8rem;
+      max-width: 280px;
+    }
+
+    .perspective-container {
+      margin-bottom: 35px;
+      margin-top: 25px;
+    }
 }

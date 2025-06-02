@@ -79,3 +79,47 @@
   .sign-in-up-link:hover {
     color: #00a38a;
   }
+
+/* Применяется для экранов шириной до 991px и в горизонтальной ориентации */
+@media screen and (max-width: 991px) and (orientation: landscape) {
+    .auth-container {
+        max-width: 600px; 
+        margin: 20px auto;
+        padding: 20px;
+        gap: 10px; 
+    }
+
+    .auth-container h2 {
+        margin-bottom: 15px; 
+        font-size: 1.8rem;
+    }
+
+    .auth-form {
+        gap: 10px; 
+    }
+
+    .auth-form input {
+        padding: 8px; 
+        font-size: 0.95rem; 
+    }
+
+    .auth-form button {
+        padding: 8px; 
+        font-size: 1rem;
+    }
+
+    .auth-error,
+    .auth-success {
+        margin-bottom: 8px; 
+        font-size: 0.9rem; 
+    }
+
+    .sign-in-up-p {
+        gap: 8px; 
+        font-size: 0.9rem; 
+    }
+
+    .sign-in-up-link {
+        font-size: 0.9rem; 
+    }
+}

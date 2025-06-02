@@ -1,5 +1,3 @@
-/* ComaBerenicesStyles.css */
-
 .coma-berenices-main-div {
   max-width: 800px;
   margin: 0 auto;
@@ -30,7 +28,7 @@
 }
 
 .coma-section:hover {
-  border-left-color: #9b59b6; /* фиолетовый оттенок — типа "космическое свечение" */
+  border-left-color: #9b59b6;
 }
 
 .coma-section h2 {
@@ -43,7 +41,6 @@
   font-size: 1.4rem;
   margin-top: 1rem;
   margin-bottom: 0.3rem;
-  /* color: #34495e; */
   color: white;
 }
 
@@ -52,18 +49,46 @@
   text-align: justify;
 }
 
-/* Адаптация под мобильные устройства */
-@media (max-width: 600px) {
+@media screen and (max-width: 992px) and (orientation: landscape) {
   .coma-berenices-main-div {
-    padding: 1rem;
+    max-width: 98%; 
+    padding: 1rem; 
+    line-height: 1.4; 
   }
 
   .coma-title {
-    font-size: 2rem;
+    font-size: 56px; 
+    margin-bottom: 0.5rem;
   }
 
-  .coma-intro,
-  .coma-section p {
+  .coma-intro {
     font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .coma-section {
+    margin-bottom: 1rem; 
+    padding: 0.8rem;
+  }
+
+  .coma-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .coma-section h3 {
+    font-size: 1.1rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .coma-section p {
+    font-size: 0.9rem; 
+    margin-bottom: 0.6rem;
+  }
+
+  .coma-section p span[style*="background-color: #3498db"] {
+    font-size: 0.85rem !important;
+    padding: 0 3px !important;
   }
 }

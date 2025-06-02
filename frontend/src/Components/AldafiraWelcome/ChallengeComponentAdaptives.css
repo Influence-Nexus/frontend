@@ -1,17 +1,17 @@
-@media (max-width: 980px) {
+@media screen and (max-width: 991px) and (orientation: landscape) {
   .star-system {
-    top: 5.75rem;
-    left: 12.75rem;
+    top: 4rem;
+    left: 7rem;
   }
 
   .comabla {
     left: 2rem;
-    top: 13rem;
+    top: 16rem;
     font-size: 50px;
   }
 
   .letsGoText {
-    top: 13rem;
+    top: 16rem;
     left: 75%;
     font-size: 50px;
   }

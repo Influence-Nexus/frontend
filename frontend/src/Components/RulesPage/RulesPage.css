@@ -98,7 +98,6 @@
   
   #letter-list-uncolored li::marker {
     color: rgb(255, 215, 0);
-    /* font-size: 1.5em; */
     font-size: calc(1.325rem + .9vw);
   }
   
@@ -146,7 +145,6 @@
   }
 
   #spanned-list-header-p {
-    /* color: rgb(114, 144, 255); */
     font-weight: 900;
     font-style: italic;
     letter-spacing: 2px;
@@ -160,23 +158,3 @@
   #players-capabilities-list li::marker {
     color: white;
   }
-
-
-@media (max-width: 850px) {
-  .Rules-div {
-    padding: 20px;  
-    font-size: xx-small;
-  }
-
-  #crime-img {
-    width: 300px;
-    height: 200px;
-  }
-  
-  .Example-crime-div{
-    gap: 1rem;
-  }
-  .num-list-unordered{
-    padding-left: 10px;
-  }
-}

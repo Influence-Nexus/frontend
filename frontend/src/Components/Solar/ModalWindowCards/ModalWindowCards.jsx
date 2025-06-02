@@ -3,7 +3,6 @@ import { Modal } from "react-bootstrap";
 import CloseIcon from "@mui/icons-material/Cancel";
 import { Link } from "react-router-dom";
 
-// Локальные карточки и стили
 import { cards, cardcreds } from "./cards";
 import "./ModalWindowCards.css";
 import "./mobileVersion.css";
@@ -12,7 +11,6 @@ export const PlanetCardModal = ({ selectedPlanet, setSelectedPlanet }) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false);
 
-  // Карточки берём напрямую из cards.js
   const currentCards = cards[selectedPlanet.name] || [];
 
   const handleZoomWindow = (index) => {
@@ -24,7 +22,6 @@ export const PlanetCardModal = ({ selectedPlanet, setSelectedPlanet }) => {
     setIsZoomed(false);
     setTimeout(() => setSelectedCardIndex(null), 300);
   };
-      // contentClassName={`modal-content-custom modal-content-${selectedPlanet.name.toLowerCase()}`}
   return (    
     <Modal
       show={true}

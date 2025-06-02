@@ -1,5 +1,5 @@
 .challenge-text {
-    font-size: 6rem; /* Увеличен для читаемости */
+    font-size: 6rem;
     font-weight: 400;
     color: #ffffff;
     font-family: 'MoonDance', sans-serif;
@@ -7,13 +7,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 30px 0 10px 0;
+    margin: 15px 0 10px 0;
   }
   
   .challenge-text-sign {
     font-family: "Reggae One", sans-serif;
     font-size: 5rem;
-    color: white; /* Подчёркиваемый элемент */
+    color: white; 
     margin-left: 1.2rem;
   }
 
