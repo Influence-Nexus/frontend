@@ -18,7 +18,7 @@ export const HistoryTable = ({ matrixUuid, planetColor, history, setHistory }) =
   }, [matrixUuid]);
 
   if (!history.length)
-    return <p className="history-no-games">Нет сыгранных партий</p>;
+    return <h1 className="history-no-games">Нет сыгранных партий</h1>;
 
   return (
     <div className="history-table-container">

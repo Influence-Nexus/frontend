@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 
-const BASE_URL = `${window.location.protocol}//${window.location.hostname}:8000`;
+const BASE_URL = `${window.location.protocol}//${window.location.hostname}:8001`;
 
 // const BASE_URL = "http://localhost:8000"
 

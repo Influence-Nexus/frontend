@@ -88,6 +88,7 @@ export const GraphCanvasRender = ({
           description: oldNodes[fromId - 1].description,
           color: { background: isDisabled ? "gray" : nodeColor },
           font: { size: isDisabled ? 14 : 16 },
+          fixed: true, // для того чтобы пользователь не мог двигать ноды
         };
         nodesMap.set(fromId, nodeData);
         nodesDataSet.add(nodeData);
@@ -103,6 +104,8 @@ export const GraphCanvasRender = ({
           description: oldNodes[toId - 1].description,
           color: { background: isDisabled ? "gray" : nodeColor },
           font: { size: isDisabled ? 14 : 16 },
+          fixed: true, // для того чтобы пользователь не мог двигать ноды
+
         };
         if (oldNodes[toId - 1].target === 1) {
           nodeData.color = { background: "gold" };
@@ -164,6 +167,10 @@ export const GraphCanvasRender = ({
         font: { size: 14, color: "white", align: "center" },
         borderWidth: 2,
         borderWidthSelected: 4,
+        fixed: {
+          x: true,
+          y: true,
+        } // этот блок тоже для того чтобы нельзя было двигать ноды
       },
       interaction: { hover: true, tooltipDelay: 300, multiselect: true },
     };

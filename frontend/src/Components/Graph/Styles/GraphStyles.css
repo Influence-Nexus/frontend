@@ -383,7 +383,7 @@
 
 .node-list-container {
   position: absolute;
-  top: 200px;
+  top: 0;
   right: 0;
   left: 65% !important;
   z-index: 2;
@@ -473,6 +473,15 @@
   padding: 10px 15px;
   border-radius: 8px;
   border: 2px solid white;
+}
+
+.history-no-games{
+  display: flex;
+  color: white;
+  padding: 20px 0 20px 0;
+  margin: 20px 0 20px 0;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Адаптивные стили */
@@ -687,14 +696,19 @@
   }
 }
 
-@media (max-width: 900px) {
-  .graph-component-row {
-    padding: 15px 15px;
+@media screen and (max-width: 992px) and (orientation: landscape) {
+  .graph-container{
+    height: 302px;
   }
 
-   .stopwatch-container {
+  .graph-component-row {
+    padding: 15px 15px 2px 15px;
+  }
+
+  .stopwatch-container {
     font-size: 14px;
     width: 170px;
+    height: 294px;
   }
 
   .stopwatch-container h3 {
@@ -737,5 +751,9 @@
 
   .graph-component-inner {
     gap: 10px;
+  }
+
+  .vertical-progress-bar{
+    height: 316px;
   }
 }

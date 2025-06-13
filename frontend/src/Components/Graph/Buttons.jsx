@@ -136,10 +136,10 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
             Load Last View
           </button>
         </li>
-        <li>          <button className='game-button' onClick={handleButtonClick(handleSaveDefaultView)} title='Временная кнопка'>
+        {/* <li>          <button className='game-button' onClick={handleButtonClick(handleSaveDefaultView)} title='Временная кнопка'>
             Save Graph (Default)
           </button>
-        </li>
+        </li> */}
       </ul>
     </div>
   );
