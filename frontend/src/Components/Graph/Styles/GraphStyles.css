@@ -80,6 +80,7 @@
    Контейнер графа (GraphCanvasRender)
 ---------------------------------- */
 .graph-container {
+  display: flex;
   height: 620px;
   width: 100%;
   position: relative;
@@ -118,7 +119,6 @@
   justify-content: space-between;
   padding: 15px 80px;
 }
-
 /* ----------------------------------
    Кнопки-контейнер (Buttons.jsx)
 ---------------------------------- */
@@ -441,5 +441,112 @@
   display: flex;
   justify-content: space-between;
 }
+/* === МОБИЛЬНАЯ ВЕРСИЯ (ГРАФИК НА ВЕСЬ ЭКРАН) === */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+
+  .layout-mobile.landscape {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  }
+
+  .layout-mobile.landscape .graph-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: 20px;
+  width: 75%;
+  height: 70vh;
+  box-sizing: border-box;
+  }
+
+  .layout-mobile.landscape .mobile-overlay {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 5px;
+  }
+
+  .layout-mobile.landscape .stopwatch-container {
+    width: 30%;
+    height: calc(100vh - 20px);
+    overflow-y: auto;
+  }
+
+  .layout-mobile.landscape .game-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .mobile-buttons-overlay {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .layout-mobile.landscape canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .stopwatch-container {
+  color: white;
+  font-size: 0.85rem;
+}
+
+.stopwatch-container h3 {
+  font-size: 1.1rem;
+  color: white;
+}
+
+.stopwatch-container p {
+  font-size: 0.9rem;
+  color: white;
+}
+
+.stopwatch-container .selected-list li {
+  font-size: 0.8rem;
+  color: white;
+}
+
+.btn-start,
+.btn-stop {
+  font-size: 0.9rem;
+  color: white !important;
+}
 
 
+.layout-mobile.portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.mobile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mobile-planet-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.mobile-buttons-overlay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+   margin-bottom: 10px;
+}
+}

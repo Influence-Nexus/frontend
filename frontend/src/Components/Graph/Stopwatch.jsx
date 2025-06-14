@@ -20,25 +20,25 @@ const Stopwatch = ({ planetColor }) => {
 
   return (
     <div className="stopwatch-container">
-      {/* Время */}
+      {/* Блок времени */}
       <div className="stopwatch-container-time">
         <h3>Time</h3>
         <p><FaStopwatch /> {formattedTime}</p>
       </div>
 
-      {/* Счёт */}
+      {/* Блок счёта */}
       <div className="stopwatch-container-score">
         <h3>Score</h3>
         <p><FaMedal /> {score.toFixed(2)}</p>
       </div>
 
-      {/* История ходов */}
-      <div className="stopwatch-container-table" style={{ overflowY: 'auto' }}>
+      {/* Блок ходов */}
+      <div className="stopwatch-container-table">
         <h3>Vertices</h3>
         {movesHistory.length > 0 ? (
-          <ul className="selected-list" style={{ padding: 0, margin: 0 }}>
+          <ul className="selected-list">
             {movesHistory.map((move) => (
-              <li key={move.moveNumber} style={{ marginBottom: '10px' }}>
+              <li key={move.moveNumber}>
                 <strong>Move {move.moveNumber}:</strong> {move.nodes.map(node => node?.id ?? 'N/A').join(', ')}
               </li>
             ))}
@@ -62,7 +62,6 @@ const Stopwatch = ({ planetColor }) => {
           onMouseLeave={() => setIsHoveredStart(false)}
           onClick={handleStart}
           disabled={isRunning}
-          title={isRunning ? "Вы уже в процессе игры!" : "Начать игру"}
         >
           Start
         </button>
@@ -79,7 +78,6 @@ const Stopwatch = ({ planetColor }) => {
           onMouseLeave={() => setIsHoveredStop(false)}
           onClick={handleStop}
           disabled={!isRunning}
-          title={isRunning ? "Остановить игру" : "Вы ещё не начали игру!"}
         >
           Stop
         </button>

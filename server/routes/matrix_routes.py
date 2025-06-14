@@ -121,7 +121,8 @@ async def lifespan(app):
         await tg_app.shutdown()
         logging.info("[✅ BOT] stopped")
 # ------------------- базовая инициализация -------------------
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 # else:
 #     app = FastAPI()
 router = APIRouter()

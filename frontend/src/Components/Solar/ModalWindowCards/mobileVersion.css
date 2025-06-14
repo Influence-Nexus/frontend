@@ -135,7 +135,7 @@
   /* Изображение планеты */
   .planet-image {
     position: relative;
-    top: -60px;
+    top: -5px;
     width: 120px;
     height: 120px;
   }
@@ -148,11 +148,13 @@
 
   /* Контейнер карточек */
   .cards-container {
-    gap: 15px;
-    padding: 0 10px;
-    overflow-y: auto;
-  }
-
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, max-content));
+  justify-content: center; /* <-- это выравнивает карточки по центру */
+  gap: 15px;
+  margin: 20px;
+  overflow-y: auto;
+}
   /* Обычная карточка */
   .card-item-normal {
     width: 100%; /* Полная ширина контейнера */
@@ -162,8 +164,16 @@
 
   /* Заголовок карточки */
   .card-header {
-    font-size: 14px;
-    height: 40px;
+      font-size: clamp(12px, 3vw, 16px); /* от 12 до 16px в зависимости от ширины экрана */
+  min-height: 40px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  white-space: normal;
+  word-wrap: break-word;
     color: rgb(255, 218, 150);
   }
 
@@ -229,5 +239,42 @@
     font-size: 2rem; /* Увеличьте размер на мобильных */
     top: 10px;
     right: 10px;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-height: 480px) {
+
+  .modal-content-custom {
+    width: 95%;
+    height: 95vh;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr); /* или 1fr, если всё ломается */
+    gap: 10px;
+    margin: 10px;
+  }
+
+  .card-item-normal {
+    min-width: 140px;
+    max-width: 180px;
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .selected-planet-name {
+    font-size: 2rem;
+  }
+
+  .card-description {
+    font-size: 12px;
+    max-height: 100px;
+  }
+
+  .planet-image {
+    width: 90px;
+    height: 90px;
   }
 }

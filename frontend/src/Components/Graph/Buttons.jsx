@@ -1,11 +1,13 @@
+// src/Components/Graph/Buttons.jsx
 import React, { useEffect, useState } from 'react';
-import { useCustomStates } from '../../CustomStates';
 import InfoIcon from '@mui/icons-material/Info';
+import KeyIcon from '@mui/icons-material/Key';
 import { Link } from 'react-router-dom';
-import KeyIcon from "@mui/icons-material/Key";
+
+import { useCustomStates } from '../../CustomStates';
 import { getScienceClicks, logScienceAttempt } from '../../clientServerHub';
 
-export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
+const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
   const {
     isRunning,
     selectedPlanet,
@@ -14,105 +16,115 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
     handleLoadCoordinates,
     handleResetCoordinates,
     handleSaveUserView,
-    handleSaveDefaultView, applyCoordinates, setShowHistory
+    handleSaveDefaultView,
+    applyCoordinates,
+    setShowHistory,
   } = useCustomStates();
 
-  const [scienceClicks, setScienceClicks] = useState(null); // null пока не загрузилось
-
-  // Загружаем текущее количество science_clicks при монтировании
+  // Science-клики
+  const [scienceClicks, setScienceClicks] = useState(null);
   useEffect(() => {
-    const fetchScienceClicks = async () => {
+    (async () => {
       try {
-        const result = await getScienceClicks(matrixUuid); // Тот же эндпоинт, но без уменьшения
-        if (result && result.science_clicks !== undefined) {
-          setScienceClicks(result.science_clicks);
-        }
-      } catch (error) {
-        console.error("Ошибка при получении science_clicks:", error.message);
+        const res = await getScienceClicks(matrixUuid);
+        if (res?.science_clicks != null) setScienceClicks(res.science_clicks);
+      } catch (err) {
+        console.error('Не удалось загрузить science_clicks:', err);
       }
-    };
-
-    fetchScienceClicks();
+    })();
   }, [matrixUuid]);
 
   const handleScienceClick = async () => {
     try {
-      const result = await logScienceAttempt(matrixUuid);
-      // console.log("Science attempt logged:", result);
-      if (result && result.science_clicks !== undefined) {
-        setScienceClicks(result.science_clicks); // Обновляем из ответа сервера
-      }
-    } catch (error) {
-      console.error("Ошибка:", error.message);
-      alert(error.message);
+      const res = await logScienceAttempt(matrixUuid);
+      if (res?.science_clicks != null) setScienceClicks(res.science_clicks);
+    } catch (err) {
+      console.error('Ошибка при Science click:', err);
+      alert(err.message);
     }
   };
 
   return (
     <div className="buttons-container">
-      <ul className="buttons-group" id="pills-tab" role="tablist">
+      <ul className="buttons-group" role="tablist">
+        {/* Details */}
         <li>
-          <button id="details-button" className="game-button" onClick={handleOpenModal}>
+          <button
+            id="details-button"
+            className="game-button"
+            onClick={() => handleOpenModal(selectedCardIndex)}
+            disabled={selectedCardIndex == null}
+          >
             <InfoIcon /> Details
           </button>
         </li>
 
+        {/* Science */}
         <li>
-          <Link to={`/science/${matrixUuid}`} state={{ selectedPlanet, selectedCardIndex, planetColor, planetImg }}>
+          <Link
+            to={`/science/${matrixUuid}`}
+            state={{ selectedPlanet, selectedCardIndex, planetColor, planetImg }}
+          >
             <button
-              id="science-button"
-              className='game-button'
+              className="game-button"
               onClick={handleScienceClick}
               disabled={scienceClicks !== null && scienceClicks <= 0}
             >
               <p>Science</p>
               {scienceClicks !== null &&
-                Array.from({ length: scienceClicks }, (_, index) => (
-                  <KeyIcon key={index} sx={{ marginRight: "4px" }} />
-                ))
-              }
+                Array.from({ length: scienceClicks }, (_, i) => (
+                  <KeyIcon key={i} sx={{ mr: 0.5 }} />
+                ))}
             </button>
           </Link>
         </li>
 
-        {/* Остальные кнопки */}
+        {/* Game */}
         <li>
-
-          {/* GAME возвращает граф, без refresh */}
           <button
             className="game-button"
-            id="game-button-divider"
             onClick={() => {
-              setShowHistory(false);        // возвращаемся в граф
+              setShowHistory(false);
               if (matrixUuid && applyCoordinates) {
-                handleLoadCoordinates(matrixUuid, applyCoordinates); // переобновляем координаты
+                handleLoadCoordinates(matrixUuid, applyCoordinates);
               }
             }}
           >
             Game
           </button>
-
         </li>
+
+        {/* Profile */}
         <li>
-          {/* PROFILE показывает историю */}
           <button
             className="game-button"
             disabled={isRunning}
-            title={isRunning ? "Not available during the game" : ""}
+            title={isRunning ? 'Not available during the game' : ''}
             onClick={() => setShowHistory(true)}
           >
             Profile
           </button>
         </li>
-        <li><button className="game-button" onClick={handleSaveUserView}>Save View</button></li>
-        <li><button
-          className="game-button"
-          onClick={() => handleResetCoordinates(matrixUuid, applyCoordinates)}
-          title="Сбросить граф к дефолтным настройкам"
-        >
-          Reset
-        </button>
+
+        {/* Save View */}
+        <li>
+          <button className="game-button" onClick={handleSaveUserView}>
+            Save View
+          </button>
         </li>
+
+        {/* Reset */}
+        <li>
+          <button
+            className="game-button"
+            onClick={() => handleResetCoordinates(matrixUuid, applyCoordinates)}
+            title="Сбросить граф к дефолтным настройкам"
+          >
+            Reset
+          </button>
+        </li>
+
+        {/* Load Last View */}
         <li>
           <button
             className="game-button"
@@ -122,8 +134,14 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
             Load Last View
           </button>
         </li>
+
+        {/* Save Default */}
         <li>
-          <button className='game-button' onClick={handleSaveDefaultView} title='Временная кнопка'>
+          <button
+            className="game-button"
+            onClick={handleSaveDefaultView}
+            title="Сохранить вид графа по умолчанию"
+          >
             Save Graph (Default)
           </button>
         </li>
@@ -131,3 +149,5 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
     </div>
   );
 };
+
+export default Buttons;

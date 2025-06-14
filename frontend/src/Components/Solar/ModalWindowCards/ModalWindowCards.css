@@ -98,6 +98,7 @@
   border-radius: 15px; /* обновлено с 10px */
   padding: 10px;
   width: 200px;
+  height: 330px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
@@ -285,3 +286,56 @@
   width: 95%;
   font-size: 1.5rem;
 }
+/* Скрыть вертикальный скроллбар во всех браузерах */
+.modal-body-custom::-webkit-scrollbar,
+.card-description::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* полностью прозрачный фон */
+}
+
+.modal-body-custom,
+.card-description {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE и Edge */
+}
+/* Убираем белые полосы и стилизуем стрелки в select или кастомных dropdown'ах */
+select,
+.custom-dropdown {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #2a2a2a; /* под цвет карточки */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Скрываем скроллбар в WebKit-браузерах */
+select::-webkit-scrollbar,
+.custom-dropdown::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+/* Убираем фон, рамки и белые полосы у всех возможных стрелок и оболочек */
+.card-header button,
+.card-header span,
+.card-header div,
+.card-header p {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: white;
+  scrollbar-width: none !important;
+}
+
+/* Отключаем скроллбар внутри заголовков */
+.card-header::-webkit-scrollbar,
+.card-header span::-webkit-scrollbar,
+.card-header p::-webkit-scrollbar {
+  width: 0 !important;
+  background: transparent !important;
+}
+
