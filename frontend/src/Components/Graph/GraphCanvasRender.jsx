@@ -317,7 +317,7 @@ export const GraphCanvasRender = ({
           className="selected-edges-clear"
           style={{
             position: "absolute",
-            top: "240px",
+            top: "220px",
             right: "80px",
             zIndex: 1,
             backgroundColor: "white",

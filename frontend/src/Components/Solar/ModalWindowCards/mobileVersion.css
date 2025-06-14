@@ -292,6 +292,7 @@
   .card-item-normal {
     width: 160px; 
     padding: 8px; 
+    height: 230px;
   }
 
   .card-header {

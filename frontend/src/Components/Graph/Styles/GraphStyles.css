@@ -697,6 +697,40 @@
 }
 
 @media screen and (max-width: 992px) and (orientation: landscape) {
+
+  .selected-edges-clear
+  {
+    top: 200px !important;
+    right: 25px !important;
+  }
+
+  .node-list-container{
+    position: absolute !important;
+    font-size: 10px;
+    max-width: 300px !important;
+    padding: 5px;
+  }
+  
+  .node-list{
+    padding-left: 10px;
+  }
+
+  .selected-nodes-list{
+    position: absolute !important;
+    top: 100px;
+    right: 615px;
+    font-size: 10px;
+    padding: 10px;
+  }
+
+  .btn-success{
+    margin-left: 5px;
+  }
+
+ .vis-tooltip{
+  font-size: 10px;
+ }
+
   .graph-container{
     height: 302px;
   }
