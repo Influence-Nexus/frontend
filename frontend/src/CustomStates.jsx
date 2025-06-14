@@ -118,6 +118,10 @@ export const CustomStatesProvider = ({ children }) => {
     };
 
     document.addEventListener("click", unlockAudio);
+
+    return () => {
+      document.removeEventListener("click", unlockAudio); // Очистка
+    };
   }, []);
 
 
