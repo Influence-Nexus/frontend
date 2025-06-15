@@ -33,8 +33,6 @@ from routes.UUID_MATRICES     import MATRIX_UUIDS
 # if load_tg_bot == "yes" or load_tg_bot == "da" or load_tg_bot == "lf" or load_tg_bot == "нуы" or load_tg_bot == "да":
 load_dotenv()
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-if not TELEGRAM_TOKEN:
-    raise RuntimeError("TELEGRAM_BOT_TOKEN не найден в .env!")
 # ─── bot handlers ───────────────────────────────────────────
 async def tg_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Привет! Я бот для обратной связи — пишите и присылайте файлы.")
@@ -102,6 +100,9 @@ async def tg_save_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ─── lifespan ───────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app):
+    if not TELEGRAM_TOKEN:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN не найден в .env!")
+
     tg_app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     tg_app.add_handler(CommandHandler("start", tg_start))
     tg_app.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, tg_save_message))
