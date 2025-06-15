@@ -40,28 +40,12 @@ export const GraphComponent = (props) => {
   }, [matrixInfo, isNetworkReady, uuid, applyCoordinates]);
 
   const graphCanvasProps = {
-    matrixInfo,
-    disabledNodes,
-    nodeColor,
-    edgeRoundness,
-    positiveEdgeColor,
-    negativeEdgeColor,
-    setGraphData,
-    graphData,
-    selectedEdges,
-    physicsEnabled,
-    nodeSize,
-    setHighlightedNode,
-    setShowNodeList,
-    setHoveredNode,
-    lockedNodes,
-    setSelectedNodes,
-    setSelectedEdges,
-    networkRef, handleClear, handleMakeMove,
-    selectedNodes, hoveredNode,
-    showModal, setShowModal, lastIndex, showNodeList,
-    handleClearEdges, setIsNetworkReady,
-    graphDataState, setGraphDataState, hoverSoundRef
+    matrixInfo, disabledNodes, nodeColor, edgeRoundness, positiveEdgeColor,
+    negativeEdgeColor, setGraphData, graphData, selectedEdges, physicsEnabled,
+    nodeSize, setHighlightedNode, setShowNodeList, setHoveredNode, lockedNodes,
+    setSelectedNodes, setSelectedEdges, networkRef, handleClear, handleMakeMove,
+    selectedNodes, hoveredNode, showModal, setShowModal, lastIndex, showNodeList,
+    handleClearEdges, setIsNetworkReady, graphDataState, setGraphDataState, hoverSoundRef
   };
 
   return (
