@@ -45,10 +45,6 @@
 
 /* Адаптивные стили для телефонов (max-width: 480px) */
 @media screen and (max-width: 480px) and (orientation: portrait )   {
-  .start-page {
-    position: absolute;
-    top: 20%;
-  }
   .code-text {
     font: 400 80px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica,
       sans-serif;

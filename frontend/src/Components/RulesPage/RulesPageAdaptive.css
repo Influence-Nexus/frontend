@@ -91,3 +91,115 @@
         padding: 3px 8px !important;
     }
 }
+
+/* New styles for portrait mode on phones */
+@media screen and (max-width: 767px) and (orientation: portrait) {
+    .Rules-div {
+        padding: 15px;
+        font-size: small;
+    }
+
+    .Rules-div h1 {
+        font-size: clamp(2em, 8vw, 3.5em) !important;
+    }
+
+    .Rules-div h2 {
+        font-size: clamp(1.5em, 6vw, 2em);
+    }
+
+    .Rules-div p {
+        font-size: clamp(0.9em, 4vw, 1.3em) !important;
+    }
+
+    .Rules-div a {
+        font-size: clamp(0.8em, 3.5vw, 1.2em) !important;
+    }
+
+    #sub-topic {
+        font-size: clamp(1.5em, 6vw, 2em);
+        text-align: left; /* Adjust alignment for better readability on small screens */
+    }
+
+    #sub-paragraph {
+        margin-left: 0; /* Убран левый отступ */
+        text-align: left;
+    }
+
+    #letter-sublist-uncolored,
+    #letter-list-uncolored {
+        margin-left: 0; /* Убран левый отступ */
+        padding-left: 1em; /* Добавлен отступ для маркеров списка */
+    }
+
+    #letter-sublist-uncolored li::marker,
+    #letter-list-uncolored li::marker {
+        font-size: clamp(0.9em, 3.5vw, 1.2em);
+    }
+
+    #sub-list-colored-span {
+        font-size: clamp(0.9em, 3.5vw, 1.2em);
+    }
+
+    #sub-list-colored-div {
+        margin-left: 0; /* Убран левый отступ */
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Align to the start */
+        gap: 2px;
+    }
+
+    #num-list-uncolored {
+        margin-left: 0; /* Убран левый отступ */
+        padding-left: 1em; /* Добавлен отступ для маркеров списка */
+    }
+
+    #num-list-uncolored li::marker {
+        font-size: clamp(0.9em, 3.5vw, 1.2em);
+    }
+
+    #disc-list-uncolored {
+        margin-left: 0; /* Убран левый отступ */
+        padding-left: 1em; /* Добавлен отступ для маркеров списка */
+    }
+
+    #disc-list-uncolored li::marker {
+        font-size: clamp(1.2em, 5vw, 1.5em);
+    }
+
+    #list-header-h2 {
+        font-size: clamp(1.3rem, 5.5vw, 1.6rem);
+    }
+
+    #spanned-list-header-p {
+        font-size: clamp(0.9em, 4vw, 1.3em);
+    }
+
+    #players-capabilities-list {
+        margin-left: 0; /* Убран левый отступ */
+        padding-left: 1em; /* Добавлен отступ для маркеров списка */
+    }
+
+    .Example-crime-div {
+        flex-direction: column; /* Stack image and list vertically */
+        gap: 1.5rem;
+    }
+
+    #crime-img {
+        width: 80%; /* Make image larger in portrait mode */
+        max-width: 300px; /* Limit max width */
+        height: auto;
+    }
+
+    .num-list-unordered {
+        padding-left: 0; /* Remove padding for tighter layout */
+        text-align: left;
+    }
+
+    .Start-End-Phrase {
+        font-size: clamp(2.5rem, 10vw, 4rem) !important;
+    }
+
+    .Rules-div button {
+        font-size: clamp(0.4em, 2vw, 0.6em) !important;
+        padding: 2px 6px !important;
+    }
+}

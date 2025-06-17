@@ -26,3 +26,83 @@
     z-index: 1001;
   }
 }
+
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  .fullScreenVideo {
+    object-fit: contain !important;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+  }
+
+  .skipButton {
+    font-size: 18px;
+    bottom: 5vh;
+    right: 5vw;
+    padding: 8px 16px;
+  }
+
+  /* Adjustments for the main content in portrait mode */
+  .challengeContainer {
+    background-size: cover; /* Ensure background covers the whole area */
+    animation: none; /* Disable zoom animation for portrait mode */
+  }
+
+  .heroSection {
+    justify-content: center; /* Center content vertically */
+    padding-top: 5vh; /* Add some padding from the top */
+  }
+
+  .star-system {
+    top: 20vh; /* Adjust position relative to viewport height */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for true centering */
+    width: 200px; /* Adjust size */
+    height: 150px; /* Adjust size */
+  }
+
+  .burningStar {
+    top: 3rem; /* Adjust position within star-system */
+    left: 5%;
+    transform: translateX(-50%);
+    width: 15px; /* Smaller star */
+    height: 15px;
+  }
+
+  .constellationLine {
+    width: 250px; /* Adjust line size */
+    height: 150px;
+  }
+
+  .challenge-mind-text-div {
+    margin-top: 40vh; /* Push challenge text down */
+    font-size: 0.8em; /* Smaller font for mobile */
+    text-align: center;
+  }
+
+  .second-page-texts {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    width: 100%; /* Take full width */
+    position: relative; /* Ensure proper positioning */
+    margin-top: 5vh; /* Space below challenge mind text */
+  }
+
+  .comabla {
+    position: relative; /* Make it flow with other elements */
+    top: auto;
+    left: auto;
+    font-size: 32px; /* Smaller font size */
+    margin-bottom: 20px; /* Space between elements */
+    text-align: center;
+  }
+
+  .letsGoText {
+    position: relative; /* Make it flow with other elements */
+    top: auto;
+    left: auto;
+    font-size: 48px; /* Smaller font size */
+    text-align: center;
+  }
+}

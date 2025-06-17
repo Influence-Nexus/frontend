@@ -24,7 +24,7 @@
 }
 
 /* Адаптивность для телефонов (макс. ширина 480px) */
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 480px) and (orientation: portrait) {
   .challenge-text {
     font-size: 3rem;
     margin: 15px 0 5px 0;
@@ -37,9 +37,3 @@
 }
 
 
-@media (max-width: 980px) {
-  .challenge-text {
-    font-size: 4rem;
-    margin-top: 0px;
-  }
-}

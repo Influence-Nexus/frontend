@@ -157,18 +157,3 @@
   height: 250px;
 }
 
-@media screen and (max-width: 768px) and (orientation: portrait) {
-  .fullScreenVideo {
-    object-fit: contain !important;
-    width: 100vw;
-    height: 100vh;
-    background-color: black;
-  }
-
-  .skipButton {
-    font-size: 18px;
-    bottom: 5vh;
-    right: 5vw;
-    padding: 8px 16px;
-  }
-}

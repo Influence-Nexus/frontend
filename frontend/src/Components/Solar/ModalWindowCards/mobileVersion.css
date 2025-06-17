@@ -13,118 +13,133 @@
   .modal-header-custom {
     padding: 10px 0;
     gap: 10px;
+    flex-direction: column; /* Stack header content vertically */
+    align-items: center; /* Center items in the header */
   }
+
   .life-strategy {
-    font-size: 14px;
+    font-size: 1rem;
   }
+
   /* Изображение планеты */
   .planet-image {
     position: relative;
     top: -5px;
-    width: 120px;
-    height: 120px;
+    width: 100px; /* Smaller image */
+    height: 100px; /* Smaller image */
   }
 
   /* Заголовок планеты */
   .selected-planet-name {
-    font-size: 2.5rem; /* Уменьшенный размер шрифта */
+    font-size: 2rem; /* Уменьшенный размер шрифта */
     margin: 0;
   }
 
   /* Контейнер карточек */
   .cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, max-content));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adjusted min-width for more columns if space allows */
     justify-content: center; /* <-- это выравнивает карточки по центру */
-    gap: 15px;
-    margin: 20px;
+    gap: 10px; /* Reduced gap */
+    margin: 10px; /* Reduced margin */
     overflow-y: auto;
   }
+
   /* Обычная карточка */
   .card-item-normal {
-    width: 100%; /* Полная ширина контейнера */
-    padding: 10px;
-    height: 340px;
+    width: 100%; /* Full width of its grid column */
+    padding: 8px; /* Reduced padding */
+    height: 330px; /* Adjusted height */
     border-radius: 12px;
   }
 
   /* Заголовок карточки */
   .card-header {
-    font-size: clamp(12px, 3vw, 16px); /* от 12 до 16px в зависимости от ширины экрана */
-    min-height: 40px;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: clamp(10px, 3vw, 14px);
+    min-height: 65px;
+    padding: 8px 0;
     text-align: center;
-    padding: 10px;
-    white-space: normal;
-    word-wrap: break-word;
-    color: rgb(255, 218, 150);
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
   }
 
   /* Изображение в карточке */
   .card-img {
-    width: 80%;
+    width: 70%; /* Smaller image */
     height: auto;
   }
 
   /* Описание карточки */
   .card-description {
-    font-size: 14px;
+    font-size: 12px; /* Smaller font size */
     width: 100%;
-    max-height: 150px;
+    max-height: 241px; /* Adjusted max-height */
     padding: 5px;
   }
 
   /* Кнопки действий */
   .modal-cards-buttons {
-    width: 120px;
-    height: 40px;
-    font-size: 14px;
+    width: 100px; /* Smaller buttons */
+    height: 35px; /* Smaller buttons */
+    font-size: 12px; /* Smaller font size */
   }
 
   .card-item-zoomed {
-    width: 100%; /* Полная ширина экрана */
-    max-width: 100%; /* Запрещаем выход за экран */
-    padding: 20px;
+    width: 95%; /* Полная ширина экрана */
+    max-width: 95%; /* Запрещаем выход за экран */
+    padding: 15px; /* Reduced padding */
     border-radius: 15px;
     height: 85vh;
     overflow-y: auto;
-    position: fixed; /* Убедитесь, что позиционирование сохранено */
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    flex-direction: column; /* Stack content vertically */
+    align-items: center; /* Center zoomed card content */
   }
 
   /* Убираем фиксированную ширину для внутренних блоков */
+  .card-item-zoomed .card-wrapper {
+    max-width: 100%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .card-item-zoomed .card-header,
   .card-item-zoomed .card-body {
-    max-width: 100% !important; /* !important для перезаписи */
+    max-width: 100% !important; 
     width: 100%;
   }
 
   /* Корректируем изображение в зумированной карточке */
   .card-item-zoomed .card-img-zoomed {
-    width: 80%;
+    width: 70%; /* Adjusted image size in zoomed view */
     height: auto;
-    max-width: 80%;
-    max-height: 400px; /* Ограничение по высоте */
+    max-width: 250px; /* Adjusted max-width */
+    max-height: 300px; 
     object-fit: contain;
   }
 
   /* Адаптивные размеры для текста */
   .card-item-zoomed .card-description {
-    font-size: 14px;
-    width: 80%;
+    font-size: 12px; /* Smaller font for zoomed description */
+    width: 90%; /* Adjusted width */
     max-width: 100%;
     padding: 5px;
+    text-align: center; /* Center description text */
+  }
+  .card-item-zoomed .card-header p {
+    font-size: 1.1rem; /* Smaller font for zoomed header */
+    width: 90%;
   }
   .close-cardList-modal-window,
   .close-card-modal-window {
-    font-size: 2rem; /* Увеличьте размер на мобильных */
-    top: 10px;
-    right: 10px;
+    font-size: 1.8rem; /* Увеличьте размер на мобильных */
+    top: 5px; /* Adjusted position */
+    right: 5px; /* Adjusted position */
   }
 }
 
@@ -154,14 +169,67 @@
     font-size: 2rem;
   }
 
-  .card-description {
+  .life-strategy {
     font-size: 12px;
-    max-height: 100px;
   }
 
   .planet-image {
     width: 90px;
     height: 90px;
+  }
+
+  .card-item-zoomed {
+    flex-direction: row; /* Keep horizontal layout for landscape zoomed cards */
+    max-width: 90vw;
+    max-height: 90vh;
+    padding: 10px;
+  }
+
+  .card-item-zoomed .card-wrapper {
+    flex-direction: row; /* Keep horizontal for inner wrapper */
+    align-items: flex-start;
+  }
+
+  .card-item-zoomed .card-header {
+    width: 40%; /* Allocate width for header */
+    max-width: none;
+    text-align: left;
+    padding: 5px;
+  }
+
+  .card-item-zoomed .card-header p {
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  .card-item-zoomed .card-body {
+    width: 60%; /* Allocate width for body */
+    max-width: none;
+    align-items: flex-start;
+  }
+
+  .card-item-zoomed .card-img-zoomed {
+    max-width: 150px; /* Smaller image in landscape zoomed */
+    max-height: 150px;
+  }
+
+  .card-item-zoomed .card-description {
+    font-size: 0.75rem; /* Smaller font for description in landscape zoomed */
+    max-height: 80px; /* Adjusted height */
+    overflow-y: auto;
+    width: 100%;
+    padding: 2px;
+  }
+
+  .card-item-zoomed .card-footer {
+    font-size: 0.8rem;
+    padding-bottom: 5px;
+  }
+
+  .card-item-zoomed .modal-cards-buttons {
+    width: 100px;
+    height: 30px;
+    font-size: 1rem;
   }
 }
 
