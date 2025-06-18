@@ -1,4 +1,4 @@
-/* Готовим все классы для тех мест, где были инлайн-стили, 
+/* Готовим все классы для тех мест, где были инлайн-стили,
    плюс то, что ты уже дал в сниппете для stopwatch-container и game-button.
    По желанию можно разбить на несколько CSS, но здесь всё вместе. */
 
@@ -105,6 +105,12 @@
   padding-left: 80px;
   align-items: center;
 }
+
+/* Добавлен класс .head для управления flex по умолчанию */
+.graph-component-header .head {
+  display: flex; /* По умолчанию для десктопа */
+}
+
 .graph-component-inner {
   display: flex;
   flex-direction: column;
@@ -131,6 +137,8 @@
   margin: 0;
   align-items: center;
   gap: 10px;
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out; /* Анимация скрытия/показа */
+  overflow: hidden; /* Обрезаем контент, когда скрыт */
 }
 /* Отдельный класс, если нужен для детали: */
 #details-button {
@@ -449,53 +457,51 @@
   width: 100%;
 }
 
-.buttons-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  transition: all 0.3s ease;
-}
-
-.history-no-games{
-  display: flex;
+/* Стили для иконки меню, которая будет видна только на мобильных */
+.menu-toggle {
+  display: none; /* Скрыто по умолчанию */
+  background-color: #342b41;
+  border-radius: 15px;
+  border: 3px solid white;
   color: white;
-  padding: 20px 0 20px 0;
-  margin: 20px 0 20px 0;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
   align-items: center;
   justify-content: center;
+  gap: 5px;
+  margin-bottom: 10px; /* Отступ от кнопок */
 }
 
+/* Медиа-запрос для альбомного режима на устройствах с шириной до 992px */
 @media screen and (max-width: 992px) and (orientation: landscape) {
-  .selected-edges-clear
-  {
+  .selected-edges-clear {
     top: 200px !important;
     right: 38px !important;
     font-size: 10px;
   }
 
-  .button-row{
+  .button-row {
     flex-direction: column;
   }
-  
-  .btn-danger{
+
+  .btn-danger {
     margin-bottom: 5px;
   }
 
-  .node-list-container{
+  .node-list-container {
     position: absolute !important;
     font-size: 10px;
     max-width: 300px !important;
     padding: 5px;
   }
-  
-  .node-list{
+
+  .node-list {
     padding-left: 10px;
   }
 
-  .selected-nodes-list{
+  .selected-nodes-list {
     position: absolute !important;
     top: 6rem;
     right: 39rem;
@@ -503,11 +509,11 @@
     width: 160px;
   }
 
- .vis-tooltip{
+ .vis-tooltip {
   font-size: 10px;
  }
 
-  .graph-container{
+  .graph-container {
     height: 302px;
   }
 
@@ -555,8 +561,8 @@
   h1.header {
     font-size: 20px
   }
-  
-  .graph-component-header{
+
+  .graph-component-header {
     padding-left: 20px;
   }
 
@@ -564,122 +570,153 @@
     gap: 10px;
   }
 
-  .vertical-progress-bar{
+  .vertical-progress-bar {
     height: 316px;
   }
 }
 
-/* New styles for portrait mode on phones (max-width: 767px) */
+/* Новые стили для портретного режима на телефонах (max-width: 767px) */
 @media screen and (max-width: 767px) and (orientation: portrait) {
   .graph-component-header {
-    flex-direction: column; /* Stack planet image and inner content */
-    padding: 10px; /* Adjust padding */
-    align-items: center; /* Center items */
+    flex-direction: column; /* Размещаем изображение планеты и внутренний контент вертикально */
+    padding: 10px; /* Корректируем отступы */
+    align-items: center; /* Выравниваем элементы по центру */
     text-align: center;
   }
 
+  .graph-component-header .head {
+    display: block !important; /* Переопределяем flex для мобильного портрета */
+  }
+
   .graph-component-inner {
-    padding-left: 0; /* Remove left padding */
-    align-items: center; /* Center content */
-    gap: 15px; /* Adjust gap */
+    padding-left: 0; /* Убираем левый отступ */
+    align-items: center; /* Выравниваем контент по центру */
+    gap: 15px; /* Корректируем промежуток */
+    flex-direction: column; /* Изменяем на вертикальное расположение для мобильных кнопок */
   }
 
   .graph-component-row {
-    flex-direction: column; /* Stack progress bar, graph, and stopwatch */
-    padding: 10px; /* Adjust padding */
-    gap: 20px; /* Add gap between stacked elements */
+    margin-top: 70px;
+    flex-direction: column; /* Размещаем прогресс-бар, граф и секундомер вертикально */
+    padding: 10px; /* Корректируем отступы */
+    gap: 20px; /* Добавляем промежуток между сложенными элементами */
   }
 
   .planet-image {
-    width: 100px !important; /* Smaller planet image */
+    width: 100px !important; /* Уменьшаем размер изображения планеты */
     height: 100px !important;
-    margin-bottom: 10px; /* Space below image */
+    margin-bottom: 10px; /* Пространство под изображением */
   }
 
   h1.header {
-    font-size: 1em; /* Smaller header font */
+    font-size: 1.5em; /* Уменьшаем размер шрифта заголовка */
+  }
+
+  /* Стили для контейнера кнопок в мобильном портрете */
+  .buttons-container {
+    position: absolute;
+    top: 80px;
+    width: 100%;
+    display: flex; /* Делаем контейнер кнопок flex-контейнером */
+    flex-direction: column; /* Располагаем элементы вертикально */
+    align-items: center; /* Выравниваем по центру */
+  }
+
+  .menu-toggle {
+    display: flex; /* Показываем кнопку меню на мобильных */
   }
 
   .buttons-group {
-    flex-direction: column; /* Stack buttons vertically */
-    gap: 10px; /* Adjust gap between buttons */
+    max-height: 0; /* Скрываем кнопки по умолчанию */
+    opacity: 0;
+    pointer-events: none; /* Отключаем события при скрытии */
+    flex-direction: column; /* Кнопки также в столбец */
+    width: 100%; /* Занимают всю доступную ширину */
+    align-items: center; /* Выравниваем кнопки по центру */
+  }
+
+  .buttons-container.menu-open .buttons-group {
+    max-height: 500px; /* Достаточно большое значение для раскрытия */
+    opacity: 1;
+    pointer-events: auto; /* Включаем события при показе */
   }
 
   .game-button {
-    width: 100%; /* Make buttons full width */
-    max-width: 200px; /* Limit max width */
-    height: 40px; /* Adjust height */
-    font-size: 0.9em; /* Smaller font */
+    width: 90%; /* Делаем кнопки на 90% ширины */
+    max-width: 250px; /* Ограничиваем максимальную ширину */
+    height: 45px; /* Корректируем высоту */
+    font-size: 1em; /* Уменьшаем размер шрифта */
   }
 
   #details-button {
-    flex-direction: column; /* Stack details button content */
+    flex-direction: row; /* Оставляем в строку для деталей */
   }
 
   #science-button {
-    width: 100%; /* Make science button full width */
+    width: 90%; /* Делаем кнопку "Наука" на 90% ширины */
+    max-width: 250px;
   }
 
   .vertical-progress-bar {
-    width: 40px; /* Smaller width for progress bar */
-    height: 200px; /* Shorter height */
-    margin: 0 auto; /* Center progress bar */
+    width: 40px; /* Уменьшаем ширину прогресс-бара */
+    height: 200px; /* Уменьшаем высоту */
+    margin: 0 auto; /* Выравниваем прогресс-бар по центру */
   }
 
   .graph-container {
-    height: 300px; /* Smaller graph height */
-    width: 95%; /* Adjust width to fit screen */
-    margin: 0 auto; /* Center graph */
+    height: 300px; /* Уменьшаем высоту графа */
+    width: 95%; /* Корректируем ширину для соответствия экрану */
+    margin: 0 auto; /* Выравниваем граф по центру */
   }
 
   .stopwatch-container {
-    width: 95%; /* Adjust stopwatch width */
-    height: auto; /* Auto height */
-    font-size: 1em; /* Adjust font size */
-    margin: 0 auto; /* Center stopwatch */
+    width: 95%; /* Корректируем ширину секундомера */
+    height: auto; /* Автоматическая высота */
+    font-size: 1em; /* Корректируем размер шрифта */
+    margin: 0 auto; /* Выравниваем секундомер по центру */
   }
 
   .stopwatch-container-time,
   .stopwatch-container-score,
   .stopwatch-container-table {
-    font-size: 1em; /* Adjust font sizes */
+    font-size: 1em; /* Корректируем размеры шрифтов */
   }
 
   .stopwatch-container-table {
-    height: 200px; /* Adjust history table height */
+    height: 200px; /* Корректируем высоту таблицы истории */
   }
 
   .btn-start,
   .btn-stop {
-    font-size: 1em; /* Adjust button font sizes */
-    padding: 10px 20px; /* Adjust padding */
+    font-size: 1em; /* Корректируем размеры шрифтов кнопок */
+    padding: 10px 20px; /* Корректируем отступы */
   }
 
   .selected-edges-clear {
-    position: static; /* Change to static positioning */
-    margin-top: 10px; /* Add margin for spacing */
-    width: 90%; /* Adjust width */
-    max-width: 300px; /* Limit max width */
+    position: static; /* Изменяем на статичное позиционирование */
+    margin-top: 10px; /* Добавляем отступ для расстояния */
+    width: 90%; /* Корректируем ширину */
+    max-width: 300px; /* Ограничиваем максимальную ширину */
     left: auto;
     right: auto;
     top: auto;
   }
 
   .node-list-container {
-    position: static !important; /* Change to static positioning */
-    margin-top: 10px; /* Add margin for spacing */
-    width: 90%; /* Adjust width */
-    max-width: 300px !important; /* Limit max width */
+    position: static !important; /* Изменяем на статичное позиционирование */
+    margin-top: 10px; /* Добавляем отступ для расстояния */
+    width: 90%; /* Корректируем ширину */
+    max-width: 300px !important; /* Ограничиваем максимальную ширину */
     left: auto;
     right: auto;
     top: auto;
   }
 
   .selected-nodes-list {
-    position: static !important; /* Change to static positioning */
-    margin-top: 10px; /* Add margin for spacing */
-    width: 90%; /* Adjust width */
-    max-width: 300px; /* Limit max width */
+    position: static !important; /* Изменяем на статичное позиционирование */
+    margin-top: 10px; /* Добавляем отступ для расстояния */
+    width: 90%; /* Корректируем ширину */
+    max-width: 300px; /* Ограничиваем максимальную ширину */
     left: auto;
     right: auto;
     top: auto;

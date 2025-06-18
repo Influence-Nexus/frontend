@@ -17,7 +17,7 @@ export const GraphComponent = (props) => {
     disabledNodes, matrixInfo,
     positiveEdgeColor, negativeEdgeColor,
     physicsEnabled, nodeSize,
-    edgeRoundness, 
+    edgeRoundness,
     networkRef, selectedPlanetLocal,
     uuid, nodeColor, applyCoordinates,
     handleClear, handleMakeMove,
@@ -51,11 +51,11 @@ export const GraphComponent = (props) => {
   return (
     <div>
       <div className="graph-component-header">
-        <div style={{ display: "flex" }}>
+        <div className="head"> {/* Removed inline style */}
           <img
             src={planetImg}
             alt="planet"
-            style={{ width: "150px", height: "150px", borderRadius: "15px" }}
+            className="planet-image" // Added className
           />
           <div className="graph-component-inner">
             <h1 className="header" style={{ position: "relative", color: planetColor }}>
