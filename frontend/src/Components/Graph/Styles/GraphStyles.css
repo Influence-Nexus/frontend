@@ -62,10 +62,8 @@
   background-color: #342b41 !important;
   border-radius: 15px !important;
   border: 3px solid white !important;
-  /* padding-left: 30px !important; */
-  /* padding-right: 30px !important; */
-  height: 52px;
-  width: 10em;
+  height: 52px; /* Фиксированная высота */
+  width: 120px; /* Фиксированная ширина для всех кнопок */
   color: white;
   cursor: pointer;
 }
@@ -148,6 +146,11 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+}
+
+.history-no-games{
+  color: white;
+  text-align: center;
 }
 
 #science-button {
@@ -368,6 +371,7 @@
 }
 .vertical-progress-bar-fill {
   width: 100%;
+  height: 0%;
   transition: height 0.1s ease;
   background-color: rgba(169, 169, 169, 0.8);
 }
@@ -482,6 +486,11 @@
     font-size: 10px;
   }
 
+  .planet-image{
+    width: 150px;
+    height: 150px;
+  }
+   
   .button-row {
     flex-direction: column;
   }
@@ -489,7 +498,7 @@
   .btn-danger {
     margin-bottom: 5px;
   }
-
+  
   .node-list-container {
     position: absolute !important;
     font-size: 10px;
@@ -499,6 +508,10 @@
 
   .node-list {
     padding-left: 10px;
+  }
+
+  .buttons-group{
+    flex-wrap: wrap;
   }
 
   .selected-nodes-list {
@@ -596,7 +609,6 @@
   }
 
   .graph-component-row {
-    margin-top: 70px;
     flex-direction: column; /* Размещаем прогресс-бар, граф и секундомер вертикально */
     padding: 10px; /* Корректируем отступы */
     gap: 20px; /* Добавляем промежуток между сложенными элементами */
@@ -615,7 +627,7 @@
   /* Стили для контейнера кнопок в мобильном портрете */
   .buttons-container {
     position: absolute;
-    top: 80px;
+    top: -410%;
     width: 100%;
     display: flex; /* Делаем контейнер кнопок flex-контейнером */
     flex-direction: column; /* Располагаем элементы вертикально */
@@ -624,13 +636,19 @@
 
   .menu-toggle {
     display: flex; /* Показываем кнопку меню на мобильных */
+    width: 120px; /* Фиксированная ширина для кнопки меню */
+    height: 45px; /* Фиксированная высота для кнопки меню */
+    padding: 0; /* Обнуляем padding для лучшего контроля размера */
+    box-sizing: border-box; /* Учитываем padding и border в размере */
   }
 
   .buttons-group {
     max-height: 0; /* Скрываем кнопки по умолчанию */
     opacity: 0;
     pointer-events: none; /* Отключаем события при скрытии */
-    flex-direction: column; /* Кнопки также в столбец */
+    flex-direction: row; /* Кнопки также в столбец */
+    flex-wrap: wrap;
+    justify-content: space-around;
     width: 100%; /* Занимают всю доступную ширину */
     align-items: center; /* Выравниваем кнопки по центру */
   }
@@ -642,10 +660,10 @@
   }
 
   .game-button {
-    width: 90%; /* Делаем кнопки на 90% ширины */
-    max-width: 250px; /* Ограничиваем максимальную ширину */
+    width: 120px; /* Устанавливаем фиксированную ширину для всех кнопок */
     height: 45px; /* Корректируем высоту */
     font-size: 1em; /* Уменьшаем размер шрифта */
+    padding: 0 10px; /* Уменьшаем padding для лучшего контроля размера */
   }
 
   #details-button {
@@ -653,14 +671,20 @@
   }
 
   #science-button {
-    width: 90%; /* Делаем кнопку "Наука" на 90% ширины */
-    max-width: 250px;
+    width: 120px; /* Устанавливаем фиксированную ширину для кнопки "Наука" */
   }
 
   .vertical-progress-bar {
-    width: 40px; /* Уменьшаем ширину прогресс-бара */
-    height: 200px; /* Уменьшаем высоту */
-    margin: 0 auto; /* Выравниваем прогресс-бар по центру */
+    width: 95%; /* Увеличиваем ширину для горизонтальной полосы */
+    height: 40px; /* Уменьшаем высоту */
+    margin: 10px auto; /* Добавляем отступы сверху/снизу и центрируем */
+    flex-direction: row; /* Делаем горизонтальной */
+    justify-content: flex-start; /* Выравниваем по началу */
+    align-items: center; /* Выравниваем по центру по вертикали */
+  }
+  .vertical-progress-bar-fill {
+    height: 100%; /* Заполняем всю высоту */
+    width: 0%; /* Начинаем с 0% ширины */
   }
 
   .graph-container {
@@ -698,27 +722,30 @@
     width: 90%; /* Корректируем ширину */
     max-width: 300px; /* Ограничиваем максимальную ширину */
     left: auto;
-    right: auto;
-    top: auto;
+    right: auto !important;
+    top: 18% !important;
   }
 
+
+
   .node-list-container {
-    position: static !important; /* Изменяем на статичное позиционирование */
+    position: absolute !important; /* Изменяем на статичное позиционирование */
     margin-top: 10px; /* Добавляем отступ для расстояния */
     width: 90%; /* Корректируем ширину */
     max-width: 300px !important; /* Ограничиваем максимальную ширину */
-    left: auto;
-    right: auto;
-    top: auto;
+    left: auto !important;
+    right: auto !important;
+    top: 65% !important;
+    max-height: 330px;
   }
 
   .selected-nodes-list {
-    position: static !important; /* Изменяем на статичное позиционирование */
+    position: absolute !important;
     margin-top: 10px; /* Добавляем отступ для расстояния */
     width: 90%; /* Корректируем ширину */
     max-width: 300px; /* Ограничиваем максимальную ширину */
     left: auto;
     right: auto;
-    top: auto;
+    top: 3%;
   }
 }
