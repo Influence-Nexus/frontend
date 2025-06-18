@@ -1,63 +1,84 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useCustomStates } from '../../CustomStates';
 import InfoIcon from '@mui/icons-material/Info';
-import KeyIcon from "@mui/icons-material/Key";
-import MenuIcon from '@mui/icons-material/Menu'; // Import MenuIcon
+import KeyIcon from '@mui/icons-material/Key';
+import MenuIcon from '@mui/icons-material/Menu';
 import { getScienceClicks, logScienceAttempt } from '../../clientServerHub';
 
-export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
+export const Buttons = ({ matrixUuid }) => {
   const {
     isRunning,
     handleOpenModal,
     handleLoadCoordinates,
     handleResetCoordinates,
     handleSaveUserView,
-    handleSaveDefaultView, applyCoordinates, setShowHistory
+    applyCoordinates,
+    setShowHistory,
   } = useCustomStates();
 
-  const [scienceClicks, setScienceClicks] = useState(null); // null пока не загрузилось
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State for menu open/close
+  const [scienceClicks, setScienceClicks] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const buttonsContainerRef = useRef(null);
 
-  // Загружаем текущее количество science_clicks при монтировании
   useEffect(() => {
     const fetchScienceClicks = async () => {
       try {
-        const result = await getScienceClicks(matrixUuid); // Тот же эндпоинт, но без уменьшения
+        const result = await getScienceClicks(matrixUuid);
         if (result && result.science_clicks !== undefined) {
           setScienceClicks(result.science_clicks);
         }
       } catch (error) {
-        console.error("Ошибка при получении science_clicks:", error.message);
+        console.error('Ошибка при получении science_clicks:', error.message);
       }
     };
 
     fetchScienceClicks();
   }, [matrixUuid]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isMenuOpen &&
+        buttonsContainerRef.current &&
+        !buttonsContainerRef.current.contains(event.target) &&
+        window.innerWidth <= 768
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
   const handleScienceClick = async () => {
     try {
       const result = await logScienceAttempt(matrixUuid);
-      // console.log("Science attempt logged:", result);
+
       if (result && result.science_clicks !== undefined) {
-        setScienceClicks(result.science_clicks); // Обновляем из ответа сервера
+        setScienceClicks(result.science_clicks);
       }
     } catch (error) {
-      console.error("Ошибка:", error.message);
-      // Use a custom modal instead of alert
-      // alert(error.message);
+      console.error('Ошибка:', error.message);
     }
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(prev => !prev);
+    setIsMenuOpen((prev) => !prev);
   };
 
-  // Закрываем меню при клике на любую кнопку на мобильных устройствах
   const handleButtonClick = (callback) => {
-    return () => {
+    return (event) => {
       callback();
-      // Закрываем меню только если оно открыто и на мобильном устройстве (ширина менее 768px)
-      if (isMenuOpen && window.innerWidth <= 768) {
+
+      if (
+        isMenuOpen &&
+        window.innerWidth <= 768 &&
+        event.currentTarget.id !== 'menu-toggle-button'
+      ) {
         setIsMenuOpen(false);
       }
     };
@@ -66,15 +87,25 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
   return (
     <div
       className={`buttons-container ${isMenuOpen ? 'menu-open' : ''}`}
+      ref={buttonsContainerRef}
     >
+      {' '}
+      {/* Attach ref */}
       {/* Кнопка-переключатель меню для мобильных устройств */}
-      <button className="menu-toggle" onClick={toggleMenu}>
+      <button
+        id="menu-toggle-button"
+        className="menu-toggle"
+        onClick={toggleMenu}
+      >
         <MenuIcon /> Menu
       </button>
-
       <ul className="buttons-group" id="pills-tab" role="tablist">
         <li>
-          <button id="details-button" className="game-button" onClick={handleButtonClick(handleOpenModal)}>
+          <button
+            id="details-button"
+            className="game-button"
+            onClick={handleButtonClick(handleOpenModal)}
+          >
             <InfoIcon /> Details
           </button>
         </li>
@@ -82,18 +113,16 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
         <li>
           <button
             id="science-button"
-            className='game-button'
+            className="game-button"
             onClick={handleButtonClick(handleScienceClick)}
-            // disabled={scienceClicks !== null && scienceClicks <= 0}
             disabled
-            title='Временно заблокирована!'
+            title="Временно заблокирована!"
           >
             <p>Science</p>
             {scienceClicks !== null &&
               Array.from({ length: scienceClicks }, (_, index) => (
-                <KeyIcon key={index} sx={{ marginRight: "4px" }} />
-              ))
-            }
+                <KeyIcon key={index} sx={{ marginRight: '4px' }} />
+              ))}
           </button>
         </li>
 
@@ -104,9 +133,9 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
             className="game-button"
             id="game-button-divider"
             onClick={handleButtonClick(() => {
-              setShowHistory(false);        // возвращаемся в граф
+              setShowHistory(false);
               if (matrixUuid && applyCoordinates) {
-                handleLoadCoordinates(matrixUuid, applyCoordinates); // переобновляем координаты
+                handleLoadCoordinates(matrixUuid, applyCoordinates);
               }
             })}
           >
@@ -118,25 +147,37 @@ export const Buttons = ({ matrixUuid, planetColor, planetImg }) => {
           <button
             className="game-button"
             disabled={isRunning}
-            title={isRunning ? "Not available during the game" : ""}
+            title={isRunning ? 'Not available during the game' : ''}
             onClick={handleButtonClick(() => setShowHistory(true))}
           >
             Profile
           </button>
         </li>
-        <li><button className="game-button" onClick={handleButtonClick(handleSaveUserView)}>Save View</button></li>
-        <li><button
-          className="game-button"
-          onClick={handleButtonClick(() => handleResetCoordinates(matrixUuid, applyCoordinates))}
-          title="Сбросить граф к дефолтным настройкам"
-        >
-          Reset
-        </button>
+        <li>
+          <button
+            className="game-button"
+            onClick={handleButtonClick(handleSaveUserView)}
+          >
+            Save View
+          </button>
         </li>
         <li>
           <button
             className="game-button"
-            onClick={handleButtonClick(() => handleLoadCoordinates(matrixUuid, applyCoordinates))}
+            onClick={handleButtonClick(() =>
+              handleResetCoordinates(matrixUuid, applyCoordinates)
+            )}
+            title="Сбросить граф к дефолтным настройкам"
+          >
+            Reset
+          </button>
+        </li>
+        <li>
+          <button
+            className="game-button"
+            onClick={handleButtonClick(() =>
+              handleLoadCoordinates(matrixUuid, applyCoordinates)
+            )}
             title="Загружает последний сохранённый вид графа"
           >
             Load Last View

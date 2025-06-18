@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { loginUser, getUserUuidFromToken } from '../../clientServerHub';  // Импорт из хаба
+import { loginUser, getUserUuidFromToken } from '../../clientServerHub';
 import './UserCreds.css';
 import { Link } from 'react-router-dom';
 
@@ -25,8 +25,8 @@ export const SignIn = ({ setHeaderShow }) => {
       const response = await loginUser(form.username, form.password);
       setSuccessMsg(response.message || 'Вход выполнен успешно');
 
-      // Извлекаем токен из localStorage и декодируем user_uuid
       const token = localStorage.getItem('access_token');
+      // eslint-disable-next-line no-unused-vars
       const user_uuid = getUserUuidFromToken(token);
     } catch (err) {
       console.error('Ошибка входа:', err);
@@ -44,7 +44,7 @@ export const SignIn = ({ setHeaderShow }) => {
         onSubmit={async (e) => {
           await handleSubmit(e);
           if (!error) {
-            window.location.href = "/";
+            window.location.href = '/';
           }
         }}
         className="auth-form"
@@ -66,7 +66,12 @@ export const SignIn = ({ setHeaderShow }) => {
         />
         <button type="submit">Войти</button>
       </form>
-      <p className='sign-in-up-p'>Вы тут впервые? <Link className='sign-in-up-link' to={"/sign-up"}>Зарегистрироваться</Link></p> 
+      <p className="sign-in-up-p">
+        Вы тут впервые?{' '}
+        <Link className="sign-in-up-link" to={'/sign-up'}>
+          Зарегистрироваться
+        </Link>
+      </p>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-/* Основной контейнер модального окна с эффектом размытия фона */
 .modal-content-custom {
   background-color: rgb(0, 0, 0);
   backdrop-filter: blur(3px);
@@ -18,13 +17,11 @@
   margin-top: 1rem;
 }
 
-/* Применяем шрифт ко всем элементам внутри */
 .modal-content-custom,
 .modal-content-custom * {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
-/* Стилизация скроллбара */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -44,7 +41,6 @@
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* Скрываем скроллбар, но оставляем функциональность */
 .modal-body-custom,
 .card-description,
 .life-strategy {
@@ -53,36 +49,36 @@
 }
 
 .card-header {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .card-header::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
-#card-desc-link, .card-desc-link {
+#card-desc-link,
+.card-desc-link {
   color: rgb(255, 218, 150);
   text-decoration: underline !important;
 }
 
 .selected-planet-name {
-  font: 900 4rem "Montserrat-Bold", sans-serif;
+  font:
+    900 4rem 'Montserrat-Bold',
+    sans-serif;
 }
 
-/* Центрирование модального окна */
 .modal-dialog {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 2rem auto;
   outline: none !important;
-  /* padding-bottom: 30px; */
 }
 
-/* Заголовок модального окна */
 .modal-header-custom {
-  position: relative; /* Добавлено */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -91,14 +87,12 @@
   border-bottom: 1px solid white;
 }
 
-/* Блок с информацией о планете */
 .modal-header-content {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-/* Изображение планеты */
 .planet-image {
   width: 150px;
   height: 150px;
@@ -106,7 +100,6 @@
   object-fit: cover;
 }
 
-/* Кнопка закрытия */
 .close-cardList-modal-window {
   position: absolute;
   top: 15px;
@@ -116,17 +109,15 @@
   cursor: pointer;
   color: #fff;
   font-size: 1.5rem;
-  z-index: 1000; /* Убедитесь, что она поверх контента */
+  z-index: 1000;
 }
 
-/* Модальное тело с прокруткой */
 .modal-body-custom {
   flex: 1;
   overflow-y: auto;
   padding: 0 10px;
 }
 
-/* Контейнер карточек */
 .cards-container {
   display: flex;
   flex-wrap: wrap;
@@ -137,15 +128,16 @@
   height: 100%;
 }
 
-/* Обычная карточка */
 .card-item-normal {
   background: #2a2a2a;
-  border-radius: 15px; /* обновлено с 10px */
+  border-radius: 15px;
   padding: 10px;
   width: 200px;
   height: 290px;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   position: relative;
 }
 
@@ -154,7 +146,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Зумированная (выбранная) карточка */
 .card-item-zoomed {
   position: fixed;
   top: 50%;
@@ -175,15 +166,13 @@
   gap: 15px;
 }
 
-/* Оболочка для контента карточки */
 .card-item-zoomed .card-wrapper {
-  position: relative; /* Для позиционирования кнопки */
+  position: relative;
   max-width: 450px;
   width: 100%;
   height: 100%;
 }
 
-/* Обёртка для заголовка и тела */
 .card-item-zoomed .card-header,
 .card-item-zoomed .card-body {
   background: #2a2a2a;
@@ -191,7 +180,6 @@
   max-width: 450px;
 }
 
-/* Заголовок карточки */
 .card-header {
   font-size: 14px;
   line-height: 1.2;
@@ -203,7 +191,6 @@
   overflow: hidden;
   text-align: center;
 }
-
 
 .card-item-zoomed .card-header,
 .card-body {
@@ -229,7 +216,6 @@
   border-top-right-radius: 0;
 }
 
-/* Заголовок для зумированной карточки */
 .card-item-zoomed .card-header p {
   font-size: 1.5rem;
   font-weight: bold;
@@ -242,7 +228,6 @@
   justify-content: center;
 }
 
-/* Кнопка закрытия */
 .close-card-modal-window {
   position: absolute;
   top: 15px;
@@ -256,7 +241,7 @@
 }
 
 .card-body {
-  border-radius: 15px; /* обновлено для единообразия */
+  border-radius: 15px;
   width: 100%;
   height: auto;
   margin-top: 10px;
@@ -279,7 +264,6 @@
   margin: 10px 0;
 }
 
-/* Описание карточки в зумированном состоянии */
 .card-description {
   margin-top: 10px;
   font-size: 18px;
@@ -312,7 +296,6 @@
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* Футер карточки */
 .card-footer {
   margin-top: 10px;
   display: flex;
@@ -321,20 +304,18 @@
   height: 45px;
 }
 
-/* Дополнительные стили для футера зумированной карточки */
 .card-item-zoomed .card-footer {
   font-size: 20px;
   padding-bottom: 20px;
   padding-top: 10px;
 }
 
-/* Контейнер для кнопок действий */
 .card-action {
   margin-top: 10px;
 }
 
 .modal-cards-buttons {
-  border-radius: 15px; /* обновлено */
+  border-radius: 15px;
   background: transparent;
   width: 100px;
   height: 35px;

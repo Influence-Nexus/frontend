@@ -1,9 +1,6 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export const SciencePageButtons = () => {
-
-
   return (
     <div className="SciencePageButtons-div">
       <button id="game-button">
@@ -12,10 +9,10 @@ export const SciencePageButtons = () => {
         </a>
       </button>
 
-    <Link to="/algorithm">
-      <button id="algo-button">
+      <Link to="/algorithm">
+        <button id="algo-button">
           <h4>Algorithm</h4>
-      </button>
+        </button>
       </Link>
     </div>
   );

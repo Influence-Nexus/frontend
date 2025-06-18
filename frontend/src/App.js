@@ -1,26 +1,26 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
-import StartPage from "./Components/StartPage/StartPage";
-import Header from "./Components/Header/Header";
-import ChallengeComponent from "./Components/AldafiraWelcome/ChallengeComponent";
-import { useState } from "react";
-import SolarSystem from "./Components/Solar/SolarSystem";
-import { GraphMainLayout } from "./Components/Graph/GraphMainLayout";
-import { SignUp } from "./Components/UserCreds/SignUp";
-import { SignIn } from "./Components/UserCreds/SignIn";
-import { CustomStatesProvider } from "./CustomStates";
-import { SciencePage } from "./Components/Science/SciencePage";
-import { AlgoPage } from "./Components/Science/AlgoPage";
-import { RulesPage } from "./Components/RulesPage/RulesPage";
-import { GlobalAudioManager } from "./Components/Audio";
-import { ComaBerenicesPage } from "./Components/ComaBerenicesPage/ComaBerenicesPage";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import StartPage from './Components/StartPage/StartPage';
+import Header from './Components/Header/Header';
+import ChallengeComponent from './Components/AldafiraWelcome/ChallengeComponent';
+import { useState } from 'react';
+import SolarSystem from './Components/Solar/SolarSystem';
+import { GraphMainLayout } from './Components/Graph/GraphMainLayout';
+import { SignUp } from './Components/UserCreds/SignUp';
+import { SignIn } from './Components/UserCreds/SignIn';
+import { CustomStatesProvider } from './CustomStates';
+import { SciencePage } from './Components/Science/SciencePage';
+import { AlgoPage } from './Components/Science/AlgoPage';
+import { RulesPage } from './Components/RulesPage/RulesPage';
+import { GlobalAudioManager } from './Components/Audio';
+import { ComaBerenicesPage } from './Components/ComaBerenicesPage/ComaBerenicesPage';
 
 function App() {
   const [headerShow, setHeaderShow] = useState(true);
 
   return (
     <CustomStatesProvider>
-      {" "}
+      {' '}
       {/* 🚀 ОБЁРТКА ЗДЕСЬ */}
       <Router>
         <Header headerShow={headerShow} />
@@ -64,7 +64,6 @@ function App() {
           <Route
             path="/coma-berenices"
             element={<ComaBerenicesPage setHeaderShow={setHeaderShow} />}
-
           />
         </Routes>
       </Router>

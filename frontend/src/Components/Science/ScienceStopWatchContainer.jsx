@@ -23,23 +23,31 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
       {/* Время */}
       <div className="science-stopwatch-container-time">
         <h3>Time</h3>
-        <p><FaStopwatch /> {formattedTime}</p>
+        <p>
+          <FaStopwatch /> {formattedTime}
+        </p>
       </div>
 
       {/* Счёт */}
       <div className="science-stopwatch-container-score">
         <h3>Score</h3>
-        <p><FaMedal /> {score}</p>
+        <p>
+          <FaMedal /> {score}
+        </p>
       </div>
 
       {/* История ходов */}
-      <div className="science-stopwatch-container-table" style={{ overflowY: 'auto' }}>
+      <div
+        className="science-stopwatch-container-table"
+        style={{ overflowY: 'auto' }}
+      >
         <h3>Vertices</h3>
         {movesHistory.length > 0 ? (
           <ul className="selected-list" style={{ padding: 0, margin: 0 }}>
             {movesHistory.map((move) => (
               <li key={move.moveNumber} style={{ marginBottom: '10px' }}>
-                <strong>Move {move.moveNumber}:</strong> {move.nodes.map(node => node?.id ?? 'N/A').join(', ')}
+                <strong>Move {move.moveNumber}:</strong>{' '}
+                {move.nodes.map((node) => node?.id ?? 'N/A').join(', ')}
               </li>
             ))}
           </ul>
@@ -53,16 +61,20 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
         <button
           className="btn-start"
           style={{
-            backgroundColor: isRunning ? "gray" : (isHoveredStart ? 'transparent' : planetColor),
-            border: `1px solid ${isRunning ? "gray" : planetColor}`,
-            color: isHoveredStart ? planetColor : "black",
-            cursor: isRunning ? "not-allowed" : "pointer"
+            backgroundColor: isRunning
+              ? 'gray'
+              : isHoveredStart
+                ? 'transparent'
+                : planetColor,
+            border: `1px solid ${isRunning ? 'gray' : planetColor}`,
+            color: isHoveredStart ? planetColor : 'black',
+            cursor: isRunning ? 'not-allowed' : 'pointer',
           }}
           onMouseEnter={() => setIsHoveredStart(true)}
           onMouseLeave={() => setIsHoveredStart(false)}
           onClick={handleStart}
           disabled={isRunning}
-          title={isRunning ? "Вы уже в процессе игры!" : "Начать игру"}
+          title={isRunning ? 'Вы уже в процессе игры!' : 'Начать игру'}
         >
           Start
         </button>
@@ -70,16 +82,20 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
         <button
           className="btn-stop"
           style={{
-            backgroundColor: isRunning ? (isHoveredStop ? 'transparent' : 'rgb(255, 105, 105)') : 'gray',
-            border: `1px solid ${isRunning ? (isHoveredStop ? planetColor : "rgb(255, 105, 105)") : 'gray'}`,
-            color: isHoveredStop ? planetColor : "black",
-            cursor: isRunning ? "pointer" : "not-allowed"
+            backgroundColor: isRunning
+              ? isHoveredStop
+                ? 'transparent'
+                : 'rgb(255, 105, 105)'
+              : 'gray',
+            border: `1px solid ${isRunning ? (isHoveredStop ? planetColor : 'rgb(255, 105, 105)') : 'gray'}`,
+            color: isHoveredStop ? planetColor : 'black',
+            cursor: isRunning ? 'pointer' : 'not-allowed',
           }}
           onMouseEnter={() => setIsHoveredStop(true)}
           onMouseLeave={() => setIsHoveredStop(false)}
           onClick={handleStop}
           disabled={!isRunning}
-          title={isRunning ? "Остановить игру" : "Вы ещё не начали игру!"}
+          title={isRunning ? 'Остановить игру' : 'Вы ещё не начали игру!'}
         >
           Stop
         </button>

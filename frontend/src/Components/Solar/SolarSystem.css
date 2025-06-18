@@ -11,7 +11,9 @@
 
 .text-block-solar {
   color: white;
-  font: 400 72px "Moon Dance", cursive;
+  font:
+    400 72px 'Moon Dance',
+    cursive;
 }
 
 .custom-modal-content {
@@ -74,7 +76,7 @@
 
 #game-over-title {
   font-size: 2em;
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   text-align: center;
   color: white;
 }
@@ -106,7 +108,7 @@
   align-items: center;
   justify-content: center;
   background-color: transparent;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 800;
 }
 
@@ -145,4 +147,3 @@
 .game-over-modal.slide-out {
   animation: gameOverSlideOut 0.9s ease-in-out;
 }
-

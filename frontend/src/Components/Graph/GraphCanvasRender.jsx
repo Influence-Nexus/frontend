@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { DataSet, Network } from "vis-network/standalone/esm/vis-network";
-import { AllNodesList } from "./AllNodesList";
+import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
+import { AllNodesList } from './AllNodesList';
 import { SelectedNodesList } from './SelectedNodes';
 import { Button } from 'react-bootstrap';
 
@@ -31,15 +31,14 @@ export const GraphCanvasRender = ({
   showNodeList,
   handleClearEdges,
   setIsNetworkReady,
-  hoverSoundRef
+  hoverSoundRef,
 }) => {
   const localNetworkRef = useRef(null);
   const nodesRef = useRef(null);
   const edgesRef = useRef(null);
-  // Создаём ref для актуальных disabledNodes
+
   const disabledNodesRef = useRef(disabledNodes);
 
-  // Обновляем disabledNodesRef при изменении disabledNodes
   useEffect(() => {
     disabledNodesRef.current = disabledNodes;
   }, [disabledNodes]);
@@ -49,23 +48,21 @@ export const GraphCanvasRender = ({
     if (!network) return;
 
     const onHover = ({ node }) => {
-      // не играем, если этот узел задизейблен
       if (disabledNodesRef.current.includes(Number(node))) return;
       hoverSoundRef.current
         ?.play()
-        .catch(err => console.warn("hoverSound play failed:", err.message));
+        .catch((err) => console.warn('hoverSound play failed:', err.message));
     };
 
-    network.on("hoverNode", onHover);
+    network.on('hoverNode', onHover);
     return () => {
-      network.off("hoverNode", onHover);
+      network.off('hoverNode', onHover);
     };
   }, [networkRef, hoverSoundRef]);
 
-  // 1) Инициализация DataSet и Network только один раз, когда получен matrixInfo
   useEffect(() => {
     if (!matrixInfo?.edges || !matrixInfo?.nodes) return;
-    // Если DataSet уже созданы – не пересоздаём их
+
     if (nodesRef.current && edgesRef.current) return;
 
     const { edges, nodes: oldNodes } = matrixInfo;
@@ -78,7 +75,6 @@ export const GraphCanvasRender = ({
       const fromId = from;
       const toId = to;
 
-      // Добавляем узел-источник, если ещё не добавлен
       if (oldNodes[fromId - 1] && !nodesMap.has(fromId)) {
         const isDisabled = disabledNodes.includes(fromId);
         const nodeData = {
@@ -86,14 +82,13 @@ export const GraphCanvasRender = ({
           label: `${fromId}`,
           title: oldNodes[fromId - 1].name,
           description: oldNodes[fromId - 1].description,
-          color: { background: isDisabled ? "gray" : nodeColor },
+          color: { background: isDisabled ? 'gray' : nodeColor },
           font: { size: isDisabled ? 14 : 16 },
         };
         nodesMap.set(fromId, nodeData);
         nodesDataSet.add(nodeData);
       }
 
-      // Добавляем узел-приёмник, если ещё не добавлен
       if (oldNodes[toId - 1] && !nodesMap.has(toId)) {
         const isDisabled = disabledNodes.includes(toId);
         const nodeData = {
@@ -101,18 +96,17 @@ export const GraphCanvasRender = ({
           label: `${toId}`,
           title: oldNodes[toId - 1].name,
           description: oldNodes[toId - 1].description,
-          color: { background: isDisabled ? "gray" : nodeColor },
+          color: { background: isDisabled ? 'gray' : nodeColor },
           font: { size: isDisabled ? 14 : 16 },
         };
         if (oldNodes[toId - 1].target === 1) {
-          nodeData.color = { background: "gold" };
+          nodeData.color = { background: 'gold' };
           nodeData.font = { size: 25 };
         }
         nodesMap.set(toId, nodeData);
         nodesDataSet.add(nodeData);
       }
 
-      // Добавляем ребро
       try {
         const edgeId = `${fromId}-${toId}`;
         edgesDataSet.add({
@@ -121,75 +115,105 @@ export const GraphCanvasRender = ({
           to: toId,
           rawValue: value,
           width: 1,
-          title: `При увеличении ${oldNodes[fromId - 1].name} ${value > 0 ? "увеличивается" : "уменьшается"} ${oldNodes[toId - 1].name} на ${value}`,
+          title: `При увеличении ${oldNodes[fromId - 1].name} ${value > 0 ? 'увеличивается' : 'уменьшается'} ${oldNodes[toId - 1].name} на ${value}`,
           label: value.toString(),
-          smooth: { type: "continues", roundness: edgeRoundness },
+          smooth: { type: 'continues', roundness: edgeRoundness },
           color: { color: value > 0 ? positiveEdgeColor : negativeEdgeColor },
         });
       } catch (e) {
-        console.log("Ошибка при создании ребра:", e);
+        console.log('Ошибка при создании ребра:', e);
       }
     });
 
-    // Сохраняем DataSet в useRef, чтобы не пересоздавать их при обновлении других состояний
     nodesRef.current = nodesDataSet;
     edgesRef.current = edgesDataSet;
     if (setGraphData) {
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
 
-    // Инициализируем Network один раз
-    const container = document.getElementById("graph-container");
+    const container = document.getElementById('graph-container');
     if (!container) {
-      console.warn("Контейнер #graph-container не найден");
+      console.warn('Контейнер #graph-container не найден');
       return;
     }
     const options = {
       edges: {
-        smooth: { type: "curvedCW", roundness: edgeRoundness },
-        scaling: { min: 1, max: 1, label: { enabled: true, min: 11, max: 11, maxVisible: 55, drawThreshold: 5 } },
+        smooth: { type: 'curvedCW', roundness: edgeRoundness },
+        scaling: {
+          min: 1,
+          max: 1,
+          label: {
+            enabled: true,
+            min: 11,
+            max: 11,
+            maxVisible: 55,
+            drawThreshold: 5,
+          },
+        },
         arrows: { to: true },
-        font: { size: 18, align: "horizontal", color: "white", strokeWidth: 2, strokeColor: "black" },
-        color: { highlight: "white", hover: "white" },
+        font: {
+          size: 18,
+          align: 'horizontal',
+          color: 'white',
+          strokeWidth: 2,
+          strokeColor: 'black',
+        },
+        color: { highlight: 'white', hover: 'white' },
         chosen: true,
       },
       physics: {
         enabled: physicsEnabled,
-        barnesHut: { gravitationalConstant: -50000, centralGravity: 0.3, springLength: 95, springConstant: 0.04, damping: 0.09, avoidOverlap: 3.4 },
+        barnesHut: {
+          gravitationalConstant: -50000,
+          centralGravity: 0.3,
+          springLength: 95,
+          springConstant: 0.04,
+          damping: 0.09,
+          avoidOverlap: 3.4,
+        },
         stabilization: { enabled: true, iterations: 1000, updateInterval: 25 },
       },
       nodes: {
-        shape: "circle",
+        shape: 'circle',
         size: nodeSize,
-        font: { size: 14, color: "white", align: "center" },
+        font: { size: 14, color: 'white', align: 'center' },
         borderWidth: 2,
         borderWidthSelected: 4,
       },
       interaction: { hover: true, tooltipDelay: 300, multiselect: true },
     };
 
-    const newNetwork = new Network(container, { nodes: nodesDataSet, edges: edgesDataSet }, options);
+    const newNetwork = new Network(
+      container,
+      { nodes: nodesDataSet, edges: edgesDataSet },
+      options
+    );
     localNetworkRef.current = newNetwork;
     if (networkRef) {
       networkRef.current = newNetwork;
     }
     if (setIsNetworkReady) {
-      // console.log("Сеть создана, устанавливаем isNetworkReady = true");
       setIsNetworkReady(true);
     }
 
-    // Устанавливаем обработчики, используя актуальное значение disabledNodes через disabledNodesRef
-    newNetwork.on("click", (event) => {
+    newNetwork.on('click', (event) => {
       const clickedNodeIds = event.nodes || [];
       const clickedEdgeIds = event.edges || [];
-      if (clickedNodeIds.some((id) => disabledNodesRef.current.includes(Number(id)))) {
+      if (
+        clickedNodeIds.some((id) =>
+          disabledNodesRef.current.includes(Number(id))
+        )
+      ) {
         newNetwork.unselectAll();
         return;
       }
-      // Дальше обычная логика:
+
       if (clickedNodeIds.length === 1) {
         const clickedNodeId = clickedNodeIds[0];
-        if (!lockedNodes[clickedNodeId] && !disabledNodesRef.current.includes(Number(clickedNodeId))) {
+        if (
+          !lockedNodes[clickedNodeId] &&
+          !disabledNodesRef.current.includes(Number(clickedNodeId))
+        ) {
           setSelectedNodes((prev) =>
             prev.includes(clickedNodeId)
               ? prev.filter((id) => id !== clickedNodeId)
@@ -208,7 +232,12 @@ export const GraphCanvasRender = ({
                 edgesRef.current.update({
                   id: edgeId,
                   width: 1,
-                  color: { color: edgeObj.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor },
+                  color: {
+                    color:
+                      edgeObj.rawValue > 0
+                        ? positiveEdgeColor
+                        : negativeEdgeColor,
+                  },
                 });
               }
             } else {
@@ -218,7 +247,7 @@ export const GraphCanvasRender = ({
                 edgesRef.current.update({
                   id: edgeId,
                   width: 5,
-                  color: { color: "white" },
+                  color: { color: 'white' },
                 });
               }
             }
@@ -227,8 +256,7 @@ export const GraphCanvasRender = ({
         });
       }
     });
-    newNetwork.on("hoverNode", (event) => {
-      // Если узел задизейблен, сбрасываем выделение и не обрабатываем hover
+    newNetwork.on('hoverNode', (event) => {
       if (disabledNodesRef.current.includes(Number(event.node))) {
         newNetwork.unselectAll();
         setShowNodeList(false);
@@ -239,13 +267,16 @@ export const GraphCanvasRender = ({
       setShowNodeList(true);
       setHoveredNode(event.node);
     });
-    newNetwork.on("blurNode", () => {
+    newNetwork.on('blurNode', () => {
       setHighlightedNode(null);
       setShowNodeList(false);
       setHoveredNode(null);
     });
-    newNetwork.on("selectNode", (params) => {
-      const selectableNodes = params.nodes.filter((id) => !lockedNodes.hasOwnProperty(String(id)));
+    newNetwork.on('selectNode', (params) => {
+      const selectableNodes = params.nodes.filter(
+        // eslint-disable-next-line no-prototype-builtins
+        (id) => !lockedNodes.hasOwnProperty(String(id))
+      );
       newNetwork.setSelection({ nodes: selectableNodes, edges: params.edges });
     });
   }, [
@@ -263,20 +294,24 @@ export const GraphCanvasRender = ({
     lockedNodes,
   ]);
 
-  // 2) Обновляем стили узлов при изменении disabledNodes (без пересоздания DataSet)
   useEffect(() => {
     if (nodesRef.current) {
       nodesRef.current.forEach((node) => {
         if (disabledNodes.includes(node.id)) {
-          nodesRef.current.update({ id: node.id, color: { background: "gray" } });
+          nodesRef.current.update({
+            id: node.id,
+            color: { background: 'gray' },
+          });
         } else {
-          nodesRef.current.update({ id: node.id, color: { background: nodeColor } });
+          nodesRef.current.update({
+            id: node.id,
+            color: { background: nodeColor },
+          });
         }
       });
     }
   }, [disabledNodes, nodeColor]);
 
-  // 3) Обновляем стили выбранных рёбер
   useEffect(() => {
     if (!edgesRef.current) return;
     selectedEdges.forEach((edgeId) => {
@@ -284,7 +319,7 @@ export const GraphCanvasRender = ({
         edgesRef.current.update({
           id: edgeId,
           width: 5,
-          color: { color: "white" },
+          color: { color: 'white' },
         });
       } catch (err) {
         console.warn(`Ошибка обновления ребра ${edgeId}:`, err);
@@ -295,7 +330,9 @@ export const GraphCanvasRender = ({
         edgesRef.current.update({
           id: edge.id,
           width: 1,
-          color: { color: edge.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor },
+          color: {
+            color: edge.rawValue > 0 ? positiveEdgeColor : negativeEdgeColor,
+          },
         });
       }
     });
@@ -309,16 +346,16 @@ export const GraphCanvasRender = ({
         <div
           className="selected-edges-clear"
           style={{
-            position: "absolute",
-            top: "220px",
-            right: "80px",
+            position: 'absolute',
+            top: '220px',
+            right: '80px',
             zIndex: 1,
-            backgroundColor: "white",
-            padding: "10px",
-            borderRadius: "10px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-            fontFamily: "Montserrat",
-            color: "black",
+            backgroundColor: 'white',
+            padding: '10px',
+            borderRadius: '10px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+            fontFamily: 'Montserrat',
+            color: 'black',
           }}
         >
           <p>Выделено рёбер: {selectedEdges.length}</p>
@@ -328,7 +365,10 @@ export const GraphCanvasRender = ({
         </div>
       )}
       {graphData && showNodeList && (
-        <AllNodesList nodes={nodesRef.current ? nodesRef.current.get() : []} hoveredNode={hoveredNode} />
+        <AllNodesList
+          nodes={nodesRef.current ? nodesRef.current.get() : []}
+          hoveredNode={hoveredNode}
+        />
       )}
       {selectedNodes.length > 0 && (
         <SelectedNodesList

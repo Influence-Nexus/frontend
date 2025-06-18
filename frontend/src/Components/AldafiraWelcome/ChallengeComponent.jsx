@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import "./ChallengeComponent.css";
-import "./ChallengeComponentAdaptives.css";
-import { ChallengeYourMindText } from "../ChallengeYourMindText/ChallengeYourMindText";
-import bg from "./assets/bg.png"
-import intro from "./assets/premain.mp4"
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './ChallengeComponent.css';
+import './ChallengeComponentAdaptives.css';
+import { ChallengeYourMindText } from '../ChallengeYourMindText/ChallengeYourMindText';
+import bg from './assets/bg.png';
+import intro from './assets/premain.mp4';
 
 const ChallengeComponent = ({ setHeaderShow }) => {
   useEffect(() => {
@@ -18,7 +18,6 @@ const ChallengeComponent = ({ setHeaderShow }) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    // Предзагрузка фонового изображения
     const backgroundImg = new Image();
     backgroundImg.src = bg;
     backgroundImg.onload = () => {
@@ -47,7 +46,7 @@ const ChallengeComponent = ({ setHeaderShow }) => {
   }, [videoLoaded, isBackgroundLoaded]);
 
   const handleVideoEnd = () => {
-    navigate("/solar");
+    navigate('/solar');
   };
 
   if (!isBackgroundLoaded) {
@@ -60,8 +59,24 @@ const ChallengeComponent = ({ setHeaderShow }) => {
         <div className="star-system">
           <div className="burningStar" />
           <svg className="constellationLine" viewBox="0 0 100 100">
-            <line x1="-100" y1="100" x2="45" y2="20" stroke="white" strokeWidth="0.5" strokeLinecap="round" />
-            <line x1="45" y1="20" x2="75" y2="85" stroke="white" strokeWidth="0.5" strokeLinecap="round" />
+            <line
+              x1="-100"
+              y1="100"
+              x2="45"
+              y2="20"
+              stroke="white"
+              strokeWidth="0.5"
+              strokeLinecap="round"
+            />
+            <line
+              x1="45"
+              y1="20"
+              x2="75"
+              y2="85"
+              stroke="white"
+              strokeWidth="0.5"
+              strokeLinecap="round"
+            />
           </svg>
         </div>
         <div className="challenge-mind-text-div">
@@ -69,27 +84,29 @@ const ChallengeComponent = ({ setHeaderShow }) => {
         </div>
 
         <div className="second-page-texts">
-          <a className="comabla" href="/coma-berenices">Coma Berenices</a>
+          <a className="comabla" href="/coma-berenices">
+            Coma Berenices
+          </a>
           {showText && (
             <h1 onClick={handleVideoEnd} className="letsGoText">
-              Let's go!
+              Let&apos;s go!
             </h1>
           )}
         </div>
       </div>
-
 
       <div className="videoOverlay">
         <video
           ref={videoRef}
           src={intro}
           preload="auto"
-          className={`fullScreenVideo ${showVideo ? "visible" : "hidden"}`}
+          className={`fullScreenVideo ${showVideo ? 'visible' : 'hidden'}`}
           onCanPlay={() => setVideoLoaded(true)}
           onEnded={handleVideoEnd}
           autoPlay
           muted
           playsInline
+          // eslint-disable-next-line react/no-unknown-property
           webkit-playsinline="true"
         />
         {showVideo && (

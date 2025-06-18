@@ -1,11 +1,14 @@
-/* Адаптивные стили для планшетов (max-width: 768px) */
-@media screen and (max-width: 768px) and (orientation: portrait )  {
+@media screen and (max-width: 768px) and (orientation: portrait) {
   .start-page {
     position: absolute;
     top: 15%;
   }
   .code-text {
-    font: 400 100px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica,
+    font:
+      400 100px 'MajorMonoDisplay-Regular',
+      -apple-system,
+      Roboto,
+      Helvetica,
       sans-serif;
     height: 100px;
     -webkit-text-stroke: 4px rgba(255, 232, 28, 1);
@@ -13,12 +16,20 @@
   }
 
   #code-o {
-    font: 400 80px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica,
+    font:
+      400 80px 'MajorMonoDisplay-Regular',
+      -apple-system,
+      Roboto,
+      Helvetica,
       sans-serif;
   }
 
   #code-E {
-    font: 400 60px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica,
+    font:
+      400 60px 'MajorMonoDisplay-Regular',
+      -apple-system,
+      Roboto,
+      Helvetica,
       sans-serif;
   }
 
@@ -43,22 +54,33 @@
   }
 }
 
-/* Адаптивные стили для телефонов (max-width: 480px) */
-@media screen and (max-width: 480px) and (orientation: portrait )   {
+@media screen and (max-width: 480px) and (orientation: portrait) {
   .code-text {
-    font: 400 80px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica,
+    font:
+      400 80px 'MajorMonoDisplay-Regular',
+      -apple-system,
+      Roboto,
+      Helvetica,
       sans-serif;
     height: 80px;
     -webkit-text-stroke: 3px rgba(255, 232, 28, 1);
     margin-top: 2px;
   }
   #code-o {
-    font: 400 80px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica,
+    font:
+      400 80px 'MajorMonoDisplay-Regular',
+      -apple-system,
+      Roboto,
+      Helvetica,
       sans-serif;
   }
 
   #code-E {
-    font: 400 60px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica,
+    font:
+      400 60px 'MajorMonoDisplay-Regular',
+      -apple-system,
+      Roboto,
+      Helvetica,
       sans-serif;
   }
 
@@ -83,39 +105,38 @@
   }
 }
 
-/* Медиа-запрос для планшетов и мобильных в ландшафте (до 991px) */
 @media screen and (max-width: 991px) and (orientation: landscape) {
-    .start-page {
-      padding-bottom: 10px;
-    }
+  .start-page {
+    padding-bottom: 10px;
+  }
 
-    .code-text {
-      height: 5.5rem;
-      font-size: clamp(80px, 12vw, 120px);
-      -webkit-text-stroke: 5px rgba(255, 232, 28, 1);
-    }
+  .code-text {
+    height: 5.5rem;
+    font-size: clamp(80px, 12vw, 120px);
+    -webkit-text-stroke: 5px rgba(255, 232, 28, 1);
+  }
 
-    #code-o {
-      font-size: clamp(70px, 11vw, 110px);
-    }
+  #code-o {
+    font-size: clamp(70px, 11vw, 110px);
+  }
 
-    #code-E {
-      font-size: clamp(60px, 10vw, 90px);
-    }
+  #code-E {
+    font-size: clamp(60px, 10vw, 90px);
+  }
 
-    .button-container {
-      gap: 30px;
-    }
+  .button-container {
+    gap: 30px;
+  }
 
-    .play-button,
-    .info-button {
-      padding: 12px 50px;
-      font-size: 1.8rem;
-      max-width: 280px;
-    }
+  .play-button,
+  .info-button {
+    padding: 12px 50px;
+    font-size: 1.8rem;
+    max-width: 280px;
+  }
 
-    .perspective-container {
-      margin-bottom: 35px;
-      margin-top: 25px;
-    }
+  .perspective-container {
+    margin-bottom: 35px;
+    margin-top: 25px;
+  }
 }

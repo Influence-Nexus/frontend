@@ -1,69 +1,116 @@
-import React, { useEffect } from 'react'
-import { GraphCanvasRender } from './GraphCanvasRender'
-import Stopwatch from './Stopwatch'
-import VerticalProgressBar from './VerticalProgressBar'
-import { Buttons } from './Buttons'
-import { HistoryTable } from './HistoryTable'
+import React, { useEffect } from 'react';
+import { GraphCanvasRender } from './GraphCanvasRender';
+import Stopwatch from './Stopwatch';
+import VerticalProgressBar from './VerticalProgressBar';
+import { Buttons } from './Buttons';
+import { HistoryTable } from './HistoryTable';
 
 export const GraphComponent = (props) => {
   const {
-    graphData, setGraphData,
+    graphData,
+    setGraphData,
     setHighlightedNode,
     setSelectedNodes,
-    selectedEdges, setSelectedEdges,
-    history, setHistory,
-    setShowNodeList, lockedNodes,
-    setHoveredNode, handleLoadCoordinates,
-    disabledNodes, matrixInfo,
-    positiveEdgeColor, negativeEdgeColor,
-    physicsEnabled, nodeSize,
+    selectedEdges,
+    setSelectedEdges,
+    history,
+    setHistory,
+    setShowNodeList,
+    lockedNodes,
+    setHoveredNode,
+    handleLoadCoordinates,
+    disabledNodes,
+    matrixInfo,
+    positiveEdgeColor,
+    negativeEdgeColor,
+    physicsEnabled,
+    nodeSize,
     edgeRoundness,
-    networkRef, selectedPlanetLocal,
-    uuid, nodeColor, applyCoordinates,
-    handleClear, handleMakeMove,
-    selectedNodes, hoveredNode,
-    showModal, setShowModal,
-    lastIndex, showNodeList, handleClearEdges,
-    setIsNetworkReady, isNetworkReady,
-    graphDataState, setGraphDataState,
-    planetColor, modelName, planetImg,
-    showHistory, hoverSoundRef
-  } = props
+    networkRef,
+    selectedPlanetLocal,
+    uuid,
+    nodeColor,
+    applyCoordinates,
+    handleClear,
+    handleMakeMove,
+    selectedNodes,
+    hoveredNode,
+    showModal,
+    setShowModal,
+    lastIndex,
+    showNodeList,
+    handleClearEdges,
+    setIsNetworkReady,
+    isNetworkReady,
+    graphDataState,
+    setGraphDataState,
+    planetColor,
+    modelName,
+    planetImg,
+    showHistory,
+    hoverSoundRef,
+  } = props;
 
   useEffect(() => {
     if (!selectedPlanetLocal) return;
     if (!matrixInfo) return;
     if (!isNetworkReady) return;
 
-    console.log("Сеть готова, применяем координаты...");
+    console.log('Сеть готова, применяем координаты...');
     handleLoadCoordinates(uuid, applyCoordinates);
   }, [matrixInfo, isNetworkReady, uuid, applyCoordinates]);
 
   const graphCanvasProps = {
-    matrixInfo, disabledNodes, nodeColor, edgeRoundness, positiveEdgeColor,
-    negativeEdgeColor, setGraphData, graphData, selectedEdges, physicsEnabled,
-    nodeSize, setHighlightedNode, setShowNodeList, setHoveredNode, lockedNodes,
-    setSelectedNodes, setSelectedEdges, networkRef, handleClear, handleMakeMove,
-    selectedNodes, hoveredNode, showModal, setShowModal, lastIndex, showNodeList,
-    handleClearEdges, setIsNetworkReady, graphDataState, setGraphDataState, hoverSoundRef
+    matrixInfo,
+    disabledNodes,
+    nodeColor,
+    edgeRoundness,
+    positiveEdgeColor,
+    negativeEdgeColor,
+    setGraphData,
+    graphData,
+    selectedEdges,
+    physicsEnabled,
+    nodeSize,
+    setHighlightedNode,
+    setShowNodeList,
+    setHoveredNode,
+    lockedNodes,
+    setSelectedNodes,
+    setSelectedEdges,
+    networkRef,
+    handleClear,
+    handleMakeMove,
+    selectedNodes,
+    hoveredNode,
+    showModal,
+    setShowModal,
+    lastIndex,
+    showNodeList,
+    handleClearEdges,
+    setIsNetworkReady,
+    graphDataState,
+    setGraphDataState,
+    hoverSoundRef,
   };
 
   return (
     <div>
       <div className="graph-component-header">
-        <div className="head"> {/* Removed inline style */}
-          <img
-            src={planetImg}
-            alt="planet"
-            className="planet-image" // Added className
-          />
+        <div className="head">
+          {' '}
+          {/* Removed inline style */}
+          <img src={planetImg} alt="planet" className="planet-image" />
           <div className="graph-component-inner">
-            <h1 className="header" style={{ position: "relative", color: planetColor }}>
+            <h1
+              className="header"
+              style={{ position: 'relative', color: planetColor }}
+            >
               {modelName}
             </h1>
             <Buttons
-              matrixUuid={uuid}                // передаём uuid
-              applyCoordinates={applyCoordinates}  // передаём функцию для обновления графа
+              matrixUuid={uuid}
+              applyCoordinates={applyCoordinates}
               matrixInfo={matrixInfo}
               networkRef={networkRef}
               planetColor={planetColor}
@@ -74,7 +121,7 @@ export const GraphComponent = (props) => {
       </div>
       {/* если showHistory – показываем таблицу вместо графа */}
       {showHistory ? (
-        <div style={{ padding: "20px" }}>
+        <div style={{ padding: '20px' }}>
           <HistoryTable
             matrixUuid={uuid}
             planetColor={planetColor}
@@ -90,5 +137,5 @@ export const GraphComponent = (props) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

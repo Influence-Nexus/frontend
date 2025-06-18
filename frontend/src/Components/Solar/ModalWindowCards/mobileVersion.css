@@ -1,59 +1,51 @@
-/* Медиа-запрос для мобильных устройств */
 @media (max-width: 480px) {
-  /* Основной контейнер модального окна */
   .modal-content-custom {
-    width: 95%; /* Полная ширина экрана */
-    height: 90vh; /* Увеличенная высота */
+    width: 95%;
+    height: 90vh;
     border-radius: 15px;
     padding: 15px;
     overflow-y: auto;
   }
 
-  /* Заголовок модального окна */
   .modal-header-custom {
     padding: 10px 0;
     gap: 10px;
-    flex-direction: column; /* Stack header content vertically */
-    align-items: center; /* Center items in the header */
+    flex-direction: column;
+    align-items: center;
   }
 
   .life-strategy {
     font-size: 1rem;
   }
 
-  /* Изображение планеты */
   .planet-image {
     position: relative;
     top: -5px;
-    width: 100px; /* Smaller image */
-    height: 100px; /* Smaller image */
+    width: 100px;
+    height: 100px;
   }
 
-  /* Заголовок планеты */
   .selected-planet-name {
-    font-size: 2rem; /* Уменьшенный размер шрифта */
+    font-size: 2rem;
     margin: 0;
   }
 
-  /* Контейнер карточек */
   .cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adjusted min-width for more columns if space allows */
-    justify-content: center; /* <-- это выравнивает карточки по центру */
-    gap: 10px; /* Reduced gap */
-    margin: 10px; /* Reduced margin */
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    justify-content: center;
+    gap: 10px;
+    margin: 10px;
     overflow-y: auto;
   }
 
-  /* Обычная карточка */
   .card-item-normal {
-    width: 100%; /* Full width of its grid column */
-    padding: 8px; /* Reduced padding */
-    height: 330px; /* Adjusted height */
+    width: 100%;
+    padding: 8px;
+    height: 330px;
     border-radius: 12px;
   }
 
-  /* Заголовок карточки */
   .card-header {
     font-size: clamp(10px, 3vw, 14px);
     min-height: 65px;
@@ -64,31 +56,28 @@
     flex-direction: column;
   }
 
-  /* Изображение в карточке */
   .card-img {
-    width: 70%; /* Smaller image */
+    width: 70%;
     height: auto;
   }
 
-  /* Описание карточки */
   .card-description {
-    font-size: 12px; /* Smaller font size */
+    font-size: 12px;
     width: 100%;
-    max-height: 241px; /* Adjusted max-height */
+    max-height: 241px;
     padding: 5px;
   }
 
-  /* Кнопки действий */
   .modal-cards-buttons {
-    width: 100px; /* Smaller buttons */
-    height: 35px; /* Smaller buttons */
-    font-size: 12px; /* Smaller font size */
+    width: 100px;
+    height: 35px;
+    font-size: 12px;
   }
 
   .card-item-zoomed {
-    width: 95%; /* Полная ширина экрана */
-    max-width: 95%; /* Запрещаем выход за экран */
-    padding: 15px; /* Reduced padding */
+    width: 95%;
+    max-width: 95%;
+    padding: 15px;
     border-radius: 15px;
     height: 85vh;
     overflow-y: auto;
@@ -96,13 +85,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    flex-direction: column; /* Stack content vertically */
-    align-items: center; /* Center zoomed card content */
+    flex-direction: column;
+    align-items: center;
   }
 
-  /* Убираем фиксированную ширину для внутренних блоков */
   .card-item-zoomed .card-wrapper {
-    max-width: 100%; 
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -110,41 +98,38 @@
 
   .card-item-zoomed .card-header,
   .card-item-zoomed .card-body {
-    max-width: 100% !important; 
+    max-width: 100% !important;
     width: 100%;
   }
 
-  /* Корректируем изображение в зумированной карточке */
   .card-item-zoomed .card-img-zoomed {
-    width: 70%; /* Adjusted image size in zoomed view */
+    width: 70%;
     height: auto;
-    max-width: 250px; /* Adjusted max-width */
-    max-height: 300px; 
+    max-width: 250px;
+    max-height: 300px;
     object-fit: contain;
   }
 
-  /* Адаптивные размеры для текста */
   .card-item-zoomed .card-description {
-    font-size: 12px; /* Smaller font for zoomed description */
-    width: 90%; /* Adjusted width */
+    font-size: 12px;
+    width: 90%;
     max-width: 100%;
     padding: 5px;
-    text-align: center; /* Center description text */
+    text-align: center;
   }
   .card-item-zoomed .card-header p {
-    font-size: 1.1rem; /* Smaller font for zoomed header */
+    font-size: 1.1rem;
     width: 90%;
   }
   .close-cardList-modal-window,
   .close-card-modal-window {
-    font-size: 1.8rem; /* Увеличьте размер на мобильных */
-    top: 5px; /* Adjusted position */
-    right: 5px; /* Adjusted position */
+    font-size: 1.8rem;
+    top: 5px;
+    right: 5px;
   }
 }
 
 @media screen and (orientation: landscape) and (max-height: 480px) {
-
   .modal-content-custom {
     width: 95%;
     height: 95vh;
@@ -153,7 +138,7 @@
   }
 
   .cards-container {
-    grid-template-columns: repeat(2, 1fr); /* или 1fr, если всё ломается */
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin: 10px;
   }
@@ -179,19 +164,19 @@
   }
 
   .card-item-zoomed {
-    flex-direction: row; /* Keep horizontal layout for landscape zoomed cards */
+    flex-direction: row;
     max-width: 90vw;
     max-height: 90vh;
     padding: 10px;
   }
 
   .card-item-zoomed .card-wrapper {
-    flex-direction: row; /* Keep horizontal for inner wrapper */
+    flex-direction: row;
     align-items: flex-start;
   }
 
   .card-item-zoomed .card-header {
-    width: 40%; /* Allocate width for header */
+    width: 40%;
     max-width: none;
     text-align: left;
     padding: 5px;
@@ -203,19 +188,19 @@
   }
 
   .card-item-zoomed .card-body {
-    width: 60%; /* Allocate width for body */
+    width: 60%;
     max-width: none;
     align-items: flex-start;
   }
 
   .card-item-zoomed .card-img-zoomed {
-    max-width: 150px; /* Smaller image in landscape zoomed */
+    max-width: 150px;
     max-height: 150px;
   }
 
   .card-item-zoomed .card-description {
-    font-size: 0.75rem; /* Smaller font for description in landscape zoomed */
-    max-height: 80px; /* Adjusted height */
+    font-size: 0.75rem;
+    max-height: 80px;
     overflow-y: auto;
     width: 100%;
     padding: 2px;
@@ -233,69 +218,68 @@
   }
 }
 
-/* Медиа-запрос для планшетов и мобильных в ландшафте (до 992px) */
 @media screen and (max-width: 992px) and (orientation: landscape) {
   .modal-content-custom {
     width: 95vw;
-    max-width: 900px; 
-    min-height: auto; 
-    max-height: 95vh; 
-    padding: 10px; 
-    margin-top: 0.5rem; 
+    max-width: 900px;
+    min-height: auto;
+    max-height: 95vh;
+    padding: 10px;
+    margin-top: 0.5rem;
   }
 
   .modal-header-custom {
-    padding-bottom: 5px; 
+    padding-bottom: 5px;
     margin-bottom: 0.3rem;
   }
 
   .modal-header-content {
-    gap: 5px; 
-    width: 100%; 
+    gap: 5px;
+    width: 100%;
   }
 
   .planet-image {
-    width: 80px; 
+    width: 80px;
     height: 80px;
   }
 
   .selected-planet-name {
-    font-size: 2.2rem; 
+    font-size: 2.2rem;
   }
 
   .life-strategy {
-    max-height: 70px; 
-    font-size: 0.8rem; 
+    max-height: 70px;
+    font-size: 0.8rem;
     width: 100%;
   }
 
   .life-strategy-span {
-    font-size: 0.9rem; 
+    font-size: 0.9rem;
   }
 
   .close-cardList-modal-window {
-    top: 5px; 
+    top: 5px;
     right: 5px;
-    font-size: 1.2rem; 
+    font-size: 1.2rem;
   }
 
   .modal-body-custom {
-    padding: 0 5px; 
+    padding: 0 5px;
   }
 
   .cards-container {
-    gap: 10px; 
+    gap: 10px;
     padding: 10px 0;
   }
 
   .card-item-normal {
-    width: 160px; 
-    padding: 8px; 
+    width: 160px;
+    padding: 8px;
     height: 230px;
   }
 
   .card-header {
-    font-size: 0.8rem; 
+    font-size: 0.8rem;
   }
 
   .card-img {
@@ -304,24 +288,24 @@
   }
 
   .modal-cards-buttons {
-    width: 80px; 
-    height: 30px; 
-    font-size: 0.8rem; 
-    border-radius: 10px; 
+    width: 80px;
+    height: 30px;
+    font-size: 0.8rem;
+    border-radius: 10px;
   }
 
   .card-item-zoomed {
     padding: 15px;
-    width: 95%; 
+    width: 95%;
     max-width: 700px;
-    max-height: 90vh; 
-    gap: 10px; 
-    flex-direction: row; 
-    align-items: flex-start; 
+    max-height: 90vh;
+    gap: 10px;
+    flex-direction: row;
+    align-items: flex-start;
   }
 
   .card-item-zoomed .card-wrapper {
-    max-width: 100%; 
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -329,7 +313,7 @@
 
   .card-item-zoomed .card-header,
   .card-item-zoomed .card-body {
-    max-width: 100%; 
+    max-width: 100%;
     width: 100%;
   }
 
@@ -340,7 +324,7 @@
   }
 
   .card-item-zoomed .card-header p {
-    font-size: 1.2rem; 
+    font-size: 1.2rem;
     width: 90%;
   }
 
@@ -351,21 +335,21 @@
   }
 
   .card-img-zoomed {
-    max-width: 180px; 
+    max-width: 180px;
     margin: 5px 0;
   }
 
   .card-description {
-    font-size: 0.85rem; 
-    max-height: 150px; 
+    font-size: 0.85rem;
+    max-height: 150px;
     padding: 5px 20px 5px 20px;
-    width: 100%; 
-    margin-top: 0; 
+    width: 100%;
+    margin-top: 0;
   }
 
   .card-footer {
-    margin-top: 5px; 
-    height: auto; 
+    margin-top: 5px;
+    height: auto;
     flex-direction: column;
     gap: 5px;
   }
@@ -377,7 +361,7 @@
   }
 
   .card-item-zoomed .modal-cards-buttons {
-    width: 120px; 
+    width: 120px;
     height: 35px;
     font-size: 1.2rem;
   }

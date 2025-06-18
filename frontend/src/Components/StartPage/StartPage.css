@@ -21,15 +21,30 @@
   color: rgba(255, 232, 28, 0);
   -webkit-text-stroke: 7px rgba(255, 232, 28, 1);
   margin-bottom: 1rem;
-  font: 400 180px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica, sans-serif;
+  font:
+    400 180px 'MajorMonoDisplay-Regular',
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
 }
 
 #code-o {
-  font: 400 168px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica, sans-serif;
+  font:
+    400 168px 'MajorMonoDisplay-Regular',
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
 }
 
 #code-E {
-  font: 400 128px "MajorMonoDisplay-Regular", -apple-system, Roboto, Helvetica, sans-serif;
+  font:
+    400 128px 'MajorMonoDisplay-Regular',
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
 }
 
 .button-container {
@@ -45,7 +60,12 @@
   background-color: rgba(255, 232, 28, 1);
   padding: 9.5px 81px;
   border: 1px solid rgba(255, 232, 28, 1);
-  font-family: "Montserrat-Bold", -apple-system, Roboto, Helvetica, sans-serif;
+  font-family:
+    'Montserrat-Bold',
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
   color: rgba(0, 0, 0, 1);
   font-size: 2.25rem;
   font-weight: bold;
@@ -68,7 +88,12 @@
   background-color: transparent;
   padding: 10px 84.5px;
   border: 3px solid rgba(255, 232, 28, 1);
-  font-family: "Montserrat-Bold", -apple-system, Roboto, Helvetica, sans-serif;
+  font-family:
+    'Montserrat-Bold',
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
   color: rgba(255, 232, 28, 1);
   font-weight: 300;
   font-size: 2.25rem;

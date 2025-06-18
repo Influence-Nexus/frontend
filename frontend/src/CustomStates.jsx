@@ -1,7 +1,14 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { jwtDecode } from "jwt-decode";
-import gameOverSoundSrc from "./assets/sounds/gameOver.mp3";
-import hoverSoundSrc from "./assets/sounds/clearSection.mp3";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { jwtDecode } from 'jwt-decode';
+import gameOverSoundSrc from './assets/sounds/gameOver.mp3';
+import hoverSoundSrc from './assets/sounds/clearSection.mp3';
 
 import {
   calculateScore,
@@ -11,7 +18,7 @@ import {
   saveGraphSettingsDefaultAPI,
   saveUserGraphSettingsAPI,
   resetGame,
-} from "./clientServerHub"
+} from './clientServerHub';
 const CustomStatesContext = createContext();
 export const useCustomStates = () => useContext(CustomStatesContext);
 
@@ -20,7 +27,7 @@ export const CustomStatesProvider = ({ children }) => {
   const [highlightedNode, setHighlightedNode] = useState(null);
   const [selectedNodes, setSelectedNodes] = useState([]);
   const [selectedEdges, setSelectedEdges] = useState([]);
-  const [isRunning, setIsRunning] = useState(false)
+  const [isRunning, setIsRunning] = useState(false);
   const [stopwatchHistory, setStopwatchHistory] = useState([]);
   const [showNodeList, setShowNodeList] = useState(false);
   const [lockedNodes, setLockedNodes] = useState({});
@@ -38,8 +45,8 @@ export const CustomStatesProvider = ({ children }) => {
   const [movesHistory, setMovesHistory] = useState([]);
   const [disabledNodes, setDisabledNodes] = useState([]);
   const [matrixInfo, setMatrixInfo] = useState({});
-  const [positiveEdgeColor, setPositiveEdgeColor] = useState("#00FF00");
-  const [negativeEdgeColor, setNegativeEdgeColor] = useState("#FF0000");
+  const [positiveEdgeColor, setPositiveEdgeColor] = useState('#00FF00');
+  const [negativeEdgeColor, setNegativeEdgeColor] = useState('#FF0000');
   const [physicsEnabled, setPhysicsEnabled] = useState(false);
   const [nodeSize, setNodeSize] = useState(40);
   const [edgeRoundness, setEdgeRoundness] = useState(0.15);
@@ -60,7 +67,7 @@ export const CustomStatesProvider = ({ children }) => {
   // Текущий юзер
   // const [userUuid, setuserUuid] = useState(localStorage.getItem("currentUser") || "defaultUser");
   // Цвет узлов
-  const [nodeColor, setNodeColor] = useState("#0e0a20");
+  const [nodeColor, setNodeColor] = useState('#0e0a20');
 
   // Для статусов загрузки/ошибок
   const [error, setError] = useState(null);
@@ -77,7 +84,6 @@ export const CustomStatesProvider = ({ children }) => {
   const [hoveredPlanet, setHoveredPlanet] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
 
-
   // ----- Дописанные функции-заглушки -----
 
   // --- Инициализация userUuid ---
@@ -89,7 +95,6 @@ export const CustomStatesProvider = ({ children }) => {
   const networkRef = useRef(null);
   const backgroundMusicRef = useRef(null);
   const containerRef = useRef(null);
-
 
   // разочек на старте приложения “подхватываем” звуки
   useEffect(() => {
@@ -103,8 +108,11 @@ export const CustomStatesProvider = ({ children }) => {
   useEffect(() => {
     const playMusic = () => {
       if (backgroundMusicRef.current) {
-        backgroundMusicRef.current.play().catch(err => {
-          console.warn("🎧 Музыка не стартанула сама — нужен клик от пользователя:", err.message);
+        backgroundMusicRef.current.play().catch((err) => {
+          console.warn(
+            '🎧 Музыка не стартанула сама — нужен клик от пользователя:',
+            err.message
+          );
         });
       }
     };
@@ -114,16 +122,15 @@ export const CustomStatesProvider = ({ children }) => {
     // На случай, если блокировка — слушаем первый клик
     const unlockAudio = () => {
       playMusic();
-      document.removeEventListener("click", unlockAudio);
+      document.removeEventListener('click', unlockAudio);
     };
 
-    document.addEventListener("click", unlockAudio);
+    document.addEventListener('click', unlockAudio);
 
     return () => {
-      document.removeEventListener("click", unlockAudio); // Очистка
+      document.removeEventListener('click', unlockAudio); // Очистка
     };
   }, []);
-
 
   const isTokenExpired = (token) => {
     if (!token) return true;
@@ -134,11 +141,10 @@ export const CustomStatesProvider = ({ children }) => {
       const now = Math.floor(Date.now() / 1000); // сейчас в секундах
       return decoded.exp < now; // токен просрочен?
     } catch (error) {
-      console.error("Ошибка при декодировании токена:", error);
+      console.error('Ошибка при декодировании токена:', error);
       return true;
     }
   };
-
 
   useEffect(() => {
     if (moveHistory.length > prevScores.length) {
@@ -152,14 +158,12 @@ export const CustomStatesProvider = ({ children }) => {
     }
   }, [prevScores]);
 
-
-
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem('access_token');
     if (!token || isTokenExpired(token)) {
-      console.warn("Токен отсутствует или истёк, принудительный выход");
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("user_uuid");
+      console.warn('Токен отсутствует или истёк, принудительный выход');
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_uuid');
       setUserUuid(null);
       // можно даже делать редирект здесь, если нужно
       // window.location.href = "/sign-in";
@@ -183,12 +187,14 @@ export const CustomStatesProvider = ({ children }) => {
       // console.log('Делаем ход с вершинами:', selectedNodes);
 
       if (!graphData || !graphData.nodes) {
-        alert("Граф не загружен.");
+        alert('Граф не загружен.');
         return;
       }
 
       const allNodes = graphData.nodes.get();
-      const availableNodesCount = allNodes.filter(node => !disabledNodes.includes(node.id)).length;
+      const availableNodesCount = allNodes.filter(
+        (node) => !disabledNodes.includes(node.id)
+      ).length;
 
       const minRequired = availableNodesCount < 3 ? availableNodesCount : 3;
 
@@ -205,10 +211,13 @@ export const CustomStatesProvider = ({ children }) => {
       });
 
       // --- Запрос на сервер ---
-      const responseData = await calculateScore(selectedNodesDictionary, matrixInfo.matrix_info.uuid);
+      const responseData = await calculateScore(
+        selectedNodesDictionary,
+        matrixInfo.matrix_info.uuid
+      );
 
-      if (!responseData || typeof responseData !== "object") {
-        console.error("Некорректный ответ от сервера:", responseData);
+      if (!responseData || typeof responseData !== 'object') {
+        console.error('Некорректный ответ от сервера:', responseData);
         return;
       }
 
@@ -218,39 +227,45 @@ export const CustomStatesProvider = ({ children }) => {
 
       const { turn_score, total_score } = responseData;
 
-      setMoveHistory(prevHistory => [
+      setMoveHistory((prevHistory) => [
         ...prevHistory,
         { selectedNodes: [...selectedNodes], score: turn_score },
       ]);
 
-      const selectedIds = selectedNodes.map(n => (typeof n === 'object' ? n.id : n));
-      const moveNodesData = selectedIds.map(id => graphData.nodes.get(id)).filter(Boolean);
-      setMovesHistory(prevMoves => [
+      const selectedIds = selectedNodes.map((n) =>
+        typeof n === 'object' ? n.id : n
+      );
+      const moveNodesData = selectedIds
+        .map((id) => graphData.nodes.get(id))
+        .filter(Boolean);
+      setMovesHistory((prevMoves) => [
         ...prevMoves,
         { moveNumber: prevMoves.length + 1, nodes: moveNodesData },
       ]);
 
-      setScore(prevScore =>
-        typeof total_score === "number" && !isNaN(total_score) ? total_score : prevScore
+      setScore((prevScore) =>
+        typeof total_score === 'number' && !isNaN(total_score)
+          ? total_score
+          : prevScore
       );
 
-      setDisabledNodes(prev => [...new Set([...prev, ...selectedNodes])]);
+      setDisabledNodes((prev) => [...new Set([...prev, ...selectedNodes])]);
       setSelectedNodes([]);
       setSelectedEdges([]);
 
-      setLastIndex(prevLastIndex => {
-        const maxIndex = Math.max(...Object.keys(selectedNodesDictionary).map(Number));
+      setLastIndex((prevLastIndex) => {
+        const maxIndex = Math.max(
+          ...Object.keys(selectedNodesDictionary).map(Number)
+        );
         return maxIndex + 1;
       });
 
       setShowHistoryModal(true);
-
     } catch (error) {
-      console.error("Ошибка выполнения хода:", error);
+      console.error('Ошибка выполнения хода:', error);
       alert(`Ошибка: ${error.message}`);
     }
   };
-
 
   useEffect(() => {
     if (!graphData || !graphData.nodes || disabledNodes.length === 0) return;
@@ -261,9 +276,8 @@ export const CustomStatesProvider = ({ children }) => {
       setIsRunning(false);
       setShowGameOverModal(true);
       handleStop();
-    } // eslint-disable-next-line 
+    } // eslint-disable-next-line
   }, [disabledNodes, graphData, isRunning]);
-
 
   useEffect(() => {
     if (selectedNodes.length > 0) {
@@ -272,8 +286,6 @@ export const CustomStatesProvider = ({ children }) => {
       setShowModal(false);
     }
   }, [selectedNodes]);
-
-
 
   const handleClearEdges = () => {
     selectedEdges.forEach((edgeId) => {
@@ -291,8 +303,6 @@ export const CustomStatesProvider = ({ children }) => {
     setSelectedEdges([]);
   };
 
-
-
   // При загрузке компонента — обновим userUuid, если токен сменился
   useEffect(() => {
     const uuidFromToken = getUserUuidFromToken();
@@ -301,8 +311,6 @@ export const CustomStatesProvider = ({ children }) => {
     }
     // eslint-disable-next-line
   }, []);
-
-
 
   // Если нужна модалка Details
   const handleOpenModal = () => {
@@ -319,7 +327,7 @@ export const CustomStatesProvider = ({ children }) => {
         await resetGame(matrixInfo.matrix_info.uuid);
       }
     } catch (err) {
-      console.warn("Ошибка при сбросе на сервере:", err);
+      console.warn('Ошибка при сбросе на сервере:', err);
     }
 
     // Чистим локальные стейты
@@ -331,13 +339,12 @@ export const CustomStatesProvider = ({ children }) => {
     setMovesHistory([]);
     setLockedNodes({});
     setDisabledNodes([]); // Очистили, чтобы все узлы снова стали кликабельными
-    setPrevScores([])
+    setPrevScores([]);
     // Запускаем таймер
     intervalRef.current = setInterval(() => {
-      setCurrentTime(prev => prev + 1);
+      setCurrentTime((prev) => prev + 1);
     }, 1000);
   };
-
 
   const handleStop = () => {
     setIsRunning(false);
@@ -346,7 +353,7 @@ export const CustomStatesProvider = ({ children }) => {
       intervalRef.current = null;
     }
 
-    setStopwatchHistory(prev => [
+    setStopwatchHistory((prev) => [
       ...prev,
       {
         currentTime,
@@ -366,7 +373,6 @@ export const CustomStatesProvider = ({ children }) => {
     };
   }, []);
 
-
   // ==============================
   // Функции для загрузки/сохранения настроек (через uuid)
   // ==============================
@@ -376,16 +382,15 @@ export const CustomStatesProvider = ({ children }) => {
    */
   const loadDefaultCoordinates = async (uuid) => {
     try {
-      console.log("UUID перед отправкой запроса:", uuid, typeof uuid);
+      console.log('UUID перед отправкой запроса:', uuid, typeof uuid);
       const data = await loadDefaultCoordinatesAPI(uuid);
       const payload = Array.isArray(data) ? data[0] : data;
       return payload;
     } catch (error) {
-      console.error("Ошибка при загрузке дефолтных настроек:", error);
+      console.error('Ошибка при загрузке дефолтных настроек:', error);
       return null;
     }
   };
-
 
   /**
    * Загрузка пользовательских настроек (для конкретного userUuid), по uuid.
@@ -397,7 +402,7 @@ export const CustomStatesProvider = ({ children }) => {
       const payload = Array.isArray(data) ? data[0] : data;
       return payload; // { graph_settings, node_coordinates }
     } catch (error) {
-      console.error("Ошибка загрузки пользовательских настроек:", error);
+      console.error('Ошибка загрузки пользовательских настроек:', error);
       return null;
     }
   };
@@ -413,41 +418,40 @@ export const CustomStatesProvider = ({ children }) => {
       // console.log("Загружены пользовательские настройки");
       applyCoordinatesFn(userData);
     } else {
-      console.warn("Пользовательских настроек нет, грузим дефолтные...");
+      console.warn('Пользовательских настроек нет, грузим дефолтные...');
       const defaultData = await loadDefaultCoordinates(uuid);
       if (defaultData) {
-        console.log("Загружены дефолтные настройки");
+        console.log('Загружены дефолтные настройки');
         applyCoordinatesFn(defaultData);
       } else {
-        console.warn("И дефолтных тоже нет. Нечего грузить.");
+        console.warn('И дефолтных тоже нет. Нечего грузить.');
       }
     }
   };
-
 
   // 2. Сброс (принудительно дефолт)
   const handleResetCoordinates = async (uuid, applyCoordinatesFn) => {
     const defaultData = await loadDefaultCoordinates(uuid);
     if (defaultData) {
       applyCoordinatesFn(defaultData);
-      alert("Дефолтные настройки графа загружены.");
+      alert('Дефолтные настройки графа загружены.');
     } else {
-      alert("Дефолтные настройки графа не найдены.");
+      alert('Дефолтные настройки графа не найдены.');
     }
   };
 
   // 3. Сохранить пользовательские
   const handleSaveUserView = async () => {
     if (!matrixInfo?.matrix_info?.uuid) {
-      console.warn("UUID матрицы отсутствует");
+      console.warn('UUID матрицы отсутствует');
       return;
     }
     if (!networkRef?.current) {
-      console.warn("networkRef.current отсутствует — граф не готов");
+      console.warn('networkRef.current отсутствует — граф не готов');
       return;
     }
     if (!userUuid) {
-      console.warn("Пользователь не найден");
+      console.warn('Пользователь не найден');
     }
     try {
       const nodePositions = networkRef.current.body.nodes;
@@ -466,22 +470,25 @@ export const CustomStatesProvider = ({ children }) => {
         node_coordinates: coordinates,
       };
 
-      await saveUserGraphSettingsAPI(matrixInfo.matrix_info.uuid, userUuid, dataToSave);
+      await saveUserGraphSettingsAPI(
+        matrixInfo.matrix_info.uuid,
+        userUuid,
+        dataToSave
+      );
       // console.log(`✅ Настройки пользователя ${userUuid} успешно сохранены!`);
     } catch (error) {
-      console.error("❌ Ошибка сохранения настроек:", error);
+      console.error('❌ Ошибка сохранения настроек:', error);
     }
   };
-
 
   // 4. Сохранить дефолтные
   const handleSaveDefaultView = async () => {
     if (!matrixInfo?.matrix_info?.uuid) {
-      console.warn("UUID матрицы отсутствует");
+      console.warn('UUID матрицы отсутствует');
       return;
     }
     if (!networkRef?.current) {
-      console.warn("networkRef.current отсутствует — граф не готов");
+      console.warn('networkRef.current отсутствует — граф не готов');
       return;
     }
 
@@ -502,134 +509,189 @@ export const CustomStatesProvider = ({ children }) => {
         node_coordinates: coordinates,
       };
 
-      await saveGraphSettingsDefaultAPI(matrixInfo.matrix_info.uuid, dataToSave);
+      await saveGraphSettingsDefaultAPI(
+        matrixInfo.matrix_info.uuid,
+        dataToSave
+      );
       // console.log("✅ Дефолтные настройки успешно сохранены!");
     } catch (error) {
-      alert(`${error}. Эта кнопка для разработчиков и она временная!`)
-      console.error("❌ Ошибка сохранения дефолтных настроек:", error);
+      alert(`${error}. Эта кнопка для разработчиков и она временная!`);
+      console.error('❌ Ошибка сохранения дефолтных настроек:', error);
     }
   };
 
   // Функция, которая применяется для обновления графа
-  const applyCoordinates = useCallback((data) => {
-    // console.log(data)
-    if (!data || data.error || !networkRef?.current) {
-      console.warn("Нет корректных координат для применения:", data);
-      return;
-    }
-
-    const { graph_settings, node_coordinates } = data;
-
-    if (
-      !graph_settings ||
-      !node_coordinates ||
-      typeof node_coordinates !== 'object'
-    ) {
-      console.warn("Данные координат неполные или некорректные:", data);
-      return;
-    }
-
-    const visNetwork = networkRef.current.body;
-
-    Object.entries(node_coordinates).forEach(([nodeId, coords]) => {
-      if (visNetwork.nodes[nodeId]) {
-        visNetwork.nodes[nodeId].x = coords.x;
-        visNetwork.nodes[nodeId].y = coords.y;
+  const applyCoordinates = useCallback(
+    (data) => {
+      // console.log(data)
+      if (!data || data.error || !networkRef?.current) {
+        console.warn('Нет корректных координат для применения:', data);
+        return;
       }
-    });
 
-    if (graph_settings && networkRef.current.moveTo) {
-      networkRef.current.moveTo({
-        position: graph_settings.position || { x: 0, y: 0 },
-        scale: graph_settings.scale || 1,
-        animation: { duration: 1000, easingFunction: "easeInOutQuad" },
+      const { graph_settings, node_coordinates } = data;
+
+      if (
+        !graph_settings ||
+        !node_coordinates ||
+        typeof node_coordinates !== 'object'
+      ) {
+        console.warn('Данные координат неполные или некорректные:', data);
+        return;
+      }
+
+      const visNetwork = networkRef.current.body;
+
+      Object.entries(node_coordinates).forEach(([nodeId, coords]) => {
+        if (visNetwork.nodes[nodeId]) {
+          visNetwork.nodes[nodeId].x = coords.x;
+          visNetwork.nodes[nodeId].y = coords.y;
+        }
       });
-    }
 
-    networkRef.current.redraw();
-    // console.log("Координаты применены!");
-  }, [networkRef]);
+      if (graph_settings && networkRef.current.moveTo) {
+        networkRef.current.moveTo({
+          position: graph_settings.position || { x: 0, y: 0 },
+          scale: graph_settings.scale || 1,
+          animation: { duration: 1000, easingFunction: 'easeInOutQuad' },
+        });
+      }
+
+      networkRef.current.redraw();
+      // console.log("Координаты применены!");
+    },
+    [networkRef]
+  );
 
   return (
-    <CustomStatesContext.Provider value={{
-      // Состояния
-      graphData, setGraphData,
-      highlightedNode, setHighlightedNode,
-      selectedNodes, setSelectedNodes,
-      selectedEdges, setSelectedEdges,
-      isRunning, setIsRunning,
-      stopwatchHistory, setStopwatchHistory,
-      showNodeList, setShowNodeList,
-      lockedNodes, setLockedNodes,
-      showHistoryModal, setShowHistoryModal,
-      moveHistory, setMoveHistory,
-      lastIndex, setLastIndex,
-      hoveredNode, setHoveredNode,
-      cursorPosition, setCursorPosition,
-      showModal, setShowModal,
-      serverResponseData, setServerResponseData,
-      score, setScore,
-      maxScorePerMove, setMaxScorePerMove,
-      isClosing, setIsClosing,
-      showGameOverModal, setShowGameOverModal,
-      movesHistory, setMovesHistory,
-      disabledNodes, setDisabledNodes,
-      matrixInfo, setMatrixInfo,
-      positiveEdgeColor, setPositiveEdgeColor,
-      negativeEdgeColor, setNegativeEdgeColor,
-      physicsEnabled, setPhysicsEnabled,
-      nodeSize, setNodeSize,
-      edgeRoundness, setEdgeRoundness,
-      userUuid, setUserUuid,
-      nodeColor, setNodeColor,
-      isLoading, setIsLoading,
-      error, setError,
-      currentTime, setCurrentTime,
-      maxTime, progress, setProgress,
-      selectedPlanet, setSelectedPlanet,
-      hoveredPlanet, setHoveredPlanet,
-      isNetworkReady, setIsNetworkReady,
-      smallTableData, setSmallTableData,
-      hugeTableData, setHugeTableData,
-      syntheticData, setSyntheticData,
-      isMenuOpen, setIsMenuOpen,
-      showCat, setShowCat,
-      catAnimationLaunched, setCatAnimationLaunched,
-      isHoveredStart, setIsHoveredStart,
-      isHoveredStop, setIsHoveredStop,
-      showPreviewWindow,
-      prevScores, setPrevScores,
-      showHistory, setShowHistory,
-      history, setHistory,
+    <CustomStatesContext.Provider
+      value={{
+        // Состояния
+        graphData,
+        setGraphData,
+        highlightedNode,
+        setHighlightedNode,
+        selectedNodes,
+        setSelectedNodes,
+        selectedEdges,
+        setSelectedEdges,
+        isRunning,
+        setIsRunning,
+        stopwatchHistory,
+        setStopwatchHistory,
+        showNodeList,
+        setShowNodeList,
+        lockedNodes,
+        setLockedNodes,
+        showHistoryModal,
+        setShowHistoryModal,
+        moveHistory,
+        setMoveHistory,
+        lastIndex,
+        setLastIndex,
+        hoveredNode,
+        setHoveredNode,
+        cursorPosition,
+        setCursorPosition,
+        showModal,
+        setShowModal,
+        serverResponseData,
+        setServerResponseData,
+        score,
+        setScore,
+        maxScorePerMove,
+        setMaxScorePerMove,
+        isClosing,
+        setIsClosing,
+        showGameOverModal,
+        setShowGameOverModal,
+        movesHistory,
+        setMovesHistory,
+        disabledNodes,
+        setDisabledNodes,
+        matrixInfo,
+        setMatrixInfo,
+        positiveEdgeColor,
+        setPositiveEdgeColor,
+        negativeEdgeColor,
+        setNegativeEdgeColor,
+        physicsEnabled,
+        setPhysicsEnabled,
+        nodeSize,
+        setNodeSize,
+        edgeRoundness,
+        setEdgeRoundness,
+        userUuid,
+        setUserUuid,
+        nodeColor,
+        setNodeColor,
+        isLoading,
+        setIsLoading,
+        error,
+        setError,
+        currentTime,
+        setCurrentTime,
+        maxTime,
+        progress,
+        setProgress,
+        selectedPlanet,
+        setSelectedPlanet,
+        hoveredPlanet,
+        setHoveredPlanet,
+        isNetworkReady,
+        setIsNetworkReady,
+        smallTableData,
+        setSmallTableData,
+        hugeTableData,
+        setHugeTableData,
+        syntheticData,
+        setSyntheticData,
+        isMenuOpen,
+        setIsMenuOpen,
+        showCat,
+        setShowCat,
+        catAnimationLaunched,
+        setCatAnimationLaunched,
+        isHoveredStart,
+        setIsHoveredStart,
+        isHoveredStop,
+        setIsHoveredStop,
+        showPreviewWindow,
+        prevScores,
+        setPrevScores,
+        showHistory,
+        setShowHistory,
+        history,
+        setHistory,
 
+        // Рефы
+        hoverSoundRef,
+        gameOverSoundRef,
+        intervalRef,
+        networkRef,
+        backgroundMusicRef,
+        containerRef,
 
-      // Рефы
-      hoverSoundRef,
-      gameOverSoundRef,
-      intervalRef,
-      networkRef,
-      backgroundMusicRef,
-      containerRef,
+        // Допфункции
+        handleOpenModal,
+        handleStart,
+        handleStop,
+        handleClear,
+        handleMakeMove,
+        handleClearEdges,
+        handleClosePreviewWindow,
 
-      // Допфункции
-      handleOpenModal,
-      handleStart,
-      handleStop,
-      handleClear,
-      handleMakeMove,
-      handleClearEdges,
-      handleClosePreviewWindow,
-
-      // Методы для работы с координатами
-      loadDefaultCoordinates,
-      loadUserCoordinates,
-      handleLoadCoordinates,
-      handleResetCoordinates,
-      handleSaveUserView,
-      handleSaveDefaultView,
-      applyCoordinates
-    }}>
+        // Методы для работы с координатами
+        loadDefaultCoordinates,
+        loadUserCoordinates,
+        handleLoadCoordinates,
+        handleResetCoordinates,
+        handleSaveUserView,
+        handleSaveDefaultView,
+        applyCoordinates,
+      }}
+    >
       {children}
     </CustomStatesContext.Provider>
-  )
-}
+  );
+};

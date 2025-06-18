@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import React, { useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
 export const Orbit = ({ children, radius, speed, isPaused }) => {
   const planetRef = useRef();
@@ -9,19 +9,20 @@ export const Orbit = ({ children, radius, speed, isPaused }) => {
   useFrame((_, delta) => {
     if (!planetRef.current || isPaused) return;
 
-    // Обновляем угол только если не на паузе
     angleRef.current = (angleRef.current + speed * delta) % (Math.PI * 2);
 
-    // Устанавливаем новую позицию
     planetRef.current.position.x = radius * Math.cos(angleRef.current);
     planetRef.current.position.z = radius * Math.sin(angleRef.current);
   });
 
-  // Мемоизированная геометрия орбиты
   const orbitGeometry = React.useMemo(() => {
     const points = Array.from({ length: 64 }, (_, i) => {
       const angle = (i / 64) * Math.PI * 2;
-      return new THREE.Vector3(radius * Math.cos(angle), 0, radius * Math.sin(angle));
+      return new THREE.Vector3(
+        radius * Math.cos(angle),
+        0,
+        radius * Math.sin(angle)
+      );
     });
     return new THREE.BufferGeometry().setFromPoints(points);
   }, [radius]);

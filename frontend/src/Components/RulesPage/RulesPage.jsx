@@ -1,11 +1,11 @@
-import React from "react";
-import "./RulesPage.css";
-import "./RulesPageAdaptive.css";
-import { Link } from "react-router-dom";
-import crimeImg from "../Science/images/C_P.png"
+import React from 'react';
+import './RulesPage.css';
+import './RulesPageAdaptive.css';
+import { Link } from 'react-router-dom';
+import crimeImg from '../Science/images/C_P.png';
 
 export const RulesPage = ({ setHeaderShow }) => {
-  setHeaderShow = true
+  setHeaderShow = true;
   return (
     <div className="container Rules-div">
       <h1 className="Start-End-Phrase">Meet the Equilibrium!</h1>
@@ -15,15 +15,15 @@ export const RulesPage = ({ setHeaderShow }) => {
         возможных за одну игру. Это означает уровень изменения ситуации в лучшую
         сторону благодаря Вашей стратегии действий. Игра заканчивается, когда у
         игрока не остается больше ходов. <span id="video-span">ВИДЕО</span> с
-        соответствующими действиями доступно в {" "}
+        соответствующими действиями доступно в{' '}
         <button
           style={{
-            borderRadius: "10px",
-            color: "white",
-            backgroundColor: "#4F75FF",
-            fontSize: "0.6em",
-            padding: "5px",
-            cursor: "pointer"
+            borderRadius: '10px',
+            color: 'white',
+            backgroundColor: '#4F75FF',
+            fontSize: '0.6em',
+            padding: '5px',
+            cursor: 'pointer',
           }}
           href="/"
         >
@@ -85,9 +85,10 @@ export const RulesPage = ({ setHeaderShow }) => {
 
               <li>
                 <p>
-                  <strong>Определить и визуализировать </strong>(по смыслу задачи) целевой узел, то есть узел
-                  графа, который должен получить максимальную реакцию (отклик)
-                  при воздействии на другие узлы модели.
+                  <strong>Определить и визуализировать </strong>(по смыслу
+                  задачи) целевой узел, то есть узел графа, который должен
+                  получить максимальную реакцию (отклик) при воздействии на
+                  другие узлы модели.
                 </p>
               </li>
 
@@ -95,29 +96,35 @@ export const RulesPage = ({ setHeaderShow }) => {
                 <p>
                   <strong>Визуализировать </strong> узлы, на которые запрещено
                   прямое воздействие. Узлы, на которые воздействие запрещено,
-                  окрашены <span style={{ color: "gray" }}>серым цветом.</span>
+                  окрашены <span style={{ color: 'gray' }}>серым цветом.</span>
                 </p>
               </li>
             </ol>
             <br />
-            <h3 style={{ fontSize: "1.75rem" }}>
+            <h3 style={{ fontSize: '1.75rem' }}>
               <span
                 style={{
-                  fontStyle: "italic",
-                  // backgroundColor: "rgb(114, 144, 255)",
-                  fontSize: "1.75rem"
+                  fontStyle: 'italic',
+
+                  fontSize: '1.75rem',
                 }}
               >
                 Пример
               </span>
-              . Модель <span style={{ fontStyle: "italic" }}>«Преступление и наказание»</span>
+              . Модель{' '}
+              <span style={{ fontStyle: 'italic' }}>
+                «Преступление и наказание»
+              </span>
             </h3>
             <br />
             <ol id="num-list-uncolored">
               <li>
                 <p>
-                  Модель <span style={{ fontStyle: "italic" }}>«Преступление и наказание»</span> описывает ситуацию с
-                  регулированием воровства в обществе.
+                  Модель{' '}
+                  <span style={{ fontStyle: 'italic' }}>
+                    «Преступление и наказание»
+                  </span>{' '}
+                  описывает ситуацию с регулированием воровства в обществе.
                 </p>
               </li>
               <li>
@@ -125,31 +132,52 @@ export const RulesPage = ({ setHeaderShow }) => {
               </li>
             </ol>
             <div className="Example-crime-div">
-              <img src={crimeImg} id="crime-img" alt=""/>
+              <img src={crimeImg} id="crime-img" alt="" />
               <ol className="num-list-unordered">
                 <li>
-                  <p><strong>Узел 1:</strong> Наличие имущества (видимое наличие имущества, желаемого ворами).</p>
+                  <p>
+                    <strong>Узел 1:</strong> Наличие имущества (видимое наличие
+                    имущества, желаемого ворами).
+                  </p>
                 </li>
                 <li>
-                  <p><strong>Узел 2:</strong> Возможность (физический доступ к имуществу, наличие инструментов для взлома и т. д.).</p>
+                  <p>
+                    <strong>Узел 2:</strong> Возможность (физический доступ к
+                    имуществу, наличие инструментов для взлома и т.д.).
+                  </p>
                 </li>
                 <li>
-                  <p><strong>Узел 3:</strong> Кража (фактическое завладение имуществом)</p>
+                  <p>
+                    <strong>Узел 3:</strong> Кража (фактическое завладение
+                    имуществом)
+                  </p>
                 </li>
                 <li>
-                  <p><strong>Узел 4:</strong> Участие общественности (наблюдение за городом, общение между соседями, сообщения о преступлениях в местных новостях).</p>
+                  <p>
+                    <strong>Узел 4:</strong> Участие общественности (наблюдение
+                    за городом, общение между соседями, сообщения о
+                    преступлениях в местных новостях).
+                  </p>
                 </li>
                 <li>
-                  <p><strong>Узел 5:</strong> Преступный умысел (наличие лиц, намеревающихся совершить кражу).</p>
+                  <p>
+                    <strong>Узел 5:</strong> Преступный умысел (наличие лиц,
+                    намеревающихся совершить кражу).
+                  </p>
                 </li>
                 <li>
-                  <p><strong>Узел 6:</strong> Наказание (мера надежности и неотвратимости наказания за преступления).</p>
+                  <p>
+                    <strong>Узел 6:</strong> Наказание (мера надежности и
+                    неотвратимости наказания за преступления).
+                  </p>
                 </li>
                 <li>
-                  <p><strong>Узел 7:</strong> Присутствие полиции (регулярное видимое присутствие офицеров в форме).</p>
+                  <p>
+                    <strong>Узел 7:</strong> Присутствие полиции (регулярное
+                    видимое присутствие офицеров в форме).
+                  </p>
                 </li>
               </ol>
-
             </div>
 
             <ol start={3} id="num-list-uncolored">
@@ -158,22 +186,30 @@ export const RulesPage = ({ setHeaderShow }) => {
               </li>
               <li>
                 <p>
-                  Целевой узел в данной модели – узел 3 “Кража” (“Theft”).
-                  Цель управления данной ситуацией – максимально увеличить
-                  реакцию узла 3 через воздействия на остальные узла модели. При
-                  этом напрямую на целевой узел 3 воздействовать{" "}
+                  Целевой узел в данной модели – узел 3 “Кража” (“Theft”). Цель
+                  управления данной ситуацией – максимально увеличить реакцию
+                  узла 3 через воздействия на остальные узла модели. При этом
+                  напрямую на целевой узел 3 воздействовать{' '}
                   <strong>нельзя.</strong>
                 </p>
               </li>
             </ol>
             <p>
               Например, значение веса -0,8 (причинное уменьшение) на дуге,
-              соединяющей узел <span style={{ fontStyle: "italic" }}>Присутствие полиции</span> с узлом <span style={{ fontStyle: "italic" }}>Кража</span>, может означать,
-              что увеличение <span style={{ fontStyle: "italic" }}>Присутствие полиции</span> приводит (или имеет эффект; или
-              вызывает...) к уменьшению <span style={{ fontStyle: "italic" }}>Кража</span> (и наоборот, уменьшение значения
-              узла <span style={{ fontStyle: "italic" }}>Присутствие полиции</span> приведет к увеличению количества <span style={{ fontStyle: "italic" }}>Краж</span>).
+              соединяющей узел{' '}
+              <span style={{ fontStyle: 'italic' }}>Присутствие полиции</span> с
+              узлом <span style={{ fontStyle: 'italic' }}>Кража</span>, может
+              означать, что увеличение{' '}
+              <span style={{ fontStyle: 'italic' }}>Присутствие полиции</span>{' '}
+              приводит (или имеет эффект; или вызывает...) к уменьшению{' '}
+              <span style={{ fontStyle: 'italic' }}>Кража</span> (и наоборот,
+              уменьшение значения узла{' '}
+              <span style={{ fontStyle: 'italic' }}>Присутствие полиции</span>{' '}
+              приведет к увеличению количества{' '}
+              <span style={{ fontStyle: 'italic' }}>Краж</span>).
             </p>
-            <br /><br />
+            <br />
+            <br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">A.2. </span>
               <p id="spanned-list-header-p">
@@ -181,7 +217,8 @@ export const RulesPage = ({ setHeaderShow }) => {
               </p>
             </div>
           </li>
-          <br /><br />
+          <br />
+          <br />
           <p>Игрок может:</p>
           <br />
           <ul id="listik">
@@ -223,11 +260,13 @@ export const RulesPage = ({ setHeaderShow }) => {
               </p>
             </li>
           </ul>
-          <br /><br />
+          <br />
+          <br />
           <p>
             Время ознакомления с ситуацией <strong>не нормируется.</strong>
           </p>
-          <br /><br />
+          <br />
+          <br />
           <li>
             <p id="list-header-h2">Воздействие на ситуацию</p>
             <br />
@@ -260,34 +299,37 @@ export const RulesPage = ({ setHeaderShow }) => {
               Последующие ходы только дополнят Ваше решение.
             </p>
             <br />
-            <p style={{ fontWeight: "bold", color: "rgb(255, 215, 0)" }}>
+            <p style={{ fontWeight: 'bold', color: 'rgb(255, 215, 0)' }}>
               Постарайтесь максимизировать первый ход. Он определит всю Вашу
               стратегию и ее успех!
             </p>
-            <br /><br />
+            <br />
+            <br />
             <p>
               <strong>Максимальная реакция</strong> модели – это достижение
               максимально возможной реакции модели с ориентацией на целевой
               узел. Это достигается за счет выстраивания правильной стратегии
               воздействия на узлы графа.
             </p>
-            <br /><br />
+            <br />
+            <br />
             <p>
               <strong>Стратегия воздействия</strong> – это последовательность из
               узлов, выбранных Вами для воздействия на систему.
             </p>
-            <p><br />
+            <p>
+              <br />
               <strong>Максимально возможная </strong>(оптимальная) реакция
               модели рассчитывается алгоритмом игры с помощью специального
-              математического алгоритма -{" "}
-              <Link to={"/algorithm"}>
+              математического алгоритма -{' '}
+              <Link to={'/algorithm'}>
                 <button
                   style={{
-                    borderRadius: "10px",
-                    color: "white",
-                    backgroundColor: "#4F75FF",
-                    fontSize: "0.6em",
-                    cursor: "pointer",
+                    borderRadius: '10px',
+                    color: 'white',
+                    backgroundColor: '#4F75FF',
+                    fontSize: '0.6em',
+                    cursor: 'pointer',
                   }}
                 >
                   Algorithm
@@ -295,13 +337,15 @@ export const RulesPage = ({ setHeaderShow }) => {
               </Link>
               .
             </p>
-            <br /><br />
+            <br />
+            <br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">B.2. </span>
               <p id="spanned-list-header-p">Правила игры</p>
             </div>
-            <br /><br />
-            <p style={{ textDecoration: "underline" }}>Ходы игрока: </p>
+            <br />
+            <br />
+            <p style={{ textDecoration: 'underline' }}>Ходы игрока: </p>
             <br />
             <ol id="num-list-uncolored">
               <li>
@@ -318,55 +362,72 @@ export const RulesPage = ({ setHeaderShow }) => {
               </li>
               <li>
                 <p>
-                  Вы можете выбрать больше, чем 3 узла за один ход.{" "}
-                  <span style={{ color: "rgb(255, 215, 0)", fontWeight: "bold" }}>
+                  Вы можете выбрать больше, чем 3 узла за один ход.{' '}
+                  <span
+                    style={{ color: 'rgb(255, 215, 0)', fontWeight: 'bold' }}
+                  >
                     Однако помните, что последовательность узлов очень важна!
                   </span>
                 </p>
               </li>
               <li>
                 <p>
-                  Выбранная последовательность узлов за один ход
-                  ранжирует узлы по их силе воздействия от высшего к низшему.
+                  Выбранная последовательность узлов за один ход ранжирует узлы
+                  по их силе воздействия от высшего к низшему.
                 </p>
               </li>
             </ol>
-            <br /><br />
+            <br />
+            <br />
             <span
               style={{
-                fontStyle: "italic",
-                backgroundColor: "rgb(114, 144, 255)",
-                fontSize: "1.7rem",
+                fontStyle: 'italic',
+                backgroundColor: 'rgb(114, 144, 255)',
+                fontSize: '1.7rem',
               }}
             >
               Пример
             </span>
             <p>
-              Модель <span style={{ fontStyle: "italic" }}>«Преступление и наказание»</span> включает 7 узлов.
+              Модель{' '}
+              <span style={{ fontStyle: 'italic' }}>
+                «Преступление и наказание»
+              </span>{' '}
+              включает 7 узлов.
             </p>
             <br />
             <p>
-              <span style={{ fontStyle: "italic", fontWeight: 700 }}>Первый ход </span> – выбор
-              первой последовательности (например, из трех узлов). Например, вы указали
-              последовательность 2,7,4. Это означает то, что Вы считаете, что
-              именно эти три узла обеспечат максимальное воздействие на систему.
-              Кроме этого, сила воздействия узла 2 больше, чем узла 7; узла 7
-              больше, чем узла 4. То есть, узлу 2 присваивается первый ранг,
-              узлу 7 – второй ранг, узлу 4 – третий ранг.
+              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>
+                Первый ход{' '}
+              </span>{' '}
+              – выбор первой последовательности (например, из трех узлов).
+              Например, вы указали последовательность 2,7,4. Это означает то,
+              что Вы считаете, что именно эти три узла обеспечат максимальное
+              воздействие на систему. Кроме этого, сила воздействия узла 2
+              больше, чем узла 7; узла 7 больше, чем узла 4. То есть, узлу 2
+              присваивается первый ранг, узлу 7 – второй ранг, узлу 4 – третий
+              ранг.
             </p>
             <br />
             <p>
-              <span style={{ fontStyle: "italic", fontWeight: 700 }}>Второй ход </span> - выбор
-              второй последовательности. Можно выбрать последовательность из 3 или 4 узлов.
+              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>
+                Второй ход{' '}
+              </span>{' '}
+              - выбор второй последовательности. Можно выбрать
+              последовательность из 3 или 4 узлов.
             </p>
             <br />
 
             <p>
-              <span style={{ fontStyle: "italic", fontWeight: 700 }}>Третий ход </span> - Оставшийся один узел (если вы выбрали для 2
-              хода последовательность из 3 узлов).
+              <span style={{ fontStyle: 'italic', fontWeight: 700 }}>
+                Третий ход{' '}
+              </span>{' '}
+              - Оставшийся один узел (если вы выбрали для 2 хода
+              последовательность из 3 узлов).
             </p>
-            <br /><br />
-            <p style={{ textDecoration: "underline" }}>Время игры: </p>
+            <br />
+            <br />
+            <p style={{ textDecoration: 'underline' }}>Время игры: </p>
             <ol id="num-list-uncolored">
               <li>
                 <p>
@@ -392,8 +453,8 @@ export const RulesPage = ({ setHeaderShow }) => {
               </li>
               <li>
                 <p>
-                  <strong>Прогресс-бар </strong> отсчитывает
-                  оставшееся от нормативного времени игры.
+                  <strong>Прогресс-бар </strong> отсчитывает оставшееся от
+                  нормативного времени игры.
                 </p>
               </li>
               <li>
@@ -403,13 +464,14 @@ export const RulesPage = ({ setHeaderShow }) => {
                 </p>
               </li>
             </ol>
-            <br /><br />
+            <br />
+            <br />
             <div id="sub-list-colored-div">
               <span id="sub-list-colored-span">B.3. </span>
               <p id="spanned-list-header-p">Подсчет очков</p>
             </div>
             <br />
-            <p style={{ textDecoration: "underline" }}>
+            <p style={{ textDecoration: 'underline' }}>
               Правила подсчета очков
             </p>
             <p>За каждый ход вы получаете очки по 100-балльной шкале:</p>
@@ -442,7 +504,7 @@ export const RulesPage = ({ setHeaderShow }) => {
             <br />
             <p>Баллы начисляются по каждому узлу и затем суммируются.</p>
             <br />
-            <p style={{ textDecoration: "underline" }}>Табло очков:</p>
+            <p style={{ textDecoration: 'underline' }}>Табло очков:</p>
             <ul type="disc" id="disc-list-uncolored">
               <li>
                 <p>Номер хода</p>
@@ -466,11 +528,8 @@ export const RulesPage = ({ setHeaderShow }) => {
             <p>Игра заканчивается сразу после последнего возможного хода.</p>
           </li>
         </ol>
-        <h1 className="Start-End-Phrase">
-          Good luck to you!
-        </h1>
+        <h1 className="Start-End-Phrase">Good luck to you!</h1>
       </div>
     </div>
   );
 };
-

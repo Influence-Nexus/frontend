@@ -1,64 +1,63 @@
 .AlgoPage-main-div {
-    color: white;
-    background-color: rgba(14, 10, 32, 1);
+  color: white;
+  background-color: rgba(14, 10, 32, 1);
 }
 
 .algoPage-submain-div {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    position: relative;
-    top: 5rem
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  top: 5rem;
 }
 
 .Description-text {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    font-size: 1.5rem;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5rem;
 }
 
 .Description-text strong {
-    margin-left: 2.5em;
+  margin-left: 2.5em;
 }
 
 .Description-text ul li {
-    margin-left: 5em;
+  margin-left: 5em;
 }
 
 .blue-text {
-    color: #3498db;
+  color: #3498db;
 }
 
 .blue-background {
-    background-color: #3498db;
-    font-size: 3rem;
+  background-color: #3498db;
+  font-size: 3rem;
 }
-ol a{
-    color: #3498db
+ol a {
+  color: #3498db;
 }
 #small-blue-bg {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 h1 {
-    font-size: 3rem;
+  font-size: 3rem;
 }
 
 .italic {
-    font-style: italic;
+  font-style: italic;
 }
 
-
 .algo-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .algo-table th,
-  .algo-table td {
-    border: 1px solid #cccccc;
-    padding: 8px;
-    text-align: center;
-  }
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.algo-table th,
+.algo-table td {
+  border: 1px solid #cccccc;
+  padding: 8px;
+  text-align: center;
+}

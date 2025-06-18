@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import "./StartPage.css";
-import "./StartPageAdaptives.css"
-import ButtonGroup from "./ButtonGroup";
-import { CognitionDecisionText } from "./CognitionDecisionText";
-import { CODE } from "./CODE";
-import { ChallengeYourMindText } from "../ChallengeYourMindText/ChallengeYourMindText";
+import React, { useEffect } from 'react';
+import './StartPage.css';
+import './StartPageAdaptives.css';
+import ButtonGroup from './ButtonGroup';
+import { CognitionDecisionText } from './CognitionDecisionText';
+import { CODE } from './CODE';
+import { ChallengeYourMindText } from '../ChallengeYourMindText/ChallengeYourMindText';
 
-const StartPage = ({setHeaderShow}) => {
+const StartPage = ({ setHeaderShow }) => {
   useEffect(() => {
     setHeaderShow(true);
   }, [setHeaderShow]);

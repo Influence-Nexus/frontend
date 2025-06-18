@@ -1,6 +1,6 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import { useState, useEffect } from "react";
+import { useFrame, useThree } from '@react-three/fiber';
+import * as THREE from 'three';
+import { useState, useEffect } from 'react';
 
 const CameraResetter = ({ selectedPlanet }) => {
   const { camera } = useThree();
@@ -8,7 +8,6 @@ const CameraResetter = ({ selectedPlanet }) => {
   const [isResetting, setIsResetting] = useState(false);
 
   useEffect(() => {
-    // Запускаем сброс, когда планета снята
     if (selectedPlanet === null) {
       setIsResetting(true);
     }

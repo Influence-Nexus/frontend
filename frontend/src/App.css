@@ -8,14 +8,13 @@ a,
 p {
   margin: 0;
   padding: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 button {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
-
-.modal-open{
-  padding: 0 !important
+.modal-open {
+  padding: 0 !important;
 }

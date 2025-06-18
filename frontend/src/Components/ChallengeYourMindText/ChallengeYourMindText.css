@@ -1,19 +1,18 @@
 .challenge-text {
-    font-size: 6rem;
-    font-weight: 400;
-    color: #ffffff;
-    font-family: 'MoonDance', sans-serif;
-    font-style: italic;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 15px 0 10px 0;
-  }
-  
-  .challenge-text-sign {
-    font-family: "Reggae One", sans-serif;
-    font-size: 5rem;
-    color: white; 
-    margin-left: 1.2rem;
-  }
+  font-size: 6rem;
+  font-weight: 400;
+  color: #ffffff;
+  font-family: 'MoonDance', sans-serif;
+  font-style: italic;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15px 0 10px 0;
+}
 
+.challenge-text-sign {
+  font-family: 'Reggae One', sans-serif;
+  font-size: 5rem;
+  color: white;
+  margin-left: 1.2rem;
+}

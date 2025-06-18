@@ -1,25 +1,24 @@
-// TableHuge.jsx
-import React from "react";
+import React from 'react';
 
 const TableHeader1 = [
-  { title: "Расчётные данные (по воздействию)", width: "300px", colSpan: 2 },
-  { title: "Ваш игровой результат", width: "300px", colSpan: 2 },
+  { title: 'Расчётные данные (по воздействию)', width: '300px', colSpan: 2 },
+  { title: 'Ваш игровой результат', width: '300px', colSpan: 2 },
 ];
 
 const TableHeader2 = [
-  { title: "Вершина", key: "ID", width: "150px", height: "20px" },
-  { title: "Счёт", key: "Score1", width: "240px", height: "20px" },
-  { title: "Вершина", key: "S", width: "150px", height: "20px" },
-  { title: "Счёт", key: "Score2", width: "240px", height: "20px" },
+  { title: 'Вершина', key: 'ID', width: '150px', height: '20px' },
+  { title: 'Счёт', key: 'Score1', width: '240px', height: '20px' },
+  { title: 'Вершина', key: 'S', width: '150px', height: '20px' },
+  { title: 'Счёт', key: 'Score2', width: '240px', height: '20px' },
 ];
 
 export const TableHuge = ({ data }) => {
   const defaultData = [
-    { ID: "None", Score1: "None", S: "None", Score2: "None" },
-    { ID: "None", Score1: "None", S: "None", Score2: "None" },
-    { ID: "None", Score1: "None", S: "None", Score2: "None" },
-    { ID: "None", Score1: "None", S: "None", Score2: "None" },
-    { ID: "None", Score1: "None", S: "None", Score2: "None" },
+    { ID: 'None', Score1: 'None', S: 'None', Score2: 'None' },
+    { ID: 'None', Score1: 'None', S: 'None', Score2: 'None' },
+    { ID: 'None', Score1: 'None', S: 'None', Score2: 'None' },
+    { ID: 'None', Score1: 'None', S: 'None', Score2: 'None' },
+    { ID: 'None', Score1: 'None', S: 'None', Score2: 'None' },
   ];
 
   const tableData = data || defaultData;
@@ -36,7 +35,7 @@ export const TableHuge = ({ data }) => {
 
   return (
     <div id="huge-table-alignment-div">
-      <h5 style={{ fontSize: "1.25rem" }}>
+      <h5 style={{ fontSize: '1.25rem' }}>
         Step 2: Сравним Ваши результаты с расчётными
       </h5>
       <h2 id="huge-table-name">Результаты</h2>
@@ -48,7 +47,7 @@ export const TableHuge = ({ data }) => {
                 <th
                   key={index}
                   colSpan={header.colSpan}
-                  style={{ width: header.width, fontSize: "18px" }}
+                  style={{ width: header.width, fontSize: '18px' }}
                 >
                   {header.title}
                 </th>
@@ -61,8 +60,8 @@ export const TableHuge = ({ data }) => {
                   style={{
                     width: header.width,
                     height: header.height,
-                    fontSize: "18px",
-                    textAlign: "center",
+                    fontSize: '18px',
+                    textAlign: 'center',
                   }}
                 >
                   {header.title}
@@ -72,18 +71,18 @@ export const TableHuge = ({ data }) => {
           </thead>
           <tbody>
             {tableData.map((row, index) => (
-              <tr key={index} style={{ fontSize: "18px" }}>
+              <tr key={index} style={{ fontSize: '18px' }}>
                 <td>{row.ID}</td>
                 <td>{row.Score1}</td>
                 <td>{row.S}</td>
                 <td>{row.Score2}</td>
               </tr>
             ))}
-            <tr style={{ fontSize: "18px" }}>
+            <tr style={{ fontSize: '18px' }}>
               <td>Σ</td>
-              <td>{sums.Score1.toFixed(4) || "None"}</td>
-              <td>{sums.S.toFixed(4) || "None"}</td>
-              <td>{sums.Score2.toFixed(4) || "None"}</td>
+              <td>{sums.Score1.toFixed(4) || 'None'}</td>
+              <td>{sums.S.toFixed(4) || 'None'}</td>
+              <td>{sums.Score2.toFixed(4) || 'None'}</td>
             </tr>
           </tbody>
         </table>

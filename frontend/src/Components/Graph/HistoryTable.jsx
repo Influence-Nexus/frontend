@@ -1,18 +1,20 @@
-// components/HistoryTable.jsx
-import React, { useEffect } from "react";
-import { getGameHistory } from "../../clientServerHub";
-import "./Styles/HistoryTableStyles.css";
+import React, { useEffect } from 'react';
+import { getGameHistory } from '../../clientServerHub';
+import './Styles/HistoryTableStyles.css';
 
-export const HistoryTable = ({ matrixUuid, planetColor, history, setHistory }) => {
-
-
+export const HistoryTable = ({
+  matrixUuid,
+  planetColor,
+  history,
+  setHistory,
+}) => {
   useEffect(() => {
     (async () => {
       try {
         const res = await getGameHistory(matrixUuid);
         setHistory(res.history || []);
       } catch (e) {
-        console.error("History load error:", e);
+        console.error('History load error:', e);
       }
     })();
   }, [matrixUuid]);
@@ -34,13 +36,13 @@ export const HistoryTable = ({ matrixUuid, planetColor, history, setHistory }) =
           {history.map((g, i) => (
             <tr key={i}>
               <td>{new Date(g.timestamp).toLocaleString()}</td>
-              <td style={{ fontWeight: "bold", color: planetColor }}>
+              <td style={{ fontWeight: 'bold', color: planetColor }}>
                 {g.final_score}
               </td>
               <td>
                 {g.turns.map((turn, idx) => (
-                  <div key={idx} style={{ marginBottom: "5px" }}>
-                    Ход {idx + 1}: {turn.nodes.join(", ")}
+                  <div key={idx} style={{ marginBottom: '5px' }}>
+                    Ход {idx + 1}: {turn.nodes.join(', ')}
                   </div>
                 ))}
               </td>

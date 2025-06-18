@@ -21,7 +21,8 @@
   gap: 20px;
 }
 
-#huge-table-alignment-div h5, #small-table-alignment-div  h5 {
+#huge-table-alignment-div h5,
+#small-table-alignment-div h5 {
   color: #ffd700;
   height: 48px;
 }
@@ -42,7 +43,6 @@
   margin-top: 20px;
 }
 
-/* Общие стили для таблиц */
 .small-table-container,
 .huge-table-container {
   border: 2px solid #fff;
@@ -50,14 +50,12 @@
   overflow: hidden;
 }
 
-/* Прокрутка */
 .small-table-container,
 .huge-table-container {
   max-height: 500px;
   overflow-y: auto;
 }
 
-/* Общие стили для таблиц */
 .small-table-container table,
 .huge-table-container table {
   width: 100%;
@@ -92,8 +90,6 @@
   background-color: gray;
 }
 
-
-/* Ячейки со значениями "Счёт" */
 .huge-table-container td:nth-child(2) {
   border: 3px solid #ffd700;
   font-weight: bold;
@@ -103,14 +99,11 @@
   border: 3px solid #ffd700;
 }
 
-/* Адаптивная ширина секции таблиц */
 #small-table-alignment-div,
 #huge-table-alignment-div {
   flex: 1;
   min-width: 400px;
 }
-
-
 
 .SciencePageButtons-div button {
   color: white;
@@ -129,7 +122,7 @@
 
 .SciencePageButtons-div a {
   text-decoration: none;
-  color: white
+  color: white;
 }
 
 .SciencePageButtons-div {
@@ -137,7 +130,6 @@
   gap: 1.5em;
   margin: 1.5rem 0;
 }
-
 
 #game-button {
   background-color: #342b41;
@@ -151,7 +143,8 @@
   font-style: italic;
 }
 
-#game-button, #algo-button {
+#game-button,
+#algo-button {
   font-size: 1.5rem;
 }
 
@@ -168,8 +161,7 @@
   gap: 20px;
 }
 
-
-.science-stopwatch-container{
+.science-stopwatch-container {
   position: relative;
   color: white;
   padding: 10px;
@@ -182,41 +174,42 @@
   height: 600px;
 }
 
-.science-stopwatch-container-buttons{
+.science-stopwatch-container-buttons {
   display: flex;
   align-self: center !important;
   gap: 3rem;
-  margin-top: 10px
+  margin-top: 10px;
 }
 
-.science-stopwatch-container-time{
+.science-stopwatch-container-time {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-bottom: 1px solid white  ;
+  border-bottom: 1px solid white;
   font-size: 28px;
 }
 
-.science-stopwatch-container-score{
+.science-stopwatch-container-score {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-bottom: 1px solid white  ;
+  border-bottom: 1px solid white;
   font-size: 28px;
 }
 
-#small-table-name, #huge-table-name {
+#small-table-name,
+#huge-table-name {
   height: 75px;
 }
 
-.science-stopwatch-container-table{
+.science-stopwatch-container-table {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-bottom: 1px solid white  ;
+  border-bottom: 1px solid white;
   font-size: 28px;
   height: 380px;
-  min-width: 220px
+  min-width: 220px;
 }
 
 .selected-list {
@@ -233,8 +226,6 @@
   position: fixed;
 }
 
-
-/* Контейнер */
 .moves-table-container {
   border: 2px solid #fff;
   border-radius: 10px;
@@ -242,13 +233,11 @@
   max-height: 500px;
 }
 
-/* Таблица */
 .moves-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-/* Заголовки */
 .moves-table-header {
   background-color: #0e0a20;
   color: #fff;
@@ -261,7 +250,6 @@
   z-index: 1;
 }
 
-/* Строки */
 .moves-table-row:nth-child(even) {
   background-color: #0e0a20;
 }
@@ -270,7 +258,6 @@
   background-color: gray;
 }
 
-/* Ячейки */
 .moves-table-cell {
   border: 1px solid #fff;
   padding: 8px 12px;
@@ -278,7 +265,6 @@
   color: #fff;
 }
 
-/* Заголовок таблицы */
 .moves-table-title {
   color: #ffd700;
   font-size: 1.25rem;
@@ -287,12 +273,10 @@
   text-align: center;
 }
 
-/* Контейнер для всей секции */
 #moves-table-alignment-div {
   flex: 1;
   min-width: 400px;
 }
-
 
 @keyframes highlightRow {
   from {
