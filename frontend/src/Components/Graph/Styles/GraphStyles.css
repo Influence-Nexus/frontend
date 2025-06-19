@@ -626,7 +626,7 @@
 
   .buttons-container {
     position: absolute;
-    top: -410%;
+    top: -240px;
     width: 100%;
     display: flex;
     flex-direction: column;

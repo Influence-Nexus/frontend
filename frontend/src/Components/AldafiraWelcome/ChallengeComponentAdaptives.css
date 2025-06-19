@@ -28,6 +28,10 @@
 }
 
 @media screen and (max-width: 768px) and (orientation: portrait) {
+  .coma-title{
+    font-size: 5rem !important;
+  }
+
   .fullScreenVideo {
     object-fit: contain !important;
     width: 100vw;
@@ -74,7 +78,7 @@
   }
 
   .challenge-mind-text-div {
-    margin-top: 40vh;
+    margin-top: 5vh;
     font-size: 0.8em;
     text-align: center;
   }
@@ -85,14 +89,14 @@
     align-items: center;
     width: 100%;
     position: relative;
-    margin-top: 5vh;
+    margin-top: 50vh;
   }
 
   .comabla {
     position: relative;
     top: auto;
     left: auto;
-    font-size: 32px;
+    font-size: 3rem;
     margin-bottom: 20px;
     text-align: center;
   }
