@@ -57,6 +57,7 @@ export const TableHuge = ({ data }) => {
               {TableHeader2.map((header, index) => (
                 <th
                   key={index}
+                  className="second-header-row-th" // Добавлен этот класс
                   style={{
                     width: header.width,
                     height: header.height,

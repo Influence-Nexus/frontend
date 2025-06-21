@@ -1,13 +1,21 @@
 import { useEffect, useState, useRef } from 'react';
 import { useCustomStates } from '../../CustomStates';
+import { Link } from 'react-router-dom';
 import InfoIcon from '@mui/icons-material/Info';
 import KeyIcon from '@mui/icons-material/Key';
 import MenuIcon from '@mui/icons-material/Menu';
 import { getScienceClicks, logScienceAttempt } from '../../clientServerHub';
 
-export const Buttons = ({ matrixUuid, onOpenDetailsModal }) => {
+export const Buttons = ({
+  matrixUuid,
+  planetColor,
+  planetImg,
+  onOpenDetailsModal,
+}) => {
   const {
     isRunning,
+    selectedPlanet,
+    selectedCardIndex,
     handleLoadCoordinates,
     handleResetCoordinates,
     handleSaveUserView,
@@ -62,6 +70,7 @@ export const Buttons = ({ matrixUuid, onOpenDetailsModal }) => {
       }
     } catch (error) {
       console.error('Ошибка:', error.message);
+      // alert(error.message);
     }
   };
 
@@ -109,18 +118,29 @@ export const Buttons = ({ matrixUuid, onOpenDetailsModal }) => {
         </li>
 
         <li>
-          <button
-            id="science-button"
-            className="game-button"
-            onClick={handleButtonClick(handleScienceClick)}
-            title="Временно заблокирована!"
+          <Link
+            to={`/science/${matrixUuid}`}
+            state={{
+              selectedPlanet,
+              selectedCardIndex,
+              planetColor,
+              planetImg,
+            }}
           >
-            <p>Science</p>
-            {scienceClicks !== null &&
-              Array.from({ length: scienceClicks }, (_, index) => (
-                <KeyIcon key={index} sx={{ marginRight: '4px' }} />
-              ))}
-          </button>
+            <button
+              id="science-button"
+              className="game-button"
+              onClick={handleScienceClick}
+              disabled={scienceClicks !== null && scienceClicks <= 0}
+              title="Временно заблокирована!"
+            >
+              <p>Science</p>
+              {scienceClicks !== null &&
+                Array.from({ length: scienceClicks }, (_, index) => (
+                  <KeyIcon key={index} sx={{ marginRight: '4px' }} />
+                ))}
+            </button>
+          </Link>
         </li>
 
         {/* Остальные кнопки */}

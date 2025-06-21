@@ -5,6 +5,10 @@
   padding: 0 70px 100px 70px;
 }
 
+.huge-table-container th.second-header-row-th {
+  top: 65px; /* Это значение должно быть равно высоте первого ряда заголовков */
+}
+
 .regulator h1 {
   margin: 0 !important;
   padding: 0 !important;
@@ -289,4 +293,250 @@
 
 .moves-table-last-row {
   animation: highlightRow 1.5s ease;
+}
+
+@media screen and (max-width: 767px) and (orientation: portrait) {
+  .huge-table-container th.second-header-row-th {
+    top: 85px; /* Это значение должно быть равно высоте первого ряда заголовков */
+  }
+
+  .science-page {
+    padding: 0 15px 50px 15px; /* Уменьшим общие отступы страницы */
+  }
+
+  .planet-creds-div {
+    flex-direction: column; /* Элементы будут располагаться друг под другом */
+    gap: 10px; /* Уменьшим расстояние между элементами */
+    text-align: center; /* Выровняем текст по центру */
+  }
+
+  .planet-creds-div img {
+    width: 80px !important; /* Уменьшим размер изображения планеты */
+    height: 80px !important; /* Уменьшим размер изображения планеты */
+  }
+
+  .science-page-title {
+    font-size: 1.8rem; /* Уменьшим размер заголовка */
+    text-align: center; /* Выровняем по центру */
+  }
+
+  .tables-section {
+    flex-direction: column; /* Таблицы будут располагаться друг под другом */
+    gap: 20px; /* Сохраним расстояние между таблицами */
+  }
+
+  .small-table-container {
+    margin-top: 100px;
+    max-height: 300px; /* Уменьшим максимальную высоту таблиц */
+    overflow-x: auto; /* Добавим горизонтальный скролл для таблиц */
+  }
+
+  .huge-table-container {
+    max-height: 300px; /* Уменьшим максимальную высоту таблиц */
+    overflow-x: auto; /* Добавим горизонтальный скролл для таблиц */
+  }
+
+  .small-table-container th,
+  .huge-table-container th,
+  .small-table-container td,
+  .huge-table-container td {
+    font-size: 0.8rem; /* Уменьшим размер шрифта в таблицах */
+    padding: 6px 8px; /* Уменьшим отступы в ячейках */
+  }
+
+  #small-table-alignment-div,
+  #huge-table-alignment-div {
+    min-width: unset; /* Сбросим минимальную ширину */
+    width: 100%; /* Займут всю доступную ширину */
+  }
+
+  .SciencePageButtons-div {
+    flex-direction: column; /* Кнопки будут располагаться друг под другом */
+    gap: 10px; /* Уменьшим расстояние между кнопками */
+    margin: 1rem 0; /* Уменьшим отступы */
+  }
+
+  .SciencePageButtons-div button {
+    width: 100%; /* Кнопки будут занимать всю ширину */
+    height: 3rem; /* Уменьшим высоту кнопок */
+    font-size: 1.2rem; /* Уменьшим размер шрифта кнопок */
+  }
+
+  .graph-section {
+    flex-direction: column; /* Элементы секции графа будут располагаться друг под другом */
+    gap: 20px; /* Сохраним расстояние между элементами */
+    align-items: center; /* Выровняем по центру */
+  }
+
+  .science-graph-page {
+    width: 100%; /* Граф будет занимать всю ширину */
+    height: 400px; /* Уменьшим высоту графа */
+  }
+
+  .science-stopwatch-container {
+    width: 95%; /* Часы будут занимать почти всю ширину */
+    height: auto; /* Автоматическая высота */
+    padding: 10px; /* Уменьшим отступы */
+  }
+
+  .science-stopwatch-container-time,
+  .science-stopwatch-container-score,
+  .science-stopwatch-container-table {
+    font-size: 20px; /* Уменьшим размер шрифта в секциях часов */
+    min-width: unset; /* Сбросим минимальную ширину */
+    width: 100%; /* Займут всю доступную ширину */
+  }
+
+  .moves-table-container {
+    width: 100%; /* Таблица ходов будет занимать всю ширину */
+    max-height: 300px; /* Уменьшим максимальную высоту */
+    overflow-x: auto; /* Добавим горизонтальный скролл */
+  }
+
+  .moves-table-header,
+  .moves-table-cell {
+    font-size: 0.8rem; /* Уменьшим размер шрифта в таблице ходов */
+    padding: 6px 8px; /* Уменьшим отступы в ячейках */
+  }
+
+  #moves-table-alignment-div {
+    min-width: unset; /* Сбросим минимальную ширину */
+    width: 100%; /* Займет всю доступную ширину */
+  }
+
+  .loading-overlay p {
+    font-size: 1rem; /* Уменьшим размер шрифта текста загрузки */
+  }
+
+  .cat-animation-container {
+    /* Если такой класс будет использоваться для обертки анимации кота */
+    position: static !important; /* Уберем фиксированное позиционирование */
+    top: unset !important; /* Сбросим top */
+    padding-bottom: 50px; /* Уменьшим отступ снизу */
+  }
+}
+
+@media screen and (max-width: 992px) and (orientation: landscape) {
+  #small-table-name,
+  #huge-table-name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px 0 20px 0;
+  }
+
+  .huge-table-container th.second-header-row-th {
+    top: 85px; /* Сохраняем это значение */
+  }
+
+  .science-page {
+    padding: 0 30px 50px 30px; /* Уменьшим общие отступы страницы */
+  }
+
+  .planet-creds-div {
+    flex-direction: row; /* Элементы остаются в одной строке */
+    gap: 15px; /* Уменьшим расстояние между элементами */
+    text-align: left; /* Выравнивание по левому краю */
+  }
+
+  .planet-creds-div img {
+    width: 100px !important; /* Уменьшим размер изображения планеты */
+    height: 100px !important; /* Уменьшим размер изображения планеты */
+  }
+
+  .science-page-title {
+    font-size: 2rem; /* Уменьшим размер заголовка */
+    text-align: left; /* Выровняем по левому краю */
+  }
+
+  .tables-section {
+    flex-direction: row; /* Таблицы остаются в одной строке */
+    gap: 15px; /* Уменьшим расстояние между таблицами */
+  }
+
+  .small-table-container,
+  .huge-table-container {
+    max-height: 400px; /* Уменьшим максимальную высоту таблиц */
+    overflow-x: auto; /* Добавим горизонтальный скролл для таблиц */
+  }
+
+  .small-table-container th,
+  .huge-table-container th,
+  .small-table-container td,
+  .huge-table-container td {
+    font-size: 0.75rem; /* Уменьшим размер шрифта в таблицах */
+    padding: 5px 7px; /* Уменьшим отступы в ячейках */
+  }
+
+  #small-table-alignment-div,
+  #huge-table-alignment-div {
+    min-width: unset; /* Сбросим минимальную ширину */
+    flex: 1; /* Таблицы займут доступное пространство */
+  }
+
+  .SciencePageButtons-div {
+    flex-direction: row; /* Кнопки остаются в одной строке */
+    gap: 1em; /* Уменьшим расстояние между кнопками */
+    margin: 1rem 0; /* Уменьшим отступы */
+  }
+
+  .SciencePageButtons-div button {
+    width: auto; /* Ширина по контенту */
+    padding: 0 15px; /* Добавим горизонтальные отступы */
+    height: 3rem; /* Уменьшим высоту кнопок */
+    font-size: 1.1rem; /* Уменьшим размер шрифта кнопок */
+  }
+
+  .graph-section {
+    flex-direction: row; /* Элементы секции графа остаются в одной строке */
+    flex-wrap: wrap; /* Позволим элементам переноситься на новую строку */
+    justify-content: center; /* Выровняем по центру */
+    gap: 15px; /* Уменьшим расстояние между элементами */
+  }
+
+  .science-graph-page {
+    width: 60%; /* Граф будет занимать большую часть ширины */
+    height: 500px; /* Уменьшим высоту графа */
+  }
+
+  .science-stopwatch-container {
+    width: 35%; /* Часы будут занимать меньшую часть ширины */
+    height: 500px; /* Сохраним высоту */
+    padding: 8px; /* Уменьшим отступы */
+  }
+
+  .science-stopwatch-container-time,
+  .science-stopwatch-container-score,
+  .science-stopwatch-container-table {
+    font-size: 18px; /* Уменьшим размер шрифта в секциях часов */
+    min-width: unset; /* Сбросим минимальную ширину */
+    width: 100%; /* Займут всю доступную ширину */
+  }
+
+  .moves-table-container {
+    width: 100%; /* Таблица ходов будет занимать всю ширину */
+    max-height: 300px; /* Уменьшим максимальную высоту */
+    overflow-x: auto; /* Добавим горизонтальный скролл */
+  }
+
+  .moves-table-header,
+  .moves-table-cell {
+    font-size: 0.75rem; /* Уменьшим размер шрифта в таблице ходов */
+    padding: 5px 7px; /* Уменьшим отступы в ячейках */
+  }
+
+  #moves-table-alignment-div {
+    min-width: unset; /* Сбросим минимальную ширину */
+    width: 100%; /* Займет всю доступную ширину */
+  }
+
+  .loading-overlay p {
+    font-size: 0.9rem; /* Уменьшим размер шрифта текста загрузки */
+  }
+
+  .cat-animation-container {
+    position: static !important; /* Уберем фиксированное позиционирование */
+    top: unset !important; /* Сбросим top */
+    padding-bottom: 20px; /* Уменьшим отступ снизу */
+  }
 }

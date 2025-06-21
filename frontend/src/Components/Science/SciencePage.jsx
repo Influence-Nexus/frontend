@@ -17,6 +17,22 @@ import { SciencePageButtons } from './SciencePageButtons';
 import { ScienceStopWatchContainer } from './ScienceStopWatchContainer';
 import CatAnimation from '../Cat/CatAnimation';
 
+// Функция для разделения и форматирования строки
+const splitAndFormatString = (inputString) => {
+  if (!inputString) {
+    return 'Загрузка модели...'; // Возвращаем дефолтный текст, если строка пустая или null
+  }
+  const words = inputString.split('_');
+  const formattedWords = words.map((word, index) => {
+    if (index === 0) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    } else {
+      return word.toLowerCase();
+    }
+  });
+  return formattedWords.join(' ');
+};
+
 export const SciencePage = () => {
   const { uuid } = useParams();
   const location = useLocation();
@@ -69,6 +85,7 @@ export const SciencePage = () => {
     };
 
     if (uuid) fetchMatrix();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uuid]);
 
   useEffect(() => {
@@ -112,6 +129,7 @@ export const SciencePage = () => {
 
     const matrixUUID = matrixInfo?.matrix_info?.uuid;
     if (matrixUUID) fetchScience(matrixUUID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matrixInfo, userUuid]);
 
   useEffect(() => {
@@ -126,6 +144,7 @@ export const SciencePage = () => {
       setShowCat(true);
       setCatAnimationLaunched(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime, catAnimationLaunched, maxTime]);
 
   return (
@@ -144,7 +163,7 @@ export const SciencePage = () => {
             style={{ width: '120px', height: '120px', borderRadius: '15px' }}
           />
           <h1 className="science-page-title" style={{ color: planetColor }}>
-            {matrixInfo?.matrix_info?.matrix_name || 'Загрузка модели...'}
+            {splitAndFormatString(matrixInfo?.matrix_info?.matrix_name)}
           </h1>
         </div>
 

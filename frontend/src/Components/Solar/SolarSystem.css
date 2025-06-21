@@ -148,10 +148,10 @@
   animation: gameOverSlideOut 0.9s ease-in-out;
 }
 
-@media screen and (max-width: 992px) and (orientation: landscape){
+@media screen and (max-width: 992px) and (orientation: landscape) {
   .solar-challege-text-container {
-  position: absolute;
-  top: -30px;
-  width: 100%;
-}
+    position: absolute;
+    top: -30px;
+    width: 100%;
+  }
 }
