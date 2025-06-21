@@ -155,7 +155,7 @@ export const GraphMainLayout = ({ setHeaderShow }) => {
       {showCat && (
         <CatAnimation
           triggerAnimation={true}
-          stopAtX={1400}
+          stopAtX={1050}
           onAnimationEnd={() => {
             setShowCat(false);           // скрыть кота
             setCatAnimationLaunched(false); // разрешить повторный запуск
