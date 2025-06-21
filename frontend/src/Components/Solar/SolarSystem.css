@@ -147,3 +147,11 @@
 .game-over-modal.slide-out {
   animation: gameOverSlideOut 0.9s ease-in-out;
 }
+
+@media screen and (max-width: 992px) and (orientation: landscape){
+  .solar-challege-text-container {
+  position: absolute;
+  top: -30px;
+  width: 100%;
+}
+}

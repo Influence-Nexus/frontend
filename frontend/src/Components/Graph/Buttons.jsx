@@ -113,7 +113,6 @@ export const Buttons = ({ matrixUuid, onOpenDetailsModal }) => {
             id="science-button"
             className="game-button"
             onClick={handleButtonClick(handleScienceClick)}
-            disabled
             title="Временно заблокирована!"
           >
             <p>Science</p>

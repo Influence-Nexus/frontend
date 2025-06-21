@@ -35,14 +35,13 @@
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     justify-content: center;
     gap: 10px;
-    margin: 10px;
     overflow-y: auto;
   }
 
   .card-item-normal {
     width: 100%;
     padding: 8px;
-    height: 330px;
+    height: 280px;
     border-radius: 12px;
   }
 
@@ -54,6 +53,7 @@
     justify-content: center;
     display: flex;
     flex-direction: column;
+    height: 90px;
   }
 
   .card-img {
@@ -315,12 +315,14 @@
   .card-item-zoomed .card-body {
     max-width: 100%;
     width: 100%;
+    align-items: center;
   }
 
   .card-item-zoomed .card-header {
     padding-bottom: 10px;
     padding-top: 5px;
     margin-bottom: 0;
+    height: 60px;
   }
 
   .card-item-zoomed .card-header p {
