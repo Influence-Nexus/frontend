@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GraphCanvasRender } from './GraphCanvasRender';
 import Stopwatch from './Stopwatch';
 import VerticalProgressBar from './VerticalProgressBar';
 import { Buttons } from './Buttons';
 import { HistoryTable } from './HistoryTable';
+import { DetailsModal } from './DetailsModal'; // Импортируем модальное окно
+import { cards } from '../Solar/ModalWindowCards/cards';
 
 export const GraphComponent = (props) => {
   const {
@@ -51,6 +53,10 @@ export const GraphComponent = (props) => {
     hoverSoundRef,
   } = props;
 
+  // Локальное состояние для управления модальным окном Details в GraphComponent
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [selectedCardDetails, setSelectedCardDetails] = useState(null);
+
   useEffect(() => {
     if (!selectedPlanetLocal) return;
     if (!matrixInfo) return;
@@ -58,7 +64,46 @@ export const GraphComponent = (props) => {
 
     console.log('Сеть готова, применяем координаты...');
     handleLoadCoordinates(uuid, applyCoordinates);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matrixInfo, isNetworkReady, uuid, applyCoordinates]);
+
+  // Функция для открытия модального окна Details
+  const handleOpenDetailsModal = () => {
+    let foundCard = null;
+
+    // Ищем карточку по uuid во всех массивах внутри объекта cards
+    for (const planetKey in cards) {
+      // Перебираем ключи (названия планет) в объекте cards
+      if (Object.prototype.hasOwnProperty.call(cards, planetKey)) {
+        const planetCards = cards[planetKey]; // Получаем массив карточек для текущей планеты
+        foundCard = planetCards.find((card) => card.uuid === uuid); // Ищем карточку по uuid
+        if (foundCard) {
+          break; // Если нашли, прерываем цикл
+        }
+      }
+    }
+
+    if (foundCard) {
+      setSelectedCardDetails(foundCard); // Сохраняем найденную карточку
+    } else {
+      console.warn(`Карточка с UUID ${uuid} не найдена в массиве 'cards'.`); //
+      // Если карточка не найдена, можно установить дефолтные значения
+      setSelectedCardDetails({
+        title: modelName || 'Неизвестная модель',
+        image: planetImg || '',
+        description: 'Информация об этой модели пока недоступна.',
+        paper: '',
+        link: '',
+      });
+    }
+    setIsDetailsModalOpen(true);
+  };
+
+  // Функция для закрытия модального окна Details
+  const handleCloseDetailsModal = () => {
+    setIsDetailsModalOpen(false);
+    setSelectedCardDetails(null); // Очищаем данные при закрытии
+  };
 
   const graphCanvasProps = {
     matrixInfo,
@@ -115,6 +160,8 @@ export const GraphComponent = (props) => {
               networkRef={networkRef}
               planetColor={planetColor}
               planetImg={planetImg}
+              modelName={modelName}
+              onOpenDetailsModal={handleOpenDetailsModal} // Передаем функцию для открытия модального окна
             />
           </div>
         </div>
@@ -136,6 +183,14 @@ export const GraphComponent = (props) => {
           <Stopwatch planetColor={planetColor} />
         </div>
       )}
+
+      {/* Модальное окно Details теперь рендерится здесь, на уровне GraphComponent */}
+      <DetailsModal
+        open={isDetailsModalOpen}
+        handleClose={handleCloseDetailsModal}
+        cardData={selectedCardDetails} // Передаем найденную карточку
+        planetColor={planetColor} // Передаем цвет планеты
+      />
     </div>
   );
 };

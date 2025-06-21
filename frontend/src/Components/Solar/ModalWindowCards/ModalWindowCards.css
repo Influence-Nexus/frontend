@@ -190,7 +190,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-align: center;
-  height: 30px; /* Вот тут высоту выставил, чтобы ровно было */
+  height: 33px; /* Вот тут высоту выставил, чтобы ровно было */
 }
 
 .card-item-zoomed .card-header,

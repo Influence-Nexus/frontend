@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { Text } from '@react-three/drei';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import * as THREE from 'three';

@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useCustomStates } from '../../CustomStates';
 import InfoIcon from '@mui/icons-material/Info';
 import KeyIcon from '@mui/icons-material/Key';
 import MenuIcon from '@mui/icons-material/Menu';
 import { getScienceClicks, logScienceAttempt } from '../../clientServerHub';
 
-export const Buttons = ({ matrixUuid }) => {
+export const Buttons = ({ matrixUuid, onOpenDetailsModal }) => {
   const {
     isRunning,
-    handleOpenModal,
     handleLoadCoordinates,
     handleResetCoordinates,
     handleSaveUserView,
@@ -89,7 +88,6 @@ export const Buttons = ({ matrixUuid }) => {
       className={`buttons-container ${isMenuOpen ? 'menu-open' : ''}`}
       ref={buttonsContainerRef}
     >
-      {' '}
       {/* Attach ref */}
       {/* Кнопка-переключатель меню для мобильных устройств */}
       <button
@@ -104,7 +102,7 @@ export const Buttons = ({ matrixUuid }) => {
           <button
             id="details-button"
             className="game-button"
-            onClick={handleButtonClick(handleOpenModal)}
+            onClick={handleButtonClick(onOpenDetailsModal)} // Вызываем пропс onOpenDetailsModal
           >
             <InfoIcon /> Details
           </button>

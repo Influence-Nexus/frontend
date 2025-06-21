@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { Text } from '@react-three/drei';
 
 export const Sun = ({ sunRef }) => {
