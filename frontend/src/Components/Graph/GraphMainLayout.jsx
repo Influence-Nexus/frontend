@@ -4,7 +4,7 @@ import { useCustomStates } from '../../CustomStates';
 import { useLocation, useParams } from 'react-router-dom';
 import { getMatrixByUUID } from '../../clientServerHub';
 import { ChallengeYourMindText } from '../ChallengeYourMindText/ChallengeYourMindText';
-import { cards, cardcreds } from '../Solar/ModalWindowCards/cards';
+import { cards, cardcreds } from '../Solar/ModalWindowCards/Ru/cards';
 import './Styles/GraphStyles.css';
 
 import CatAnimation from '../Cat/CatAnimation';

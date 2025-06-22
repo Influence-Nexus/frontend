@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useMemo } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { EffectComposer, GodRays } from '@react-three/postprocessing';
 import { OrbitControls, Stars } from '@react-three/drei';
-import { PlanetCardModal } from './ModalWindowCards/ModalWindowCards';
+import { PlanetCardModal } from './ModalWindowCards/Ru/ModalWindowCards';
 import './SolarSystem.css';
 import { ChallengeYourMindText } from '../ChallengeYourMindText/ChallengeYourMindText';
 import CameraResetter from './CameraResetter';

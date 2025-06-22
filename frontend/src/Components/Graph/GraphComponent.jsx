@@ -5,7 +5,7 @@ import VerticalProgressBar from './VerticalProgressBar';
 import { Buttons } from './Buttons';
 import { HistoryTable } from './HistoryTable';
 import { DetailsModal } from './DetailsModal'; // Импортируем модальное окно
-import { cards } from '../Solar/ModalWindowCards/cards';
+import { cards } from '../Solar/ModalWindowCards/Ru/cards';
 
 export const GraphComponent = (props) => {
   const {

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ChallengeComponent.css';
-import './ChallengeComponentAdaptives.css';
-import { ChallengeYourMindText } from '../ChallengeYourMindText/ChallengeYourMindText';
-import bg from './assets/bg.png';
-import intro from './assets/premain.mp4';
+import '../ChallengeComponent.css';
+import '../ChallengeComponentAdaptives.css';
+import { ChallengeYourMindText } from '../../ChallengeYourMindText/ChallengeYourMindText';
+import bg from '../assets/bg.png';
+import intro from '../assets/premain.mp4';
 
-const ChallengeComponent = ({ setHeaderShow }) => {
+const ChallengeComponentEng = ({ setHeaderShow }) => {
   useEffect(() => {
     setHeaderShow(false);
   }, [setHeaderShow]);
@@ -18,6 +18,7 @@ const ChallengeComponent = ({ setHeaderShow }) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
+    // Предзагрузка фонового изображения
     const backgroundImg = new Image();
     backgroundImg.src = bg;
     backgroundImg.onload = () => {
@@ -106,8 +107,7 @@ const ChallengeComponent = ({ setHeaderShow }) => {
           autoPlay
           muted
           playsInline
-          // eslint-disable-next-line react/no-unknown-property
-          webkit-playsinline="true"
+          //webkit-playsinline="true"
         />
         {showVideo && (
           <button className="skipButton" onClick={handleVideoEnd}>
@@ -119,4 +119,4 @@ const ChallengeComponent = ({ setHeaderShow }) => {
   );
 };
 
-export default ChallengeComponent;
+export default ChallengeComponentEng;
