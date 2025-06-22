@@ -3,9 +3,9 @@ import { Modal } from 'react-bootstrap';
 import CloseIcon from '@mui/icons-material/Cancel';
 import { Link } from 'react-router-dom';
 
-import { cards, cardcreds } from '../cards';
-import './ModalWindowCards.css';
-import './mobileVersion.css';
+import { cards, cardcreds } from './cardsRU';
+import '../../ModalWindowCards/ModalWindowCards.css';
+import '../../ModalWindowCards/mobileVersion.css';
 
 export const PlanetCardModal = ({ selectedPlanet, setSelectedPlanet }) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(null);

@@ -1,4 +1,4 @@
-import { images } from './cardImgs';
+import { images } from '../../ModalWindowCards/cardImgs';
 export const modelcards = {
   '3d005563-3a2a-4e7c-9717-b7e00c2ad60f':
     'Финансовый_кризис,_связанный_с_иностранными_спекулятивными_инвестициями',

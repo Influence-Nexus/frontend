@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCustomStates } from '../../CustomStates';
+import { useCustomStates } from '../../../CustomStates';
 
 export const MovesTable = () => {
   const { prevScores, containerRef } = useCustomStates();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { useCustomStates } from '../../CustomStates';
+import { useCustomStates } from '../../../CustomStates';
 
 export const ScienceSelectedNodesList = ({
   selectedNodes,

@@ -33,7 +33,7 @@ const splitAndFormatString = (inputString) => {
   return formattedWords.join(' ');
 };
 
-export const SciencePage = () => {
+export const SciencePageRU = () => {
   const { uuid } = useParams();
   const location = useLocation();
   const planetColor = location.state?.planetColor;
@@ -213,3 +213,5 @@ export const SciencePage = () => {
     </div>
   );
 };
+
+export default SciencePageRU;

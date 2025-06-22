@@ -93,7 +93,7 @@ export const GameOverModalWindow = ({ planetColor, score }) => {
                     marginBottom: '10px',
                   }}
                 >
-                  Идеальное прохождение! 🌟
+                  Flawless playthrough! 🌟
                 </h3>
                 <h3>Your Score: {score.toFixed(2)}</h3>
               </>

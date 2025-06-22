@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { GraphCanvasRender } from './GraphCanvasRender';
-import Stopwatch from './Stopwatch';
-import VerticalProgressBar from './VerticalProgressBar';
-import { Buttons } from './Buttons';
-import { HistoryTable } from './HistoryTable';
-import { DetailsModal } from './DetailsModal'; // Импортируем модальное окно
-import { cards } from '../Solar/ModalWindowCards/Ru/cards';
+import { GraphCanvasRender } from '../GraphCanvasRender';
+import Stopwatch from '../Stopwatch';
+import VerticalProgressBar from '../VerticalProgressBar';
+import { Buttons } from '../Buttons';
+import { HistoryTable } from '../HistoryTable';
+import { DetailsModal } from '../DetailsModal'; // Импортируем модальное окно
+import { cards } from '../../Solar/ru/ModalWindowCards/cardsRU';
 
-export const GraphComponent = (props) => {
+export const GraphComponentRU = (props) => {
   const {
     graphData,
     setGraphData,
@@ -194,3 +194,5 @@ export const GraphComponent = (props) => {
     </div>
   );
 };
+
+export default GraphComponentRU;

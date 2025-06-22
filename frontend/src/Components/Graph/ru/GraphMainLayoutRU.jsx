@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
-import { GraphComponent } from './GraphComponent';
-import { useCustomStates } from '../../CustomStates';
+import { GraphComponentRU } from './GraphComponentRU';
+import { useCustomStates } from '../../../CustomStates';
 import { useLocation, useParams } from 'react-router-dom';
-import { getMatrixByUUID } from '../../clientServerHub';
-import { ChallengeYourMindText } from '../ChallengeYourMindText/ChallengeYourMindText';
-import { cards, cardcreds } from '../Solar/ModalWindowCards/Ru/cards';
-import './Styles/GraphStyles.css';
+import { getMatrixByUUID } from '../../../clientServerHub';
+import { ChallengeYourMindText } from '../../ChallengeYourMindText/ChallengeYourMindText';
+import { cards, cardcreds } from '../../Solar/ru/ModalWindowCards/cardsRU';
+import '../Styles/GraphStyles.css';
 
-import CatAnimation from '../Cat/CatAnimation';
-import { InfoModalWindow } from './InfoModalWindow';
-import { GameOverModalWindow } from './GameOverModalWindow';
+import CatAnimation from '../../Cat/CatAnimation';
+import { InfoModalWindow } from '../InfoModalWindow';
+import { GameOverModalWindow } from '../GameOverModalWindow';
 
-export const GraphMainLayout = ({ setHeaderShow }) => {
+export const GraphMainLayoutRU = ({ setHeaderShow }) => {
   useEffect(() => {
     setHeaderShow(true);
   }, [setHeaderShow]);
@@ -144,9 +144,13 @@ export const GraphMainLayout = ({ setHeaderShow }) => {
   if (!matrixInfo)
     return <div className="error-status">Данные матрицы не найдены</div>;
 
-  const planetColor = cardcreds[selectedPlanetLocal.name]?.color || 'white';
-  const planetName = selectedPlanetLocal.name;
-  const currentCard = cards[planetName].find((card) => card.uuid === uuid);
+  const planetName = selectedPlanetLocal?.name;
+  const planetColor = planetName
+    ? cardcreds[planetName]?.color || 'white'
+    : 'white';
+  const currentCard = planetName
+    ? cards[planetName].find((card) => card.uuid === uuid)
+    : null;
   const modelName = currentCard?.title;
   const planetImg = currentCard?.image;
 
@@ -235,7 +239,7 @@ export const GraphMainLayout = ({ setHeaderShow }) => {
   return (
     <div className="layout-challenge-container">
       <ChallengeYourMindText />
-      <GraphComponent {...graphProps} />
+      <GraphComponentRU {...graphProps} />
       {showCat && (
         <CatAnimation
           triggerAnimation={true}
@@ -251,3 +255,5 @@ export const GraphMainLayout = ({ setHeaderShow }) => {
     </div>
   );
 };
+
+export default GraphMainLayoutRU;

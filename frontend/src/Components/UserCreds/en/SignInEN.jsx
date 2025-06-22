@@ -37,7 +37,7 @@ export const SignInEN = ({ setHeaderShow }) => {
 
   return (
     <div className="auth-container">
-      <h2>Вход</h2>
+      <h2>Login</h2>
       {error && <p className="auth-error">{error}</p>}
       {successMsg && <p className="auth-success">{successMsg}</p>}
 
@@ -52,7 +52,7 @@ export const SignInEN = ({ setHeaderShow }) => {
       >
         <input
           name="username"
-          placeholder="Имя пользователя"
+          placeholder="Username"
           value={form.username}
           onChange={handleChange}
           required
@@ -60,17 +60,17 @@ export const SignInEN = ({ setHeaderShow }) => {
         <input
           type="password"
           name="password"
-          placeholder="Пароль"
+          placeholder="Password"
           value={form.password}
           onChange={handleChange}
           required
         />
-        <button type="submit">Войти</button>
+        <button type="submit">Log In</button>
       </form>
       <p className="sign-in-up-p">
-        Вы тут впервые?{' '}
+        New here?
         <Link className="sign-in-up-link" to={'/sign-up'}>
-          Зарегистрироваться
+          Register
         </Link>
       </p>
     </div>

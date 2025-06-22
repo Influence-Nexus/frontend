@@ -23,4 +23,12 @@ export const componentMap = {
 
   'AlgoPage-ru': () => import('./Components/Science/ru/AlgoPageRU.jsx'),
   'AlgoPage-en': () => import('./Components/Science/en/AlgoPageEN.jsx'),
+
+  'SolarSystem-ru': () => import('./Components/Solar/ru/SolarSystemRU.jsx'),
+  'SolarSystem-en': () => import('./Components/Solar/en/SolarSystemEN.jsx'),
+
+  'GraphMainLayout-en': () =>
+    import('./Components/Graph/en/GraphMainLayoutEN.jsx'),
+  'GraphMainLayout-ru': () =>
+    import('./Components/Graph/ru/GraphMainLayoutRU.jsx'),
 };

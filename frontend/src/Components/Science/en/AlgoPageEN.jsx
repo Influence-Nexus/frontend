@@ -3,7 +3,7 @@ import '../AlgoPage.css';
 import crimeImg from '../images/C_P.png';
 import influenceGraphImg from '../images/influence_graph.png';
 
-export const AlgoPage = ({ setHeaderShow }) => {
+export const AlgoPageEN = ({ setHeaderShow }) => {
   setHeaderShow = true;
   return (
     <div className="AlgoPage-main-div">
@@ -367,3 +367,5 @@ export const AlgoPage = ({ setHeaderShow }) => {
     </div>
   );
 };
+
+export default AlgoPageEN;

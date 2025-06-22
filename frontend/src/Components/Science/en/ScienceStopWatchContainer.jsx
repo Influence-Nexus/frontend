@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaStopwatch, FaMedal } from 'react-icons/fa';
-import { useCustomStates } from '../../CustomStates';
+import { useCustomStates } from '../../../CustomStates';
 
 export const ScienceStopWatchContainer = ({ planetColor }) => {
   const {

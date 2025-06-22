@@ -25,10 +25,7 @@ const Header = ({ headerShow }) => {
       <SocialIcons />
       <div
         style={{
-          position: 'absolute',
-          top: '10px',
-          right: '530px',
-          zIndex: 1000,
+          margin: '0 245px',
         }}
       >
         <button

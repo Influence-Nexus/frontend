@@ -14,7 +14,7 @@ export const AllNodesList = ({ nodes, hoveredNode }) => {
 
   return (
     <div className="node-list-container">
-      <h4>Все узлы:</h4>
+      <h4>All nodes:</h4>
       <ol className="node-list">
         {nodes.map((node) => (
           <li

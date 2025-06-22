@@ -3,12 +3,12 @@ import React, { useEffect, useRef, useMemo } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { EffectComposer, GodRays } from '@react-three/postprocessing';
 import { OrbitControls, Stars } from '@react-three/drei';
-import { PlanetCardModal } from './ModalWindowCards/ModalWindowCards';
-import './SolarSystem.css';
-import { ChallengeYourMindText } from '../ChallengeYourMindText/ChallengeYourMindText';
-import CameraResetter from './CameraResetter';
-import { Scene } from './SolarSystemRender/Scene';
-import { useCustomStates } from '../../CustomStates';
+import { PlanetCardModal } from './ModalWindowCards/ModalWindowCardsEN';
+import '../SolarSystem.css';
+import { ChallengeYourMindText } from '../../ChallengeYourMindText/ChallengeYourMindText';
+import CameraResetter from '../CameraResetter';
+import { Scene } from '../SolarSystemRender/Scene';
+import { useCustomStates } from '../../../CustomStates';
 
 const RenderController = ({ isPaused }) => {
   useThree();
@@ -26,7 +26,7 @@ const MemoizedScene = React.memo(Scene);
 const MemoizedStars = React.memo(Stars);
 const MemoizedChallengeText = React.memo(ChallengeYourMindText);
 
-const SolarSystem = ({ setHeaderShow }) => {
+const SolarSystemEN = ({ setHeaderShow }) => {
   useEffect(() => {
     setHeaderShow(false);
   }, [setHeaderShow]);
@@ -103,4 +103,4 @@ const SolarSystem = ({ setHeaderShow }) => {
   );
 };
 
-export default React.memo(SolarSystem);
+export default React.memo(SolarSystemEN);

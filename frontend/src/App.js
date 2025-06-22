@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { CustomStatesProvider } from './CustomStates';
 import { GlobalAudioManager } from './Components/Audio';
 import DynamicComponentLoader from './DynamicComponentLoader';
+import StaticCanvasWrapper from './StaticCanvasWrapper';
 
 function App() {
   const [headerShow, setHeaderShow] = useState(true);
@@ -35,18 +36,14 @@ function App() {
           />
           <Route
             path="/:lang/solar"
-            element={
-              <DynamicComponentLoader
-                componentPath="Solar/SolarSystem"
-                setHeaderShow={setHeaderShow}
-              />
-            }
+            element={<StaticCanvasWrapper setHeaderShow={setHeaderShow} />}
           />
           <Route
             path="/:lang/science/:uuid"
             element={
               <DynamicComponentLoader
-                componentPath="Science/SciencePage"
+                componentBaseDir="Science"
+                componentName="SciencePage"
                 setHeaderShow={setHeaderShow}
               />
             }
@@ -55,7 +52,8 @@ function App() {
             path="/:lang/matrix_uuid/:uuid"
             element={
               <DynamicComponentLoader
-                componentPath="Graph/GraphMainLayout"
+                componentBaseDir="Graph"
+                componentName="GraphMainLayout"
                 setHeaderShow={setHeaderShow}
               />
             }
@@ -64,7 +62,8 @@ function App() {
             path="/:lang/sign-up"
             element={
               <DynamicComponentLoader
-                componentPath="UserCreds/SignUp"
+                componentBaseDir="UserCreds"
+                componentName="SignUp"
                 setHeaderShow={setHeaderShow}
               />
             }
@@ -73,7 +72,8 @@ function App() {
             path="/:lang/sign-in"
             element={
               <DynamicComponentLoader
-                componentPath="UserCreds/SignIn"
+                componentBaseDir="UserCreds"
+                componentName="SignIn"
                 setHeaderShow={setHeaderShow}
               />
             }
@@ -82,7 +82,8 @@ function App() {
             path="/:lang/algorithm"
             element={
               <DynamicComponentLoader
-                componentPath="Science/AlgoPage"
+                componentBaseDir="Science"
+                componentName="AlgoPage"
                 setHeaderShow={setHeaderShow}
               />
             }
@@ -101,7 +102,8 @@ function App() {
             path="/:lang/coma-berenices"
             element={
               <DynamicComponentLoader
-                componentPath="ComaBerenicesPage/ComaBerenicesPage"
+                componentBaseDir="ComaBerenicesPage"
+                componentName="ComaBerenicesPage"
                 setHeaderShow={setHeaderShow}
               />
             }

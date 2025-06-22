@@ -2,7 +2,7 @@
 import { Text } from '@react-three/drei';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 
 export const Planet = ({
   name,
@@ -16,6 +16,13 @@ export const Planet = ({
 }) => {
   const texture = useLoader(THREE.TextureLoader, textureUrl);
   const { camera } = useThree();
+
+  // --- Очистка texture ---
+  useEffect(() => {
+    return () => {
+      texture.dispose();
+    };
+  }, [texture]);
 
   const atmosphereMaterial = useMemo(() => {
     const getGlowColor = (planetName) => {
@@ -67,6 +74,13 @@ export const Planet = ({
     });
   }, [name, camera.position]);
 
+  // --- Очистка atmosphereMaterial ---
+  useEffect(() => {
+    return () => {
+      atmosphereMaterial.dispose();
+    };
+  }, [atmosphereMaterial]);
+
   useFrame(() => {
     if (selectedPlanet?.name === name && planetRef.current) {
       const targetPosition = new THREE.Vector3(
@@ -96,6 +110,14 @@ export const Planet = ({
     () => new THREE.SphereGeometry(size * 1.1, 24, 24),
     [size]
   );
+
+  // --- Очистка геометрий ---
+  useEffect(() => {
+    return () => {
+      sphereGeometry.dispose();
+      atmosphereGeometry.dispose();
+    };
+  }, [sphereGeometry, atmosphereGeometry]);
 
   return (
     <group ref={planetRef}>

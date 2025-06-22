@@ -1,7 +1,7 @@
 import React from 'react';
 import '../ComaBerenicesStyles.css';
 
-export const ComaBerenicesPage = () => {
+export const ComaBerenicesPageRU = () => {
   return (
     <div className="coma-berenices-main-div">
       <h1 className="coma-title">Welcome to Al-Dafira</h1>
@@ -93,3 +93,5 @@ export const ComaBerenicesPage = () => {
     </div>
   );
 };
+
+export default ComaBerenicesPageRU;

@@ -131,7 +131,7 @@ export const Buttons = ({
               id="science-button"
               className="game-button"
               onClick={handleScienceClick}
-              disabled={scienceClicks !== null && scienceClicks <= 0}
+              // disabled={scienceClicks !== null && scienceClicks <= 0}
               title="Временно заблокирована!"
             >
               <p>Science</p>

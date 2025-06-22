@@ -142,7 +142,7 @@ export const DetailsModal = ({ open, handleClose, cardData, planetColor }) => {
               {paper && (
                 <>
                   <br />
-                  <p style={{ color: 'rgb(255, 218, 150)' }}>Источник: </p>
+                  <p style={{ color: 'rgb(255, 218, 150)' }}>Source: </p>
                   <p>{paper}</p>
                 </>
               )}
@@ -158,7 +158,7 @@ export const DetailsModal = ({ open, handleClose, cardData, planetColor }) => {
                     textDecoration: 'underline',
                   }}
                 >
-                  Ссылка на статью
+                  Link to the article
                 </a>
               )}
             </div>
