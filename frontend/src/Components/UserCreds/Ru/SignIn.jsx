@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { loginUser, getUserUuidFromToken } from '../../clientServerHub';
-import './UserCreds.css';
+import { loginUser, getUserUuidFromToken } from '../../../clientServerHub';
+import '../UserCreds.css';
 import { Link } from 'react-router-dom';
 
 export const SignIn = ({ setHeaderShow }) => {

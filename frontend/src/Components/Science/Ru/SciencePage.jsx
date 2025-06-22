@@ -1,21 +1,21 @@
 import { useEffect } from 'react';
-import { useCustomStates } from '../../CustomStates';
+import { useCustomStates } from '../../../CustomStates';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   getMatrixByUUID,
   fetchScienceDataByUUID,
   logScienceQuery,
-} from '../../clientServerHub';
-import { MovesTable } from './Table';
+} from '../../../clientServerHub';
+import { MovesTable } from '../Table';
 import { TableHuge } from './TableHuge';
 import { TableSmall } from './TableSmall';
 import { ScienceGraphComponent } from './ScienceGraphComp';
-import { ChallengeYourMindText } from '../ChallengeYourMindText/ChallengeYourMindText';
+import { ChallengeYourMindText } from '../../ChallengeYourMindText/ChallengeYourMindText';
 import './SciencePage.css';
 import { Conditions } from './Conditions';
 import { SciencePageButtons } from './SciencePageButtons';
-import { ScienceStopWatchContainer } from './ScienceStopWatchContainer';
-import CatAnimation from '../Cat/CatAnimation';
+import { ScienceStopWatchContainer } from '../ScienceStopWatchContainer';
+import CatAnimation from '../../Cat/CatAnimation';
 
 // Функция для разделения и форматирования строки
 const splitAndFormatString = (inputString) => {

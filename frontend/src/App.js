@@ -6,8 +6,8 @@ import ChallengeComponent from './Components/AldafiraWelcome/ChallengeComponent'
 import { useState } from 'react';
 import SolarSystem from './Components/Solar/SolarSystem';
 import { GraphMainLayout } from './Components/Graph/GraphMainLayout';
-import { SignUp } from './Components/UserCreds/SignUp';
-import { SignIn } from './Components/UserCreds/SignIn';
+import { SignUp } from './Components/UserCreds/Ru/SignUp';
+import { SignIn } from './Components/UserCreds/Ru/SignIn';
 import { CustomStatesProvider } from './CustomStates';
 import { SciencePage } from './Components/Science/SciencePage';
 import { AlgoPage } from './Components/Science/AlgoPage';

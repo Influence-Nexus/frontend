@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
 import { ScienceAllNodesList } from './ScienceAllNodesList';
-import { ScienceSelectedNodesList } from './ScienceSelectedNodes';
-import { useCustomStates } from '../../CustomStates';
+import { ScienceSelectedNodesList } from '../ScienceSelectedNodes';
+import { useCustomStates } from '../../../CustomStates';
 
 export const ScienceGraphComponent = () => {
   const {
