@@ -1,8 +1,8 @@
 import React from 'react';
-import './RulesPage.css';
-import './RulesPageAdaptive.css';
+import '../RulesPage.css';
+import '../RulesPageAdaptive.css';
 import { Link } from 'react-router-dom';
-import crimeImg from '../Science/images/C_P.png';
+import crimeImg from '../../Science/images/C_P.png';
 
 export const RulesPage = ({ setHeaderShow }) => {
   setHeaderShow = true;
@@ -533,3 +533,5 @@ export const RulesPage = ({ setHeaderShow }) => {
     </div>
   );
 };
+
+export default RulesPage;

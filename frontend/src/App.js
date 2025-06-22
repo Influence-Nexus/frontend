@@ -2,7 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import StartPage from './Components/StartPage/StartPage';
 import Header from './Components/Header/Header';
-import ChallengeComponent from './Components/AldafiraWelcome/ChallengeComponent';
+
+import ChallengeComponent from './Components/AldafiraWelcome/Ru/ChallengeComponent';
+import ChallengeComponentEng from './Components/AldafiraWelcome/Eng/ChallengeComponentEng';
+
 import { useState } from 'react';
 import SolarSystem from './Components/Solar/SolarSystem';
 import { GraphMainLayout } from './Components/Graph/GraphMainLayout';
@@ -11,7 +14,10 @@ import { SignIn } from './Components/UserCreds/Ru/SignIn';
 import { CustomStatesProvider } from './CustomStates';
 import { SciencePage } from './Components/Science/SciencePage';
 import { AlgoPage } from './Components/Science/AlgoPage';
-import { RulesPage } from './Components/RulesPage/RulesPage';
+
+import RulesPage from './Components/RulesPage/Ru/RulesPage';
+import RulesPageEng from './Components/RulesPage/Eng/RulesPageEng';
+
 import { GlobalAudioManager } from './Components/Audio';
 import { ComaBerenicesPage } from './Components/ComaBerenicesPage/ComaBerenicesPage';
 
@@ -33,6 +39,12 @@ function App() {
             path="/challengecomponent"
             element={<ChallengeComponent setHeaderShow={setHeaderShow} />}
           />
+
+          <Route
+            path="/challengecomponent_eng"
+            element={<ChallengeComponentEng setHeaderShow={setHeaderShow} />}
+          />
+
           <Route
             path="/solar"
             element={<SolarSystem setHeaderShow={setHeaderShow} />}
@@ -57,10 +69,16 @@ function App() {
             path="/algorithm"
             element={<AlgoPage setHeaderShow={setHeaderShow} />}
           />
+
           <Route
             path="/rules"
             element={<RulesPage setHeaderShow={setHeaderShow} />}
           />
+          <Route
+            path="/rules_eng"
+            element={<RulesPageEng setHeaderShow={setHeaderShow} />}
+          />
+
           <Route
             path="/coma-berenices"
             element={<ComaBerenicesPage setHeaderShow={setHeaderShow} />}
