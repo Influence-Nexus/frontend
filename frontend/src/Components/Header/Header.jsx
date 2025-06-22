@@ -8,6 +8,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 const Header = ({ headerShow }) => {
   const location = useLocation();
   const { userUuid, setUserUuid } = useCustomStates();
+  const { currentLang, setLanguage } = useCustomStates();
 
   const handleLogout = () => {
     localStorage.removeItem('access_token');
@@ -22,6 +23,29 @@ const Header = ({ headerShow }) => {
   return (
     <header className="App-header">
       <SocialIcons />
+      <div
+        style={{
+          position: 'absolute',
+          top: '10px',
+          right: '530px',
+          zIndex: 1000,
+        }}
+      >
+        <button
+          onClick={() => setLanguage('en')}
+          disabled={currentLang === 'en'}
+          style={{ marginRight: '5px', padding: '8px 12px', cursor: 'pointer' }}
+        >
+          English
+        </button>
+        <button
+          onClick={() => setLanguage('ru')}
+          disabled={currentLang === 'ru'}
+          style={{ padding: '8px 12px', cursor: 'pointer' }}
+        >
+          Русский
+        </button>
+      </div>
       <nav>
         <ul>
           <li className={location.pathname === '/' ? 'active' : ''}>

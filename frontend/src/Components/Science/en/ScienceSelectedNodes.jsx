@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { useCustomStates } from '../../../CustomStates';
+import { useCustomStates } from '../../CustomStates';
 
 export const ScienceSelectedNodesList = ({
   selectedNodes,
@@ -9,6 +9,7 @@ export const ScienceSelectedNodesList = ({
   handleClear,
   handleMakeMove,
 }) => {
+  // Получаем graphData из контекста, чтобы найти информацию по узлам
   const { graphData } = useCustomStates();
 
   return (
@@ -16,6 +17,7 @@ export const ScienceSelectedNodesList = ({
       <h2>Выбранные узлы:</h2>
       <ol className="selected-list">
         {selectedNodes.map((nodeId, index) => {
+          // Ищем данные узла по его ID через DataSet
           const nodeData =
             graphData &&
             graphData.nodes &&

@@ -6,6 +6,7 @@ import { useCustomStates } from '../../../CustomStates';
 
 export const ScienceGraphComponent = () => {
   const {
+    // -- Вытягиваем нужные стейты и методы --
     matrixInfo,
     disabledNodes,
     nodeColor,
@@ -20,7 +21,7 @@ export const ScienceGraphComponent = () => {
     setShowNodeList,
     setHoveredNode,
     lockedNodes,
-    selectedNodes,
+    selectedNodes, // теперь у нас будет массив чисел (ID)
     setSelectedNodes,
     selectedEdges,
     setSelectedEdges,
@@ -36,23 +37,30 @@ export const ScienceGraphComponent = () => {
     hoverSoundRef,
   } = useCustomStates();
 
+  // Локальные refs для DataSet узлов, рёбер и экземпляра сети
   const nodesRef = useRef(null);
   const edgesRef = useRef(null);
   const localNetworkRef = useRef(null);
 
+  // Ref для актуальных disabledNodes (чтобы знать их внутри обработчиков сети)
   const disabledNodesRef = useRef(disabledNodes);
 
+  // При изменении disabledNodes обновляем ref:
   useEffect(() => {
     disabledNodesRef.current = disabledNodes;
-
+    // Если у нас были выбраны узлы, которые вдруг стали недоступными,
+    // уберём их из selectedNodes (аналог GraphCanvasRender).
     setSelectedNodes((prev) =>
       prev.filter((id) => !disabledNodesRef.current.includes(id))
     );
   }, [disabledNodes, setSelectedNodes]);
 
+  // ======================
+  // ИНИЦИАЛИЗАЦИЯ ГРАФА (1 раз)
+  // ======================
   useEffect(() => {
     if (!matrixInfo?.edges || !matrixInfo?.nodes) return;
-
+    // Если DataSet уже созданы – не пересоздаём их
     if (nodesRef.current && edgesRef.current) return;
 
     const { edges, nodes: oldNodes } = matrixInfo;
@@ -63,6 +71,7 @@ export const ScienceGraphComponent = () => {
     edges.forEach(({ from, to, value }) => {
       if (value === 0) return;
 
+      // Добавляем узлы в DataSet (если ещё не были добавлены)
       const addNode = (id) => {
         if (!oldNodes[id - 1]) return;
         if (nodesMap.has(id)) return;
@@ -76,7 +85,7 @@ export const ScienceGraphComponent = () => {
           color: { background: isDisabled ? 'gray' : nodeColor },
           font: { size: isDisabled ? 14 : 16 },
         };
-
+        // Если это target-узел — подсветим
         if (oldNodes[id - 1].target === 1) {
           nodeData.color = { background: 'gold' };
           nodeData.font = { size: 25 };
@@ -89,6 +98,7 @@ export const ScienceGraphComponent = () => {
       addNode(from);
       addNode(to);
 
+      // Добавляем ребро
       const edgeId = `${from}-${to}`;
       edgesDataSet.add({
         id: edgeId,
@@ -105,13 +115,16 @@ export const ScienceGraphComponent = () => {
       });
     });
 
+    // Сохраняем DataSet в рефах, чтобы управлять ими напрямую
     nodesRef.current = nodesDataSet;
     edgesRef.current = edgesDataSet;
 
+    // Запишем graphData в стейт (сохраняя DataSet!)
     if (setGraphData) {
       setGraphData({ nodes: nodesDataSet, edges: edgesDataSet });
     }
 
+    // Инициализируем Network
     const container = document.getElementById('graph-container');
     if (!container) {
       console.warn('Контейнер #graph-container не найден');
@@ -176,21 +189,29 @@ export const ScienceGraphComponent = () => {
       networkRef.current = newNetwork;
     }
 
+    // ======================
+    // ОБРАБОТЧИКИ СОБЫТИЙ
+    // ======================
+
+    // -- Клик по графу --
     newNetwork.on('click', (event) => {
       const clickedNodeIds = event.nodes || [];
       const clickedEdgeIds = event.edges || [];
 
+      // Если клик по disabled узлу — снимаем выделение, игнорим
       if (clickedNodeIds.some((id) => disabledNodesRef.current.includes(id))) {
         newNetwork.unselectAll();
         return;
       }
 
+      // Клик по 1 узлу
       if (clickedNodeIds.length === 1) {
         const clickedNodeId = clickedNodeIds[0];
         if (
           !lockedNodes[clickedNodeId] &&
           !disabledNodesRef.current.includes(clickedNodeId)
         ) {
+          // 👉 ЛОГИКА, КАК В GraphCanvasRender:
           setSelectedNodes((prev) =>
             prev.includes(clickedNodeId)
               ? prev.filter((id) => id !== clickedNodeId)
@@ -199,11 +220,13 @@ export const ScienceGraphComponent = () => {
         }
       }
 
+      // Клик по рёбрам
       if (clickedEdgeIds.length > 0) {
         setSelectedEdges((prev) => {
           const newSelected = new Set(prev);
           clickedEdgeIds.forEach((edgeId) => {
             if (newSelected.has(edgeId)) {
+              // снимаем выделение
               newSelected.delete(edgeId);
               const edgeObj = edgesRef.current.get(edgeId);
               if (edgeObj) {
@@ -219,6 +242,7 @@ export const ScienceGraphComponent = () => {
                 });
               }
             } else {
+              // выделяем
               newSelected.add(edgeId);
               const edgeObj = edgesRef.current.get(edgeId);
               if (edgeObj) {
@@ -235,6 +259,7 @@ export const ScienceGraphComponent = () => {
       }
     });
 
+    // -- Наведение на узел --
     newNetwork.on('hoverNode', (event) => {
       if (disabledNodesRef.current.includes(event.node)) {
         newNetwork.unselectAll();
@@ -242,7 +267,7 @@ export const ScienceGraphComponent = () => {
         setHoveredNode(null);
         return;
       }
-
+      // играем звук при наведении на активный узел
       hoverSoundRef.current
         ?.play()
         .catch((err) => console.warn('hoverSound play failed:', err.message));
@@ -251,13 +276,16 @@ export const ScienceGraphComponent = () => {
       setHoveredNode(event.node);
     });
 
+    // -- Потеря фокуса --
     newNetwork.on('blurNode', () => {
       setHighlightedNode(null);
       setShowNodeList(false);
       setHoveredNode(null);
     });
 
+    // -- Выделение узла --
     newNetwork.on('selectNode', (params) => {
+      // Запретим выделять locked-узлы
       const selectableNodes = params.nodes.filter((id) => !lockedNodes[id]);
       newNetwork.setSelection({ nodes: selectableNodes, edges: params.edges });
     });
@@ -275,6 +303,9 @@ export const ScienceGraphComponent = () => {
     lockedNodes,
   ]);
 
+  // ======================
+  // СЛЕДИМ ЗА ИЗМЕНЕНИЕМ disabledNodes → обновляем цвета
+  // ======================
   useEffect(() => {
     if (!nodesRef.current) return;
     nodesRef.current.forEach((node) => {
@@ -289,9 +320,13 @@ export const ScienceGraphComponent = () => {
     });
   }, [disabledNodes, nodeColor]);
 
+  // ======================
+  // СЛЕДИМ ЗА ИЗМЕНЕНИЕМ selectedEdges → обновляем стили
+  // ======================
   useEffect(() => {
     if (!edgesRef.current) return;
 
+    // Подсветим выбранные
     selectedEdges.forEach((edgeId) => {
       try {
         edgesRef.current.update({
@@ -304,6 +339,7 @@ export const ScienceGraphComponent = () => {
       }
     });
 
+    // Сбросим невыбранные
     edgesRef.current.forEach((edge) => {
       if (!selectedEdges.includes(edge.id)) {
         edgesRef.current.update({
@@ -317,12 +353,18 @@ export const ScienceGraphComponent = () => {
     });
   }, [selectedEdges, positiveEdgeColor, negativeEdgeColor]);
 
+  // ======================
+  // ЗАГРУЗКА КООРДИНАТ (если нужно)
+  // ======================
   useEffect(() => {
     if (graphData && matrixInfo?.matrix_info?.uuid && networkRef.current) {
       handleLoadCoordinates(matrixInfo.matrix_info.uuid, applyCoordinates);
     }
   }, []);
 
+  // ======================
+  // Рендер
+  // ======================
   return (
     <>
       <div id="graph-container" className="graph-container" />

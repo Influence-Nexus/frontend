@@ -7,6 +7,8 @@ import {
   useState,
 } from 'react';
 import { jwtDecode } from 'jwt-decode';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import gameOverSoundSrc from './assets/sounds/gameOver.mp3';
 import hoverSoundSrc from './assets/sounds/clearSection.mp3';
 
@@ -19,6 +21,7 @@ import {
   saveUserGraphSettingsAPI,
   resetGame,
 } from './clientServerHub';
+
 const CustomStatesContext = createContext();
 export const useCustomStates = () => useContext(CustomStatesContext);
 
@@ -95,6 +98,70 @@ export const CustomStatesProvider = ({ children }) => {
   const networkRef = useRef(null);
   const backgroundMusicRef = useRef(null);
   const containerRef = useRef(null);
+
+  // --- Изменение здесь: По умолчанию русский язык ---
+  const [currentLang, setCurrentLang] = useState('ru'); // Изменено на 'ru'
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Effect для определения языка при загрузке страницы или изменении URL
+  useEffect(() => {
+    const pathParts = location.pathname.split('/');
+    const urlLang = pathParts[1];
+
+    if (urlLang === 'ru' || urlLang === 'en') {
+      setCurrentLang(urlLang);
+      localStorage.setItem('language', urlLang);
+    } else {
+      const storedLang = localStorage.getItem('language');
+      if (storedLang) {
+        setCurrentLang(storedLang);
+        const newPath = `/${storedLang}${location.pathname === '/' ? '' : location.pathname}`;
+        navigate(newPath, { replace: true });
+      } else {
+        // --- Изменение здесь: Логика определения языка браузера / конечного fallback'а ---
+        let detectedLang = 'ru'; // Устанавливаем 'ru' как ultimate fallback
+        const browserLanguage = navigator.language.toLowerCase(); // Получаем язык браузера в нижнем регистре
+
+        if (browserLanguage.startsWith('ru')) {
+          detectedLang = 'ru';
+        } else if (browserLanguage.startsWith('en')) {
+          detectedLang = 'en';
+        }
+        // Если язык браузера не ru и не en, detectedLang останется 'ru'
+
+        setCurrentLang(detectedLang);
+        localStorage.setItem('language', detectedLang);
+        const newPath = `/${detectedLang}${location.pathname === '/' ? '' : location.pathname}`;
+        navigate(newPath, { replace: true });
+      }
+    }
+  }, [location.pathname, navigate]);
+
+  const setLanguage = useCallback(
+    (lang) => {
+      if (currentLang === lang) return;
+
+      setCurrentLang(lang);
+      localStorage.setItem('language', lang);
+
+      const pathParts = location.pathname.split('/');
+      // Если путь был '/', то pathParts будет ['','']. Нужно убедиться, что он не остается пустым
+      if (pathParts.length === 2 && pathParts[1] === '') {
+        pathParts[1] = lang; // Вставляем язык в пустую часть
+      } else if (pathParts.length >= 2) {
+        pathParts[1] = lang; // Заменяем существующий язык
+      } else {
+        // Если путь был просто '/path', то pathParts будет ['', 'path'].
+        // Добавляем язык вторым элементом.
+        pathParts.splice(1, 0, lang);
+      }
+
+      const newPath = pathParts.join('/');
+      navigate(newPath);
+    },
+    [currentLang, location.pathname, navigate]
+  );
 
   // разочек на старте приложения “подхватываем” звуки
   useEffect(() => {
@@ -663,6 +730,10 @@ export const CustomStatesProvider = ({ children }) => {
         setShowHistory,
         history,
         setHistory,
+
+        // текущий язык и его изменение
+        currentLang,
+        setLanguage,
 
         // Рефы
         hoverSoundRef,
