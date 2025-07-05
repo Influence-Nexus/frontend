@@ -27,6 +27,12 @@ from drafts.file_processor    import BASE_DIR, process_input_files
 from routes.UUID_MATRICES     import MATRIX_UUIDS
 # ────────────────────────────────────
 
+from utils.db import init_db, insert_user, find_user_by, update_science_clicks, get_science_clicks, get_game_history, \
+    save_user_graph_settings, load_user_graph_settings
+
+init_db()
+
+
 
 # ==========================TG Bot=======================================
 # load_tg_bot = input("Загружать ТГ бота? ").lower()
@@ -210,31 +216,41 @@ def _find_user_file_by(key,val):
 @router.post("/sign-up")
 async def sign_up(req:Request):
     data = await req.json()
-    u,e,p = data.get("username"),data.get("email"),data.get("password")
-    if not all((u,e,p)):  return JSONResponse({"error":"username, email, password обязательны"},400)
-    if _find_user_file_by("username",u): return JSONResponse({"error":"username занят"},400)
-    if _find_user_file_by("email",e):    return JSONResponse({"error":"email занят"},400)
+    u, e, p = data.get("username"), data.get("email"), data.get("password")
+    if not all((u, e, p)):
+        return JSONResponse({"error": "username, email, password обязательны"}, 400)
 
-    uid=str(uuid4())
-    creds={"username":u,"email":e,"password":bcrypt.hashpw(p.encode(),bcrypt.gensalt()).decode(),
-           "user_uuid":uid,"science_clicks":2}
-    ensure_dir(get_user_uuid_creds_path(uid).parent)
-    save_json(get_user_uuid_creds_path(uid),creds)
-    ensure_dir(USERS_ROOT/uid/"user_settings")
-    return JSONResponse({"user_uuid":uid,"message":"OK"},201)
+    if find_user_by("username", u):
+        return JSONResponse({"error": "username занят"}, 400)
+    if find_user_by("email", e):
+        return JSONResponse({"error": "email занят"}, 400)
+
+    uid = str(uuid4())
+    pw_hash = bcrypt.hashpw(p.encode(), bcrypt.gensalt()).decode()
+    insert_user(uid, u, e, pw_hash)
+
+    return JSONResponse({"user_uuid": uid, "message": "OK"}, 201)
 
 @router.post("/sign-in")
 async def sign_in(req:Request):
-    d=await req.json(); user,pw=d.get("username"),d.get("password")
-    if not all((user,pw)): return JSONResponse({"error":"username и password обязательны"},400)
-    f=_find_user_file_by("username",user)
-    if not f: return JSONResponse({"error":"not found"},404)
-    ud=load_json(f)
-    if not bcrypt.checkpw(pw.encode(),ud["password"].encode()): return JSONResponse({"error":"bad password"},401)
-    uid=ud["user_uuid"]
-    return {"access_token":make_token({"sub":user,"uuid":uid}),
-            "refresh_token":make_token({"sub":user,"uuid":uid},ttl=60*24*30),
-            "token_type":"bearer"}
+    data = await req.json()
+    user, pw = data.get("username"), data.get("password")
+    if not all((user, pw)):
+        return JSONResponse({"error": "username и password обязательны"}, 400)
+
+    user_data = find_user_by("username", user)
+    if not user_data:
+        return JSONResponse({"error": "not found"}, 404)
+
+    if not bcrypt.checkpw(pw.encode(), user_data["password"].encode()):
+        return JSONResponse({"error": "bad password"}, 401)
+
+    uid = user_data["user_uuid"]
+    return {
+        "access_token": make_token({"sub": user, "uuid": uid}),
+        "refresh_token": make_token({"sub": user, "uuid": uid}, ttl=60 * 24 * 30),
+        "token_type": "bearer"
+    }
 
 @router.post("/refresh")
 async def refresh(req:Request):
@@ -312,51 +328,38 @@ async def reset_game(req:Request, uid:str=Depends(get_current_user_uuid)):
 #                       HISTORY END-POINT
 # =================================================================
 @router.get("/history/{matrix_uuid}")
-async def history(matrix_uuid:str, uid:str=Depends(get_current_user_uuid)):
-    name=MATRIX_UUIDS.get(matrix_uuid)
-    if not name: return JSONResponse({"error":"uuid not found"},404)
-    f=fp_history(uid,name)
-    return {"history":load_json(f) if f.exists() else []}
+async def history(matrix_uuid: str, uid: str = Depends(get_current_user_uuid)):
+    matrix_name = MATRIX_UUIDS.get(matrix_uuid)
+    if not matrix_name:
+        return JSONResponse({"error": "uuid not found"}, 404)
+
+    history = get_game_history(uid, matrix_name)
+    return {"history": history}
 
 
 # =============================== science ===============================
 science_attempts: Dict[str, int] = {}
 
 @router.post("/science_attempt")
-async def science_attempt(
-    request: Request,
-    current_user_uuid: str = Depends(get_current_user_uuid)
-):
+async def science_attempt(request: Request, current_user_uuid: str = Depends(get_current_user_uuid)):
     try:
-        # Получаем путь к файлу учетных данных пользователя по user_uuid
-        user_file = get_user_uuid_creds_path(current_user_uuid)
-        if not user_file.exists():
-            return JSONResponse({"error": "Пользователь не найден"}, 404)
-        
-        user_data = load_json(user_file)
-        clicks_left = user_data.get("science_clicks", 0)
+        clicks_left = get_science_clicks(current_user_uuid)
         if clicks_left <= 0:
-            return JSONResponse({"error": "Попытки исчерпаны"}, status_code=403)
-        
-        # Уменьшаем счетчик на 1 и сохраняем
-        user_data["science_clicks"] = clicks_left - 1
-        save_json(user_file, user_data)
-        log.info(f"[SCIENCE ATTEMPT] User {current_user_uuid} осталось попыток: {user_data['science_clicks']}")
-        
-        return JSONResponse({"message": "Научный запрос принят", "science_clicks": user_data["science_clicks"]}, status_code=200)
+            return JSONResponse({"error": "Попытки исчерпаны"}, 403)
+
+        update_science_clicks(current_user_uuid, clicks_left - 1)
+        return JSONResponse({"message": "Научный запрос принят", "science_clicks": clicks_left - 1}, 200)
     except Exception as e:
         log.error(f"[SCIENCE ATTEMPT ERROR]: {e}")
-        return JSONResponse({"error": str(e)}, status_code=500)
+        return JSONResponse({"error": str(e)}, 500)
 
 @router.get("/science_clicks")
-async def get_science_clicks(current_user_uuid: str = Depends(get_current_user_uuid)):
-    user_file = get_user_uuid_creds_path(current_user_uuid)
-    if not user_file.exists():
-        return JSONResponse({"error": "Пользователь не найден"}, 404)
-
-    user_data = load_json(user_file)
-    clicks_left = user_data.get("science_clicks", 0)
-    return JSONResponse({"science_clicks": clicks_left}, 200)
+async def get_science_clicks_endpoint(current_user_uuid: str = Depends(get_current_user_uuid)):
+    try:
+        clicks_left = get_science_clicks(current_user_uuid)
+        return JSONResponse({"science_clicks": clicks_left}, 200)
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, 500)
 
 
 @router.post("/science_table")
@@ -481,10 +484,7 @@ def load_default_graph_settings(matrix_uuid: str):
 
 
 @router.post("/{user_uuid}/save-graph-settings/{matrix_uuid}")
-async def save_user_graph_settings(user_uuid: str, matrix_uuid: str, request: Request):
-    """
-    Сохраняет пользовательские настройки графа.
-    """
+async def save_user_graph_settings_route(user_uuid: str, matrix_uuid: str, request: Request):
     try:
         data = await request.json()
         if not data:
@@ -494,32 +494,23 @@ async def save_user_graph_settings(user_uuid: str, matrix_uuid: str, request: Re
         if not matrix_name:
             return JSONResponse({"error": "UUID не найден"}, 404)
 
-        filepath = get_user_settings_filepath(user_uuid, matrix_name)
-        save_json(filepath, data)
-        log.info(f"[SAVE USER] {filepath}")
+        save_user_graph_settings(user_uuid, matrix_name, data)
         return JSONResponse({"message": "Настройки пользователя сохранены"}, 200)
     except Exception as e:
-        log.error(f"[SAVE USER ERROR]: {e}")
         return JSONResponse({"error": str(e)}, 500)
 
 @router.get("/{user_uuid}/load-graph-settings/{matrix_uuid}")
-def load_user_graph_settings(user_uuid: str, matrix_uuid: str):
-    """
-    Загружает пользовательские настройки графа.
-    """
+def load_user_graph_settings_route(user_uuid: str, matrix_uuid: str):
     try:
         matrix_name = MATRIX_UUIDS.get(matrix_uuid)
         if not matrix_name:
             return JSONResponse({"error": "UUID не найден"}, 404)
 
-        filepath = get_user_settings_filepath(user_uuid, matrix_name)
-        if not filepath.exists():
+        data = load_user_graph_settings(user_uuid, matrix_name)
+        if not data:
             return JSONResponse({"error": "Файл настроек не найден"}, 404)
 
-        data = load_json(filepath)
-        log.info(f"[LOAD USER] {filepath}")
         return JSONResponse(content=data, status_code=200)
     except Exception as e:
-        log.error(f"[LOAD USER ERROR]: {e}")
         return JSONResponse({"error": str(e)}, 500)
     
