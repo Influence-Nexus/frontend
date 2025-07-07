@@ -261,6 +261,7 @@ export const ScienceGraphComponent = () => {
       const selectableNodes = params.nodes.filter((id) => !lockedNodes[id]);
       newNetwork.setSelection({ nodes: selectableNodes, edges: params.edges });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     matrixInfo,
     nodeColor,
@@ -321,6 +322,7 @@ export const ScienceGraphComponent = () => {
     if (graphData && matrixInfo?.matrix_info?.uuid && networkRef.current) {
       handleLoadCoordinates(matrixInfo.matrix_info.uuid, applyCoordinates);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -137,6 +137,7 @@ export const GraphMainLayoutEN = ({ setHeaderShow }) => {
       setShowCat(true);
       setCatAnimationLaunched(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime, catAnimationLaunched, maxTime]);
 
   if (isLoading) return <div className="loading-status">Загрузка графа...</div>;

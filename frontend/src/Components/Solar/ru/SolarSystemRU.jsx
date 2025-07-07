@@ -7,7 +7,7 @@ import { PlanetCardModal } from './ModalWindowCards/ModalWindowCardsRU';
 import '../SolarSystem.css';
 import { ChallengeYourMindText } from '../../ChallengeYourMindText/ChallengeYourMindText';
 import CameraResetter from '../CameraResetter';
-import { Scene } from '../SolarSystemRender/Scene';
+import { Scene } from '../SolarSystemRender/SceneRU';
 import { useCustomStates } from '../../../CustomStates';
 
 const RenderController = ({ isPaused }) => {

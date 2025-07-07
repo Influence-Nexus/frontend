@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useCustomStates } from '../../../CustomStates';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   getMatrixByUUID,
   fetchScienceDataByUUID,
@@ -16,28 +16,10 @@ import { Conditions } from './Conditions';
 import { SciencePageButtons } from './SciencePageButtons';
 import { ScienceStopWatchContainer } from './ScienceStopWatchContainer';
 import CatAnimation from '../../Cat/CatAnimation';
-
-// Функция для разделения и форматирования строки
-const splitAndFormatString = (inputString) => {
-  if (!inputString) {
-    return 'Загрузка модели...'; // Возвращаем дефолтный текст, если строка пустая или null
-  }
-  const words = inputString.split('_');
-  const formattedWords = words.map((word, index) => {
-    if (index === 0) {
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    } else {
-      return word.toLowerCase();
-    }
-  });
-  return formattedWords.join(' ');
-};
+import { cards } from '../../Solar/ru/ModalWindowCards/cardsRU';
 
 export const SciencePageRU = () => {
   const { uuid } = useParams();
-  const location = useLocation();
-  const planetColor = location.state?.planetColor;
-  const planetImg = location.state?.planetImg;
 
   const {
     smallTableData,
@@ -66,6 +48,27 @@ export const SciencePageRU = () => {
     setMatrixInfo: setMatrixCtxInfo,
     userUuid,
   } = useCustomStates();
+
+  // Получаем карточку и ключ планеты по uuid для science
+  let cardForScience = null;
+  let planetKeyForScience = '';
+  for (const planetKey in cards) {
+    if (Object.prototype.hasOwnProperty.call(cards, planetKey)) {
+      const planetCards = cards[planetKey];
+      cardForScience = planetCards.find((card) => card.uuid === uuid);
+      if (cardForScience) {
+        planetKeyForScience = planetKey;
+        break;
+      }
+    }
+  }
+  // Определяем класс для цвета названия модели по ключу планеты
+  let scienceHeaderColorClass = '';
+  if (planetKeyForScience === 'Green') scienceHeaderColorClass = 'header-green';
+  else if (planetKeyForScience === 'Orange')
+    scienceHeaderColorClass = 'header-orange';
+  else if (planetKeyForScience === 'Violet')
+    scienceHeaderColorClass = 'header-violet';
 
   useEffect(() => {
     const fetchMatrix = async () => {
@@ -158,12 +161,28 @@ export const SciencePageRU = () => {
         <SciencePageButtons />
         <div className="planet-creds-div">
           <img
-            src={planetImg}
+            src={cardForScience?.image || ''}
             alt="Planet"
-            style={{ width: '120px', height: '120px', borderRadius: '15px' }}
+            style={{
+              width: '120px',
+              height: '120px',
+              borderRadius: '15px',
+            }}
           />
-          <h1 className="science-page-title" style={{ color: planetColor }}>
-            {splitAndFormatString(matrixInfo?.matrix_info?.matrix_name)}
+          <h1
+            className={`science-page-title ${scienceHeaderColorClass}`}
+            style={{
+              color:
+                planetKeyForScience === 'Green'
+                  ? '#52ffbd'
+                  : planetKeyForScience === 'Orange'
+                    ? '#ff8b2b'
+                    : planetKeyForScience === 'Violet'
+                      ? '#eea8ff'
+                      : 'white',
+            }}
+          >
+            {cardForScience?.title || 'Загрузка модели...'}
           </h1>
         </div>
 
@@ -186,7 +205,7 @@ export const SciencePageRU = () => {
             </h5>
             <div className="graph-section">
               {graphData && <ScienceGraphComponent uuid={uuid} />}
-              <ScienceStopWatchContainer planetColor={planetColor} />
+              <ScienceStopWatchContainer />
               <MovesTable data={syntheticData} />
               {showCat && (
                 <div

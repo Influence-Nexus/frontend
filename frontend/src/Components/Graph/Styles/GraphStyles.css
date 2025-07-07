@@ -626,7 +626,7 @@
 
   .buttons-container {
     position: absolute;
-    top: -240px;
+    top: -180px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -747,4 +747,15 @@
     right: auto;
     top: 3%;
   }
+}
+
+/* Цвета для названия модели в зависимости от планеты */
+.header.header-green {
+  color: #52ffbd !important;
+}
+.header.header-orange {
+  color: #ff8b2b !important;
+}
+.header.header-violet {
+  color: #eea8ff !important;
 }

@@ -105,6 +105,26 @@ export const GraphComponentEN = (props) => {
     setSelectedCardDetails(null); // Очищаем данные при закрытии
   };
 
+  // Получаем карточку и ключ планеты по uuid для отображения картинки и цвета в шапке
+  let cardForHeader = null;
+  let planetKeyForHeader = '';
+  for (const planetKey in cards) {
+    if (Object.prototype.hasOwnProperty.call(cards, planetKey)) {
+      const planetCards = cards[planetKey];
+      cardForHeader = planetCards.find((card) => card.uuid === uuid);
+      if (cardForHeader) {
+        planetKeyForHeader = planetKey;
+        break;
+      }
+    }
+  }
+
+  // Определяем класс для цвета названия модели по ключу планеты
+  let headerColorClass = '';
+  if (planetKeyForHeader === 'Green') headerColorClass = 'header-green';
+  else if (planetKeyForHeader === 'Orange') headerColorClass = 'header-orange';
+  else if (planetKeyForHeader === 'Violet') headerColorClass = 'header-violet';
+
   const graphCanvasProps = {
     matrixInfo,
     disabledNodes,
@@ -143,15 +163,17 @@ export const GraphComponentEN = (props) => {
     <div>
       <div className="graph-component-header">
         <div className="head">
-          {' '}
-          {/* Removed inline style */}
-          <img src={planetImg} alt="planet" className="planet-image" />
+          <img
+            src={cardForHeader?.image || ''}
+            alt="planet"
+            className="planet-image"
+          />
           <div className="graph-component-inner">
             <h1
-              className="header"
-              style={{ position: 'relative', color: planetColor }}
+              className={`header ${headerColorClass}`}
+              style={{ position: 'relative' }}
             >
-              {modelName}
+              {cardForHeader?.title || modelName}
             </h1>
             <Buttons
               matrixUuid={uuid}

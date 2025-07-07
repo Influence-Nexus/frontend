@@ -217,6 +217,7 @@ export const CustomStatesProvider = ({ children }) => {
     if (moveHistory.length > prevScores.length) {
       setPrevScores((prev) => [...prev, score]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moveHistory, score]);
 
   useEffect(() => {

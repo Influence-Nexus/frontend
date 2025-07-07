@@ -65,6 +65,7 @@ const DynamicComponentLoader = ({
         currentLang
       );
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [componentName, currentLang]);
 
   if (!Component) return <div>Loading...</div>;

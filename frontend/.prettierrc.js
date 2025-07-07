@@ -1,6 +1,6 @@
 // .prettierrc.js
 
-module.exports = {
+export default {
   singleQuote: true,
   semi: true,
   printWidth: 80,
@@ -9,5 +9,4 @@ module.exports = {
   trailingComma: 'es5',
   arrowParens: 'always',
   htmlWhitespaceSensitivity: 'css',
-  functionCallSpacing: false,
 };

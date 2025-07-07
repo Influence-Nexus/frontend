@@ -17,6 +17,7 @@ export const HistoryTable = ({
         console.error('History load error:', e);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matrixUuid]);
 
   if (!history.length)

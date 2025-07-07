@@ -23,24 +23,22 @@ const Header = ({ headerShow }) => {
   return (
     <header className="App-header">
       <SocialIcons />
-      <div
-        style={{
-          margin: '0 245px',
-        }}
-      >
+      <div className="lang-switcher">
         <button
           onClick={() => setLanguage('en')}
           disabled={currentLang === 'en'}
-          style={{ marginRight: '5px', padding: '8px 12px', cursor: 'pointer' }}
+          className={`lang-btn${currentLang === 'en' ? ' active' : ''}`}
+          aria-label="Switch to English"
         >
-          English
+          <span role="img" className="fi fi-us" aria-label="English"></span>
         </button>
         <button
           onClick={() => setLanguage('ru')}
           disabled={currentLang === 'ru'}
-          style={{ padding: '8px 12px', cursor: 'pointer' }}
+          className={`lang-btn${currentLang === 'ru' ? ' active' : ''}`}
+          aria-label="Переключить на русский"
         >
-          Русский
+          <span role="img" className="fi fi-ru" aria-label="Русский"></span>
         </button>
       </div>
       <nav>

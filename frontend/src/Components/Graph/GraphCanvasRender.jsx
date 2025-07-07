@@ -279,6 +279,7 @@ export const GraphCanvasRender = ({
       );
       newNetwork.setSelection({ nodes: selectableNodes, edges: params.edges });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     matrixInfo,
     nodeColor,

@@ -28,6 +28,7 @@ export const GameOverModalWindow = ({ planetColor, score }) => {
           console.warn('gameOverSound play failed:', err.message)
         );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showGameOverModal, gameOverSoundRef]);
 
   useEffect(() => {

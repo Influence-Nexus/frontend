@@ -1,4 +1,3 @@
-// StaticCanvasWrapper.jsx
 import React from 'react';
 import SolarSystemRU from './Components/Solar/ru/SolarSystemRU';
 import SolarSystemEN from './Components/Solar/en/SolarSystemEN';
