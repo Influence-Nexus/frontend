@@ -1,6 +1,18 @@
 import { jwtDecode } from 'jwt-decode';
+import { Capacitor } from '@capacitor/core';
 
-const BASE_URL = `${window.location.protocol}//${window.location.hostname}:8001`;
+// если переменная окружения задана — берём её, иначе используем старую схему
+const getDefaultUrl = () => {
+  return `${window.location.protocol}//${window.location.hostname}:8001`;
+};
+
+// Проверяем, нативная ли платформа
+const isNative = Capacitor?.platform && Capacitor.platform !== 'web';
+
+// Если это мобилка и есть REACT_APP_BACKEND_URL — берём её, иначе fallback на getDefaultUrl()
+export const BASE_URL = isNative
+  ? process.env.REACT_APP_BACKEND_URL || getDefaultUrl()
+  : getDefaultUrl();
 
 // const BASE_URL = "http://localhost:8000"
 

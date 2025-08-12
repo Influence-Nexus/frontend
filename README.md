@@ -55,6 +55,23 @@ docker-compose up --build
 
 Это создаст и запустит все необходимые контейнеры для проекта.
 
+### 4. Открыть мобильные проекты (Capacitor):
+Для разработки мобильных приложений используется [Capacitor](https://capacitorjs.com).
+В каталоге `frontend` можно добавить платформы и открыть их в соответствующих IDE:
+
+```bash
+cd frontend
+npx cap add android
+npx cap add ios
+
+npm run build:mobile
+
+npm run cap:copy
+npm run cap:sync
+
+npm cap:open
+```
+
 ## 📚 Документация API
 
 API доступно через [Swagger](http://localhost:8000/docs) для подробного описания всех эндпоинтов.
