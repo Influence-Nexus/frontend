@@ -23,11 +23,6 @@
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {
-    "@capacitor/android": "^7.4.2",
-    "@capacitor/cli": "^7.4.2",
-    "@capacitor/core": "^7.4.2",
-    "@capacitor/ios": "^7.4.2",
-    "cross-env": "^10.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "flag-icons": "^7.5.0",
@@ -36,16 +31,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:mobile": "cross-env REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "format": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "cap:sync": "cap sync",
-    "cap:copy": "cap copy",
-    "cap:open": "cap open"
+    "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "browserslist": {
     "production": [

@@ -10,9 +10,3 @@ package-lock.json
 frontend/package-lock.json
 venv
 users.sqlite3
-build
-.vscode
-
-# Capacitor platform directories
-frontend/android/
-frontend/ios/
