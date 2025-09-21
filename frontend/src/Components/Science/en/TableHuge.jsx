@@ -1,5 +1,3 @@
-// TableHuge.jsx
-
 const TableHeader1 = [
   { title: 'Calculated data (by impact)', width: '300px', colSpan: 2 },
   { title: 'Your game results', width: '300px', colSpan: 2 },

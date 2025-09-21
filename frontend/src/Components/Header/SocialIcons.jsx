@@ -1,4 +1,3 @@
-import React from 'react';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import GitHubIcon from '@mui/icons-material/GitHub';
 

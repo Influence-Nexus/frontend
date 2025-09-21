@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const importAll = (requireContext) => {
-  return requireContext.keys().map(requireContext);
-};
-
-const frames = importAll(require.context('./frames', false, /\.png$/));
+const frameModules = import.meta.glob('./frames/*.png', { eager: true });
+const frames = Object.values(frameModules);
 
 const CatAnimation = ({
   frameRate = 45,
@@ -58,7 +55,7 @@ const CatAnimation = ({
   return (
     <div style={styles.container}>
       <img
-        src={frames[currentFrame]}
+        src={frames[currentFrame].default}
         alt={`Cat frame ${currentFrame + 1}`}
         style={{
           ...styles.image,

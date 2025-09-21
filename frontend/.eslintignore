@@ -4,4 +4,79 @@ node_modules/
 .vscode/
 coverage/
 *.log
-src\CustomStates.jsx
+
+.venv
+node_modules
+server/*/__pycache__
+server/*/*.pyc
+.env
+server/users
+server/feedback
+server/__pycache__
+package-lock.json
+frontend/package-lock.json
+venv
+users.sqlite3
+
+
+build
+.vscode
+.expo/
+android/
+ios/
+
+android
+ios
+build
+
+
+
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+
+build
+.vscode
+.expo/
+android/
+ios/
+
+buildINFO/
+
+
+stats.html

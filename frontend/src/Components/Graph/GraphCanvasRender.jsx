@@ -3,6 +3,7 @@ import { DataSet, Network } from 'vis-network/standalone/esm/vis-network';
 import { AllNodesList } from './AllNodesList';
 import { SelectedNodesList } from './SelectedNodes';
 import { Button } from 'react-bootstrap';
+import { FaQuestionCircle } from 'react-icons/fa';
 
 export const GraphCanvasRender = ({
   matrixInfo,
@@ -341,8 +342,21 @@ export const GraphCanvasRender = ({
 
   return (
     <>
-      {/* Контейнер для графа – убедитесь, что он всегда рендерится */}
-      <div id="graph-container" className="graph-container" />
+      <div style={{ position: 'relative' }}>
+        <div id="graph-container" className="graph-container" />
+        <FaQuestionCircle
+          onClick={() => setShowNodeList((prev) => !prev)}
+          style={{
+            position: 'absolute',
+            top: '15px',
+            right: '40px',
+            zIndex: 2,
+            cursor: 'pointer',
+            color: 'white',
+            fontSize: '24px',
+          }}
+        />
+      </div>
       {selectedEdges.length > 0 && (
         <div
           className="selected-edges-clear"
@@ -366,10 +380,7 @@ export const GraphCanvasRender = ({
         </div>
       )}
       {graphData && showNodeList && (
-        <AllNodesList
-          nodes={nodesRef.current ? nodesRef.current.get() : []}
-          hoveredNode={hoveredNode}
-        />
+        <AllNodesList nodes={nodesRef.current ? nodesRef.current.get() : []} />
       )}
       {selectedNodes.length > 0 && (
         <SelectedNodesList

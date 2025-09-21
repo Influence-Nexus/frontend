@@ -20,7 +20,6 @@ const Stopwatch = ({ planetColor }) => {
 
   return (
     <div className="stopwatch-container">
-      {/* Время */}
       <div className="stopwatch-container-time">
         <h3>Time</h3>
         <p>
@@ -28,7 +27,6 @@ const Stopwatch = ({ planetColor }) => {
         </p>
       </div>
 
-      {/* Счёт */}
       <div className="stopwatch-container-score">
         <h3>Score</h3>
         <p>
@@ -36,7 +34,6 @@ const Stopwatch = ({ planetColor }) => {
         </p>
       </div>
 
-      {/* История ходов */}
       <div className="stopwatch-container-table" style={{ overflowY: 'auto' }}>
         <h3>Vertices</h3>
         {movesHistory.length > 0 ? (
@@ -53,7 +50,6 @@ const Stopwatch = ({ planetColor }) => {
         )}
       </div>
 
-      {/* Кнопки */}
       <div className="stopwatch-container-buttons">
         <button
           className="btn-start"

@@ -70,7 +70,6 @@ export const Buttons = ({
       }
     } catch (error) {
       console.error('Ошибка:', error.message);
-      // alert(error.message);
     }
   };
 
@@ -94,11 +93,10 @@ export const Buttons = ({
 
   return (
     <div
+      data-testid="buttons-container"
       className={`buttons-container ${isMenuOpen ? 'menu-open' : ''}`}
       ref={buttonsContainerRef}
     >
-      {/* Attach ref */}
-      {/* Кнопка-переключатель меню для мобильных устройств */}
       <button
         id="menu-toggle-button"
         className="menu-toggle"
@@ -111,7 +109,7 @@ export const Buttons = ({
           <button
             id="details-button"
             className="game-button"
-            onClick={handleButtonClick(onOpenDetailsModal)} // Вызываем пропс onOpenDetailsModal
+            onClick={handleButtonClick(onOpenDetailsModal)}
           >
             <InfoIcon /> Details
           </button>
@@ -143,9 +141,7 @@ export const Buttons = ({
           </Link>
         </li>
 
-        {/* Остальные кнопки */}
         <li>
-          {/* GAME возвращает граф, без refresh */}
           <button
             className="game-button"
             id="game-button-divider"
@@ -160,7 +156,6 @@ export const Buttons = ({
           </button>
         </li>
         <li>
-          {/* PROFILE показывает историю */}
           <button
             className="game-button"
             disabled={isRunning}

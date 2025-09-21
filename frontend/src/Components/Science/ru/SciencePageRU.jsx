@@ -49,7 +49,6 @@ export const SciencePageRU = () => {
     userUuid,
   } = useCustomStates();
 
-  // Получаем карточку и ключ планеты по uuid для science
   let cardForScience = null;
   let planetKeyForScience = '';
   for (const planetKey in cards) {
@@ -62,7 +61,6 @@ export const SciencePageRU = () => {
       }
     }
   }
-  // Определяем класс для цвета названия модели по ключу планеты
   let scienceHeaderColorClass = '';
   if (planetKeyForScience === 'Green') scienceHeaderColorClass = 'header-green';
   else if (planetKeyForScience === 'Orange')

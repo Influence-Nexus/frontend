@@ -64,67 +64,67 @@ h1 {
 
 @media screen and (max-width: 992px) and (orientation: landscape) {
   .AlgoPage-main-div {
-    padding: 0.5rem; /* Уменьшим отступы для более плотного контента в ландшафтном режиме */
+    padding: 0.5rem;
   }
 
   .algoPage-submain-div {
-    top: 1rem; /* Уменьшим отступ сверху */
-    padding: 0 0.5rem; /* Добавим горизонтальные отступы */
+    top: 1rem;
+    padding: 0 0.5rem;
   }
 
   .Description-text {
-    width: 90%; /* Увеличим ширину текста для лучшего использования пространства */
-    font-size: 1.1rem; /* Уменьшим размер шрифта */
+    width: 90%;
+    font-size: 1.1rem;
   }
 
   .Description-text strong {
-    margin-left: 0; /* Уберем отступ для жирного текста */
-    text-align: center; /* Выровняем по центру */
-    display: block; /* Сделаем блочным для центрирования */
+    margin-left: 0;
+    text-align: center;
+    display: block;
   }
 
   .Description-text ul li {
-    margin-left: 1em; /* Уменьшим отступ для элементов списка */
+    margin-left: 1em;
   }
 
   .blue-background {
-    font-size: 2.2rem; /* Уменьшим размер шрифта заголовка с синим фоном */
+    font-size: 2.2rem;
   }
 
   h1 {
-    font-size: 2rem; /* Уменьшим размер шрифта H1 */
-    text-align: center; /* Выровняем заголовки по центру */
+    font-size: 2rem;
+    text-align: center;
   }
 
   h2 {
-    font-size: 1.3rem; /* Уменьшим размер шрифта H2 */
-    text-align: center; /* Выровняем заголовки по центру */
-    letter-spacing: 1px; /* Уменьшим межбуквенный интервал */
+    font-size: 1.3rem;
+    text-align: center;
+    letter-spacing: 1px;
   }
 
   .algo-table {
-    font-size: 0.7rem; /* Уменьшим размер шрифта таблицы */
-    overflow-x: auto; /* Добавим горизонтальный скролл для таблицы */
-    display: block; /* Сделаем блочным, чтобы overflow-x работал */
-    white-space: nowrap; /* Предотвратим перенос текста в ячейках */
+    font-size: 0.7rem;
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
   }
 
   .algo-table th,
   .algo-table td {
-    padding: 4px; /* Уменьшим отступы в ячейках */
+    padding: 4px;
   }
 
   .Description-text img {
-    width: 90%; /* Изображения будут занимать большую часть доступной ширины */
-    height: auto; /* Сохраним пропорции */
+    width: 90%;
+    height: auto;
   }
 
   ol li p {
-    font-size: 0.9rem; /* Уменьшим размер шрифта для элементов упорядоченного списка */
+    font-size: 0.9rem;
   }
 
   ol a {
-    word-break: break-all; /* Разрешим перенос слов в ссылках */
+    word-break: break-all;
   }
 }
 
@@ -134,66 +134,66 @@ h1 {
   }
 
   .AlgoPage-main-div {
-    padding: 1rem; /* Уменьшим отступы для более плотного контента */
+    padding: 1rem;
   }
 
   .algoPage-submain-div {
-    top: 2rem; /* Уменьшим отступ сверху */
-    padding: 0 1rem; /* Добавим горизонтальные отступы */
+    top: 2rem;
+    padding: 0 1rem;
   }
 
   .Description-text {
-    width: 95%; /* Увеличим ширину текста для лучшего использования пространства */
-    font-size: 1rem; /* Уменьшим размер шрифта */
+    width: 95%;
+    font-size: 1rem;
   }
 
   .Description-text strong {
-    margin-left: 0; /* Уберем отступ для жирного текста */
-    text-align: center; /* Выровняем по центру */
-    display: block; /* Сделаем блочным для центрирования */
+    margin-left: 0;
+    text-align: center;
+    display: block;
   }
 
   .Description-text ul li {
-    margin-left: 1.5em; /* Уменьшим отступ для элементов списка */
+    margin-left: 1.5em;
   }
 
   .blue-background {
-    font-size: 2rem; /* Уменьшим размер шрифта заголовка с синим фоном */
+    font-size: 2rem;
   }
 
   h1 {
-    font-size: 1.8rem; /* Уменьшим размер шрифта H1 */
-    text-align: center; /* Выровняем заголовки по центру */
+    font-size: 1.8rem;
+    text-align: center;
   }
 
   h2 {
-    font-size: 1.5rem; /* Уменьшим размер шрифта H2 */
-    text-align: center; /* Выровняем заголовки по центру */
-    letter-spacing: 2px; /* Уменьшим межбуквенный интервал */
+    font-size: 1.5rem;
+    text-align: center;
+    letter-spacing: 2px;
   }
 
   .algo-table {
-    font-size: 0.8rem; /* Уменьшим размер шрифта таблицы */
-    overflow-x: auto; /* Добавим горизонтальный скролл для таблицы */
-    display: block; /* Сделаем блочным, чтобы overflow-x работал */
-    white-space: nowrap; /* Предотвратим перенос текста в ячейках */
+    font-size: 0.8rem;
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
   }
 
   .algo-table th,
   .algo-table td {
-    padding: 5px; /* Уменьшим отступы в ячейках */
+    padding: 5px;
   }
 
   .Description-text img {
-    width: 100%; /* Изображения будут занимать всю доступную ширину */
-    height: auto; /* Сохраним пропорции */
+    width: 100%;
+    height: auto;
   }
 
   ol li p {
-    font-size: 1rem; /* Уменьшим размер шрифта для элементов упорядоченного списка */
+    font-size: 1rem;
   }
 
   ol a {
-    word-break: break-all; /* Разрешим перенос слов в ссылках */
+    word-break: break-all;
   }
 }

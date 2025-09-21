@@ -49,7 +49,6 @@ export const SciencePageEN = () => {
     userUuid,
   } = useCustomStates();
 
-  // Получаем карточку и ключ планеты по uuid для science
   let cardForScience = null;
   let planetKeyForScience = '';
   for (const planetKey in cards) {
@@ -62,7 +61,6 @@ export const SciencePageEN = () => {
       }
     }
   }
-  // Определяем класс для цвета названия модели по ключу планеты
   let scienceHeaderColorClass = '';
   if (planetKeyForScience === 'Green') scienceHeaderColorClass = 'header-green';
   else if (planetKeyForScience === 'Orange')
@@ -219,8 +217,8 @@ export const SciencePageEN = () => {
                     triggerAnimation={true}
                     stopAtX={800}
                     onAnimationEnd={() => {
-                      setShowCat(false); // скрыть кота
-                      setCatAnimationLaunched(false); // разрешить повторный запуск
+                      setShowCat(false);
+                      setCatAnimationLaunched(false);
                     }}
                   />
                 </div>

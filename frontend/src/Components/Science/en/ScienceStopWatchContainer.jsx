@@ -20,7 +20,6 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
 
   return (
     <div className="science-stopwatch-container">
-      {/* Время */}
       <div className="science-stopwatch-container-time">
         <h3>Time</h3>
         <p>
@@ -28,7 +27,6 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
         </p>
       </div>
 
-      {/* Счёт */}
       <div className="science-stopwatch-container-score">
         <h3>Score</h3>
         <p>
@@ -36,7 +34,6 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
         </p>
       </div>
 
-      {/* История ходов */}
       <div
         className="science-stopwatch-container-table"
         style={{ overflowY: 'auto' }}
@@ -56,7 +53,6 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
         )}
       </div>
 
-      {/* Кнопки */}
       <div className="science-stopwatch-container-buttons">
         <button
           className="btn-start"

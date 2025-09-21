@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../RulesPage.css';
 import '../RulesPageAdaptive.css';
 import { Link } from 'react-router-dom';
 import crimeImg from '../../Science/images/C_P.png';
 
 export const RulesPageEN = ({ setHeaderShow }) => {
-  setHeaderShow = true;
+  useEffect(() => {
+    setHeaderShow(true);
+  }, [setHeaderShow]);
   return (
     <div className="container Rules-div">
       <h1 className="Start-End-Phrase">Meet the Equilibrium!</h1>

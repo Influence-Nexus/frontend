@@ -6,7 +6,7 @@
 }
 
 .huge-table-container th.second-header-row-th {
-  top: 65px; /* Это значение должно быть равно высоте первого ряда заголовков */
+  top: 65px;
 }
 
 .regulator h1 {
@@ -413,6 +413,18 @@
     position: static !important; /* Уберем фиксированное позиционирование */
     top: unset !important; /* Сбросим top */
     padding-bottom: 50px; /* Уменьшим отступ снизу */
+  }
+
+  .node-list-container {
+    top: 270% !important;
+  }
+
+  #small-table-name{
+    margin-top: 25px;
+  }
+
+  .selected-nodes-list {
+    top: 180%;
   }
 }
 

@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ChallengeYourMindText > matches snapshot 1`] = `
+<DocumentFragment>
+  <h1
+    class="challenge-text"
+  >
+    Challenge your mind
+    <span
+      class="challenge-text-sign"
+    >
+      !
+    </span>
+  </h1>
+</DocumentFragment>
+`;
