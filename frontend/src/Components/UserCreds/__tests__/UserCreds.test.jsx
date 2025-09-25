@@ -15,6 +15,9 @@ vi.mock('../../../clientServerHub', () => ({
   loginUser: vi.fn(),
   registerUser: vi.fn(),
   getUserUuidFromToken: vi.fn(() => 'uuid'),
+  requestPasswordReset: vi.fn(),
+  completePasswordReset: vi.fn(),
+  changePassword: vi.fn(),
 }));
 
 afterEach(cleanup);

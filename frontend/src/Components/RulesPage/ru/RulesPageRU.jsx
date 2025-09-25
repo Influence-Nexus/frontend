@@ -4,7 +4,7 @@ import '../RulesPageAdaptive.css';
 import { Link } from 'react-router-dom';
 import crimeImg from '../../Science/images/C_P.png';
 
-export const RulesPageRU = ({ setHeaderShow }) => {
+export const RulesPage = ({ setHeaderShow }) => {
   useEffect(() => {
     setHeaderShow(true);
   }, [setHeaderShow]);
@@ -536,4 +536,4 @@ export const RulesPageRU = ({ setHeaderShow }) => {
   );
 };
 
-export default RulesPageRU;
+export default RulesPage;

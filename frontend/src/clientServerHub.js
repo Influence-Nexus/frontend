@@ -61,9 +61,9 @@ export async function fetchJson(url, options = {}, retry = true) {
  * Декодирует JWT и возвращает user_uuid.
  * Если поле uuid отсутствует, пытается взять sub.
  */
-export const getUserUuidFromToken = () => {
+export const getUserUuidFromToken = (providedToken) => {
   try {
-    const token = localStorage.getItem('access_token');
+    const token = providedToken || localStorage.getItem('access_token');
     if (!token) return null;
     const decoded = jwtDecode(token);
     // Попытка сначала взять decoded.uuid, а если его нет, то decoded.sub
@@ -113,7 +113,38 @@ export async function loginUser(username, password) {
   } else {
     console.warn('access_token отсутствует в ответе');
   }
+  if (payload.refresh_token) {
+    localStorage.setItem('refresh_token', payload.refresh_token);
+  }
   return payload;
+}
+
+export async function requestPasswordReset(email) {
+  const body = { email };
+  return fetchJson(`${BASE_URL}/forgot-password`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}
+
+export async function completePasswordReset(token, newPassword) {
+  const body = { token, new_password: newPassword };
+  return fetchJson(`${BASE_URL}/reset-password`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}
+
+export async function changePassword(username, currentPassword, newPassword) {
+  const body = {
+    username,
+    current_password: currentPassword,
+    new_password: newPassword,
+  };
+  return fetchJson(`${BASE_URL}/change-password`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
 }
 
 async function tryRefreshToken() {

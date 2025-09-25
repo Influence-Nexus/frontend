@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { fetchJson, registerUser, loginUser } from '../clientServerHub.js';
+import {
+  fetchJson,
+  registerUser,
+  loginUser,
+  requestPasswordReset,
+  completePasswordReset,
+  changePassword,
+} from '../clientServerHub.js';
 
 // Простая реализация localStorage для тестов
 function createLocalStorageMock() {
@@ -72,14 +79,76 @@ describe('clientServerHub', () => {
 
     fetchSpy.mockResolvedValueOnce({
       ok: true,
-      json: vi.fn().mockResolvedValue({ access_token: token }),
+      json: vi.fn().mockResolvedValue({
+        access_token: token,
+        refresh_token: 'refresh123',
+      }),
     });
 
     const res = await loginUser('user', 'pass');
 
-    expect(res).toEqual({ access_token: token });
+    expect(res).toEqual({ access_token: token, refresh_token: 'refresh123' });
     expect(localStorage.getItem('access_token')).toBe(token);
     expect(localStorage.getItem('user_uuid')).toBe('user123');
+    expect(localStorage.getItem('refresh_token')).toBe('refresh123');
+  });
+
+  it('requestPasswordReset sends email', async () => {
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ message: 'ok' }),
+    });
+
+    const res = await requestPasswordReset('user@example.com');
+
+    expect(res).toEqual({ message: 'ok' });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/\/forgot-password$/),
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ email: 'user@example.com' }),
+      })
+    );
+  });
+
+  it('completePasswordReset sends token and password', async () => {
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ message: 'done' }),
+    });
+
+    const res = await completePasswordReset('token-123', 'newpass');
+
+    expect(res).toEqual({ message: 'done' });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/\/reset-password$/),
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ token: 'token-123', new_password: 'newpass' }),
+      })
+    );
+  });
+
+  it('changePassword sends credentials', async () => {
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ message: 'changed' }),
+    });
+
+    const res = await changePassword('user', 'old', 'new');
+
+    expect(res).toEqual({ message: 'changed' });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/\/change-password$/),
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          username: 'user',
+          current_password: 'old',
+          new_password: 'new',
+        }),
+      })
+    );
   });
 
   it('returns empty object on invalid JSON', async () => {

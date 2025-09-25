@@ -2,22 +2,6 @@
   "name": "cognition-decision",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "clean:coverage": "rimraf coverage",
-    "clean": "rimraf build && rimraf buildINFO",
-    "dev": "vite",
-    "build": "npm run clean && vite build",
-    "preview": "vite preview",
-    "lint": "eslint --no-error-on-unmatched-pattern \"src/**/*.{js,jsx,ts,tsx}\" \"**/*.test.{js,jsx}\"",
-    "lint:fix": "eslint --no-error-on-unmatched-pattern \"src/**/*.{js,jsx,ts,tsx}\" \"**/*.test.{js,jsx}\" --fix",
-    "format": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\" \"**/*.test.{js,jsx}\"",
-    "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\" \"**/*.test.{js,jsx}\"",
-    "test": "npm run clean:coverage && vitest",
-    "test:coverage": "npm run clean:coverage && vitest run --coverage",
-    "cap:sync": "cap sync",
-    "cap:copy": "cap copy",
-    "cap:open": "cap open"
-  },
   "dependencies": {
     "@capacitor/app": "^7.1.0",
     "@capacitor/status-bar": "^7.0.3",
@@ -63,6 +47,22 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.5",
     "vitest": "^3.2.4"
+  },
+  "scripts": {
+    "clean:coverage": "rimraf coverage",
+    "clean": "rimraf build && rimraf buildINFO",
+    "dev": "vite",
+    "build": "npm run clean && vite build",
+    "preview": "vite preview",
+    "lint": "eslint --no-error-on-unmatched-pattern \"src/**/*.{js,jsx,ts,tsx}\" \"**/*.test.{js,jsx}\"",
+    "lint:fix": "eslint --no-error-on-unmatched-pattern \"src/**/*.{js,jsx,ts,tsx}\" \"**/*.test.{js,jsx}\" --fix",
+    "format": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\" \"**/*.test.{js,jsx}\"",
+    "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\" \"**/*.test.{js,jsx}\"",
+    "test": "npm run clean:coverage && vitest",
+    "test:coverage": "npm run clean:coverage && vitest run --coverage",
+    "cap:sync": "cap sync",
+    "cap:copy": "cap copy",
+    "cap:open": "cap open"
   },
   "browserslist": {
     "production": [

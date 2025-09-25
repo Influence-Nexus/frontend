@@ -132,6 +132,9 @@ export const PlanetCardModal = ({ selectedPlanet, setSelectedPlanet }) => {
                             <Link
                               to={`/matrix_uuid/${card.uuid}`}
                               state={{ selectedPlanet }}
+                              data-selected-planet={JSON.stringify(
+                                selectedPlanet
+                              )}
                               style={{
                                 color: cardcreds[selectedPlanet.name].color,
                                 fontSize: '1.5rem',
