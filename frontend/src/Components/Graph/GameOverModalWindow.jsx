@@ -41,7 +41,7 @@ export const GameOverModalWindow = ({ planetColor, score }) => {
       hasTriggeredGameOver.current = true;
       setIsRunning(false);
       setShowGameOverModal(true);
-      handleStop();
+      handleStop({ finalize: true });
     }
   }, [
     currentTime,

@@ -10,6 +10,7 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
     handleStart,
     handleStop,
     isRunning,
+    isPaused,
     isHoveredStart,
     setIsHoveredStart,
     isHoveredStop,
@@ -17,6 +18,17 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
   } = useCustomStates();
 
   const formattedTime = `${String(Math.floor(currentTime / 60)).padStart(2, '0')}:${String(currentTime % 60).padStart(2, '0')}`;
+  const startLabel = isPaused ? 'Resume' : 'Start';
+  const startTitle = isRunning
+    ? 'You are already in the game!'
+    : isPaused
+      ? 'Resume the game'
+      : 'Start the game';
+  const pauseTitle = isRunning
+    ? 'Pause the game'
+    : isPaused
+      ? 'The game is paused'
+      : "You haven't started the game yet!";
 
   return (
     <div className="science-stopwatch-container">
@@ -70,9 +82,9 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
           onMouseLeave={() => setIsHoveredStart(false)}
           onClick={handleStart}
           disabled={isRunning}
-          title={isRunning ? 'You are already in the game!' : 'Start the game'}
+          title={startTitle}
         >
-          Start
+          {startLabel}
         </button>
 
         <button
@@ -89,13 +101,11 @@ export const ScienceStopWatchContainer = ({ planetColor }) => {
           }}
           onMouseEnter={() => setIsHoveredStop(true)}
           onMouseLeave={() => setIsHoveredStop(false)}
-          onClick={handleStop}
+          onClick={() => handleStop()}
           disabled={!isRunning}
-          title={
-            isRunning ? 'Stop the game' : "You haven't started the game yet!"
-          }
+          title={pauseTitle}
         >
-          Stop
+          Pause
         </button>
       </div>
     </div>

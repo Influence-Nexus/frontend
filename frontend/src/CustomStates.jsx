@@ -31,6 +31,7 @@ export const CustomStatesProvider = ({ children }) => {
   const [selectedNodes, setSelectedNodes] = useState([]);
   const [selectedEdges, setSelectedEdges] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [stopwatchHistory, setStopwatchHistory] = useState([]);
   const [showNodeList, setShowNodeList] = useState(false);
   const [lockedNodes, setLockedNodes] = useState({});
@@ -343,7 +344,7 @@ export const CustomStatesProvider = ({ children }) => {
     if (disabledNodes.length >= allNodeCount && isRunning) {
       setIsRunning(false);
       setShowGameOverModal(true);
-      handleStop();
+      handleStop({ finalize: true });
     } // eslint-disable-next-line
   }, [disabledNodes, graphData, isRunning]);
 
@@ -387,6 +388,18 @@ export const CustomStatesProvider = ({ children }) => {
 
   // Примитивный старт/стоп для Stopwatch
   const handleStart = async () => {
+    if (isRunning) return;
+
+    // Возобновление после паузы
+    if (isPaused) {
+      setIsRunning(true);
+      setIsPaused(false);
+      intervalRef.current = setInterval(() => {
+        setCurrentTime((prev) => prev + 1);
+      }, 1000);
+      return;
+    }
+
     if (intervalRef.current) return; // уже работает
 
     // Сброс игры на сервере (NEW)
@@ -400,6 +413,7 @@ export const CustomStatesProvider = ({ children }) => {
 
     // Чистим локальные стейты
     setIsRunning(true);
+    setIsPaused(false);
     setCurrentTime(0);
     setScore(0);
     setLastIndex(0);
@@ -414,23 +428,28 @@ export const CustomStatesProvider = ({ children }) => {
     }, 1000);
   };
 
-  const handleStop = () => {
+  const handleStop = ({ finalize = false } = {}) => {
     setIsRunning(false);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
 
-    setStopwatchHistory((prev) => [
-      ...prev,
-      {
-        currentTime,
-        startTime: new Date(),
-        selectedNodes: [...moveHistory],
-        resscore: score,
-      },
-    ]);
-    // setCurrentTime(0);
+    if (finalize) {
+      setIsPaused(false);
+      setStopwatchHistory((prev) => [
+        ...prev,
+        {
+          currentTime,
+          startTime: new Date(),
+          selectedNodes: [...moveHistory],
+          resscore: score,
+        },
+      ]);
+      return;
+    }
+
+    setIsPaused(true);
   };
 
   useEffect(() => {
@@ -645,6 +664,8 @@ export const CustomStatesProvider = ({ children }) => {
         setSelectedEdges,
         isRunning,
         setIsRunning,
+        isPaused,
+        setIsPaused,
         stopwatchHistory,
         setStopwatchHistory,
         showNodeList,

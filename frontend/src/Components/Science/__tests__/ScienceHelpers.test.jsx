@@ -59,6 +59,7 @@ describe('Science helpers', () => {
       handleStart,
       handleStop,
       isRunning: false,
+      isPaused: false,
       isHoveredStart: false,
       setIsHoveredStart: vi.fn(),
       isHoveredStop: false,
@@ -68,7 +69,7 @@ describe('Science helpers', () => {
     render(<ScienceStopWatchContainer planetColor="#fff" />);
 
     const startButton = screen.getByRole('button', { name: /start/i });
-    const stopButton = screen.getByRole('button', { name: /stop/i });
+    const stopButton = screen.getByRole('button', { name: /pause/i });
 
     expect(startButton).not.toBeDisabled();
     expect(stopButton).toBeDisabled();
@@ -83,6 +84,7 @@ describe('Science helpers', () => {
       handleStart,
       handleStop,
       isRunning: true,
+      isPaused: false,
       isHoveredStart: false,
       setIsHoveredStart: vi.fn(),
       isHoveredStop: false,
@@ -95,7 +97,7 @@ describe('Science helpers', () => {
       name: /start/i,
     })[1];
     const stopButtonRunning = screen.getAllByRole('button', {
-      name: /stop/i,
+      name: /pause/i,
     })[1];
 
     expect(startButtonRunning).toBeDisabled();

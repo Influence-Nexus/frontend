@@ -166,6 +166,7 @@ describe('Stopwatch', () => {
       handleStart,
       handleStop,
       isRunning: false,
+      isPaused: false,
       isHoveredStart: false,
       setIsHoveredStart,
       isHoveredStop: false,
@@ -176,7 +177,7 @@ describe('Stopwatch', () => {
     const { rerender } = render(<Stopwatch planetColor="#fff" />);
 
     const startButton = screen.getByRole('button', { name: /start/i });
-    const stopButton = screen.getByRole('button', { name: /stop/i });
+    const stopButton = screen.getByRole('button', { name: /pause/i });
 
     expect(startButton).not.toBeDisabled();
     expect(stopButton).toBeDisabled();
@@ -191,6 +192,7 @@ describe('Stopwatch', () => {
       handleStart,
       handleStop,
       isRunning: true,
+      isPaused: false,
       isHoveredStart: false,
       setIsHoveredStart,
       isHoveredStop: false,
@@ -200,7 +202,7 @@ describe('Stopwatch', () => {
     rerender(<Stopwatch planetColor="#fff" />);
 
     expect(screen.getByRole('button', { name: /start/i })).toBeDisabled();
-    const stopButtonActive = screen.getByRole('button', { name: /stop/i });
+    const stopButtonActive = screen.getByRole('button', { name: /pause/i });
     expect(stopButtonActive).not.toBeDisabled();
 
     await user.click(stopButtonActive);

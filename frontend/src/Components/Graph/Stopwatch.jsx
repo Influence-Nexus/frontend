@@ -10,6 +10,7 @@ const Stopwatch = ({ planetColor }) => {
     handleStart,
     handleStop,
     isRunning,
+    isPaused,
     isHoveredStart,
     setIsHoveredStart,
     isHoveredStop,
@@ -17,6 +18,17 @@ const Stopwatch = ({ planetColor }) => {
   } = useCustomStates();
 
   const formattedTime = `${String(Math.floor(currentTime / 60)).padStart(2, '0')}:${String(currentTime % 60).padStart(2, '0')}`;
+  const startLabel = isPaused ? 'Resume' : 'Start';
+  const startTitle = isRunning
+    ? 'Вы уже в процессе игры!'
+    : isPaused
+      ? 'Продолжить игру'
+      : 'Начать игру';
+  const pauseTitle = isRunning
+    ? 'Приостановить игру'
+    : isPaused
+      ? 'Игра на паузе'
+      : 'Вы ещё не начали игру!';
 
   return (
     <div className="stopwatch-container">
@@ -67,9 +79,9 @@ const Stopwatch = ({ planetColor }) => {
           onMouseLeave={() => setIsHoveredStart(false)}
           onClick={handleStart}
           disabled={isRunning}
-          title={isRunning ? 'Вы уже в процессе игры!' : 'Начать игру'}
+          title={startTitle}
         >
-          Start
+          {startLabel}
         </button>
 
         <button
@@ -86,11 +98,11 @@ const Stopwatch = ({ planetColor }) => {
           }}
           onMouseEnter={() => setIsHoveredStop(true)}
           onMouseLeave={() => setIsHoveredStop(false)}
-          onClick={handleStop}
+          onClick={() => handleStop()}
           disabled={!isRunning}
-          title={isRunning ? 'Остановить игру' : 'Вы ещё не начали игру!'}
+          title={pauseTitle}
         >
-          Stop
+          Pause
         </button>
       </div>
     </div>
