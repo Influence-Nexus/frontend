@@ -16,7 +16,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import (
-ApplicationBuilder,
+    ApplicationBuilder,
     CommandHandler,
     ContextTypes,
     MessageHandler,
@@ -26,9 +26,11 @@ ApplicationBuilder,
 
 # ───────── внешние импорты ─────────
 from services.matrix_service import get_all_matrices, get_matrix_data_by_name
+from utils.email_utils import EmailSendError, send_password_reset_email
 from utils.score_counter import calculate_step_score
 from drafts.file_processor import BASE_DIR, process_input_files
 from routes.UUID_MATRICES import MATRIX_UUIDS
+
 # ────────────────────────────────────
 
 from utils.db import (
@@ -61,11 +63,11 @@ async def tg_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Привет! Я бот для обратной связи — пишите и присылайте файлы."
     )
-    
-    
+
+
 async def tg_save_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     from datetime import datetime
-    
+
     user = update.effective_user
     uid = user.username or f"{user.first_name}_{user.last_name or ''}"
     uid = uid.replace(" ", "_")  # на всякий случай
@@ -95,7 +97,7 @@ async def tg_save_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if msg.document:
         file = await msg.document.get_file()
         file_name = (
-            msg.document.file_name 
+            msg.document.file_name
             or f"document_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         )
         file_path = folder / file_name
@@ -131,7 +133,7 @@ async def tg_save_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         json.dump(history, f, ensure_ascii=False, indent=2)
     await update.message.reply_text("👍 Сохранено!")
 
- 
+
 # ─── lifespan ───────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app):
@@ -317,7 +319,7 @@ async def sign_in(req: Request):
         "token_type": "bearer",
     }
 
-  
+
 @router.post("/forgot-password")
 async def forgot_password(req: Request):
     data = await req.json()
@@ -335,6 +337,11 @@ async def forgot_password(req: Request):
         datetime.utcnow() + timedelta(minutes=RESET_TOKEN_TTL_MINUTES)
     ).isoformat()
     create_password_reset_token(token, user["user_uuid"], expires_at)
+    try:
+        send_password_reset_email(email, token)
+    except EmailSendError as exc:
+        log.error("Failed to send password reset email to %s: %s", email, exc)
+        return JSONResponse({"error": "Не удалось отправить письмо"}, 500)
     return JSONResponse({"message": message}, 200)
 
 
@@ -406,7 +413,7 @@ def all_matrices():
     mats = []
     for m in get_all_matrices():
         m["uuid"] = next(
-            (k for k,v in MATRIX_UUIDS.items() if v == m["matrix_name"]), None
+            (k for k, v in MATRIX_UUIDS.items() if v == m["matrix_name"]), None
         )
         mats.append(m)
     return {"matrices": mats}

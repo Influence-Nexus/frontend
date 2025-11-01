@@ -7,7 +7,7 @@ const config: CapacitorConfig = {
   server: {
     url: 'http://192.168.0.116:3000',
 
-    // url: 'http://10.128.6.230:3000',
+    // url: 'http://10.131.103.114:3000',
     cleartext: true,
   },
   plugins: {

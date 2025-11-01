@@ -2,14 +2,42 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Header from './Components/Header/Header';
 import StartPage from './Components/StartPage/StartPage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CustomStatesProvider } from './CustomStates';
 import { GlobalAudioManager } from './Components/Audio';
 import DynamicComponentLoader from './DynamicComponentLoader';
 import StaticCanvasWrapper from './StaticCanvasWrapper';
+import { App as CapacitorApp } from '@capacitor/app';
 
 function App() {
   const [headerShow, setHeaderShow] = useState(true);
+
+  useEffect(() => {
+    let lastBackPress = 0;
+    let listener;
+
+    CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+      if (canGoBack) {
+        window.history.back();
+      } else {
+        const now = Date.now();
+        if (now - lastBackPress < 2000) {
+          CapacitorApp.exitApp();
+        } else {
+          lastBackPress = now;
+          console.log('Нажмите ещё раз, чтобы выйти');
+        }
+      }
+    }).then((l) => {
+      listener = l; // сохраняем handle
+    });
+
+    return () => {
+      if (listener) {
+        listener.remove(); // теперь remove есть
+      }
+    };
+  }, []);
 
   return (
     <Router>

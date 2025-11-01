@@ -191,7 +191,7 @@ export const SciencePageEN = () => {
           </div>
         ) : (
           <>
-            <Conditions />
+            <Conditions uuid={uuid} />
             <div className="tables-section">
               <TableSmall data={smallTableData} />
               <TableHuge data={hugeTableData} />
